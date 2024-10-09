@@ -43,9 +43,9 @@ class UserController {
 
     public createNewUser = async (req: Request, res:Response) => {
         try{
-            const {name, email} = req.body
+            const {name, email, username, password, role, phonenumber, degree} = req.body
 
-            const newUser = await userService.createNewUser(name, email);
+            const newUser = await userService.createNewUser(name, email, username, password, role, phonenumber, degree);
 
             res.status(200).json({
                 message: "Success",

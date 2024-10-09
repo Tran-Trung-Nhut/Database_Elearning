@@ -1,43 +1,51 @@
     import { db } from "../db/db"
-    import { users } from "../db/schema"
+    import { user } from "../db/schema"
     import { eq } from "drizzle-orm"
 
     class UserService{
         public getAllUsers = async () =>{
-            const all = await db.select().from(users)
+            const all = await db.select().from(user)
 
             return all;
         }
 
         public getUserById = async (id: string) => {
-            const user = await db.select().from(users).where(eq(users.id, id))
+            const data = await db.select().from(user).where(eq(user.id, id))
 
-            return user;
+            return data;
         }
 
-        public createNewUser = async (name: string, email: string) => {
-            const newUser = await db.insert(users).values({name, email}).returning()
+        public createNewUser = async (
+            name: string, 
+            email: string, 
+            username: string, 
+            password: string, 
+            role: string, 
+            phonenumber: string, 
+            degree: string) => {
+
+            const newUser = await db.insert(user).values({name, email, username, password, role, phonenumber, degree}).returning()
 
             return newUser
         }
 
         public updateUser = async (id: string, name: string, email: string) => {
-            const user = await db
-            .update(users)
+            const data = await db
+            .update(user)
             .set({name, email})
-            .where(eq(users.id, id))
+            .where(eq(user.id, id))
             .returning()
 
-            return user
+            return data
         }
 
         public deleteUser= async (id: string) => {
-            const user = await db
-            .delete(users)
-            .where(eq(users.id,id))
+            const data = await db
+            .delete(user)
+            .where(eq(user.id,id))
             .returning()
 
-            return user
+            return data
         }
 
     }
