@@ -10,7 +10,6 @@
     "dev": "nodemon src/index.ts",
     "generate": "drizzle-kit generate",
     "create:tables": "ts-node --files ./drizzle/migrator.ts",
-    "migrate": "tsx src/db/migrate.ts",
     "studio": "drizzle-kit studio"
   },
   "keywords": [],
