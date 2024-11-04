@@ -43,9 +43,25 @@ class UserController {
 
     public createNewUser = async (req: Request, res:Response) => {
         try{
-            const {name, email, username, password, role, phonenumber, degree} = req.body
+            const {
+                firstName, 
+                lastName, 
+                email, 
+                username, 
+                password, 
+                role, 
+                bankAccount, 
+                bankName} = req.body
 
-            const newUser = await userService.createNewUser(name, email, username, password, role, phonenumber, degree);
+            const newUser = await userService.createNewUser(
+                firstName, 
+                lastName, 
+                email, 
+                username, 
+                password, 
+                role, 
+                bankAccount, 
+                bankName);
 
             res.status(200).json({
                 message: "Success",
@@ -60,7 +76,16 @@ class UserController {
 
     public updateUser = async (req: Request, res: Response) => {
         try{
-            const {id, name, email, username, password, phonenumber, role, degree} = req.body
+            const {
+                id, 
+                firstName, 
+                lastName, 
+                email, 
+                username, 
+                password, 
+                role, 
+                bankAccount, 
+                bankName} = req.body
 
             const existUser = await userService.getUserByIdWithPassword(id)
 
@@ -72,7 +97,17 @@ class UserController {
 
             const hashedPassword = existUser[0].password
 
-            const user = await userService.updateUser(id, name, email, username, password, phonenumber, role, degree, hashedPassword)
+            const user = await userService.updateUser(
+                id, 
+                firstName, 
+                lastName, 
+                email, 
+                username, 
+                password, 
+                role, 
+                bankAccount, 
+                bankName, 
+                hashedPassword)
 
             return res.status(200).json({
                 message: "Success",

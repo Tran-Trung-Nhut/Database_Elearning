@@ -10,12 +10,13 @@
             const all = await db
             .select({
                 id: user.id,
-                name: user.name,
+                firstName: user.firstName,
+                lastName: user.lastName,
                 username: user.username,
                 role: user.role,
                 email: user.email,
-                phonenumber: user.phonenumber,
-                degree: user.degree,
+                bankName: user.bankName,
+                bankAccout: user.bankAccount,
             })
             .from(user)
 
@@ -26,12 +27,13 @@
             const data = await db
             .select({
                 id: user.id,
-                name: user.name,
+                firstName: user.firstName,
+                lastName: user.lastName,
                 username: user.username,
                 role: user.role,
                 email: user.email,
-                phonenumber: user.phonenumber,
-                degree: user.degree,
+                bankName: user.bankName,
+                bankAccout: user.bankAccount,
             })
             .from(user)
             .where(eq(user.id, id))
@@ -50,33 +52,36 @@
 
 
         public createNewUser = async (
-            name: string, 
+            firstName: string, 
+            lastName: string,
             email: string, 
             username: string, 
             password: string, 
             role: string, 
-            phonenumber: string, 
-            degree: string) => {
+            bankName: string,
+            bankAccount: string) => {
             
             const hashedPassword = await bcrypt.hash(password, saltRounds)
 
             const newUser = await db
             .insert(user)
-            .values({name,
+            .values({firstName,
+                lastName,
                 email,
                 username,
                 password: hashedPassword,
                 role,
-                phonenumber,
-                degree})
+                bankAccount,
+                bankName})
             .returning({
                 id: user.id,
-                name: user.name,
+                firstName: user.firstName,
+                lastName: user.lastName,
                 username: user.username,
                 role: user.role,
                 email: user.email,
-                phonenumber: user.phonenumber,
-                degree: user.degree,
+                bankName: user.bankName,
+                bankAccout: user.bankAccount,
             })
 
             return newUser
@@ -84,13 +89,14 @@
 
         public updateUser = async (
             id: string,
-            name: string,
-            email: string,
-            username: string,
-            password: string,
-            phonenumber: string,
-            role: string,
-            degree: string,
+            firstName: string, 
+            lastName: string,
+            email: string, 
+            username: string, 
+            password: string, 
+            role: string, 
+            bankName: string,
+            bankAccount: string,
             hashedPassword: string
         ) => {
 
@@ -103,23 +109,25 @@
             const data = await db
             .update(user)
             .set({
-                name,
+                firstName,
+                lastName,
                 email,
                 username,
-                password: changedPassword,
-                phonenumber,
+                password: hashedPassword,
                 role,
-                degree
+                bankAccount,
+                bankName
                 })
             .where(eq(user.id, id))
             .returning({
                 id: user.id,
-                name: user.name,
+                firstName: user.firstName,
+                lastName: user.lastName,
                 username: user.username,
                 role: user.role,
                 email: user.email,
-                phonenumber: user.phonenumber,
-                degree: user.degree,
+                bankName: user.bankName,
+                bankAccout: user.bankAccount,
             })
 
             return data
@@ -131,12 +139,13 @@
             .where(eq(user.id,id))
             .returning({
                 id: user.id,
-                name: user.name,
+                firstName: user.firstName,
+                lastName: user.lastName,
                 username: user.username,
                 role: user.role,
                 email: user.email,
-                phonenumber: user.phonenumber,
-                degree: user.degree,
+                bankName: user.bankName,
+                bankAccout: user.bankAccount,
             })
 
             return data

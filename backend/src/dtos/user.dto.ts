@@ -3,8 +3,9 @@ export interface UserDto{
     username: string,
     password: string,
     role: string,
-    name: string,
+    firstName: string,
+    lastName: string,
     email: string,
-    phonenumber: string,
-    degree: string | null,
+    bankAccount: string,
+    bankName: string
 }
