@@ -4,21 +4,21 @@ import { pgTable, uuid, date, integer, varchar, text, unique, primaryKey } from 
 export const user = pgTable("user", {
     id: uuid("id").defaultRandom().primaryKey(),
     email: varchar("email", { length: 255}).notNull().unique(),
-    firstName: varchar("first_name", { length: 10}).notNull(),
-    lastName: varchar("last_name", { length: 30}).notNull(),
-    username: varchar("user_name", { length: 30}).notNull().unique(),
+    firstName: varchar("firstName", { length: 10}).notNull(),
+    lastName: varchar("lastName", { length: 30}).notNull(),
+    username: varchar("username", { length: 30}).notNull().unique(),
     password: varchar("password", { length: 255}).notNull().unique(),
     role: varchar("role", { length: 255}).notNull(),
-    bankName: varchar("bank_name", { length: 20}).notNull(),
-    bankAccount: varchar("bank_account", { length: 255}).notNull()
+    bankName: varchar("bankName", { length: 20}).notNull(),
+    bankAccount: varchar("bankAccount", { length: 255}).notNull()
 });
 
 export const student = pgTable("student", {
     userId: uuid("userId").notNull().references(() => user.id).primaryKey(),
     studentId: varchar("studentId", { length: 255 }).notNull().unique(),
-    enrollmentDate: date("enrollment_date").notNull(),
-    numberCoursesEnrolled: integer("number_courses_enrolled").notNull().default(0),
-    numberCoursesCompleted: integer("number_courses_completed").notNull().default(0),
+    enrollmentDate: date("enrollmentDate").notNull(),
+    numberCoursesEnrolled: integer("numberCoursesEnrolled").notNull().default(0),
+    numberCoursesCompleted: integer("numberCoursesCompleted").notNull().default(0),
 })
 
 export const teacher = pgTable("teacher", {
@@ -26,11 +26,11 @@ export const teacher = pgTable("teacher", {
     teacherId: varchar('teacherId', { length: 255}).notNull().unique(),
 })
 
-export const teacherQualification = pgTable('teacher_qualification', {
-    teacherId: varchar('teacher_id', { length: 255 }).notNull(),
+export const teacherQualification = pgTable('teacherQualification', {
+    teacherId: varchar('teacherId', { length: 255 }).notNull(),
     qualification: varchar('qualification', { length: 255 }).notNull()
 }, () => ({
-    primaryKey: ['teacher_id', 'qualification']
+    primaryKey: ['teacherId', 'qualification']
 }));
 
 export const course = pgTable('course',{
