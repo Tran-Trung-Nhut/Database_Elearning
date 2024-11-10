@@ -27,8 +27,8 @@ Trước khi tiếp tục, hãy chắc chắn  bạn đáp ứng đủ những �
 
 1. Tải source code [tại đây](https://github.com/Tran-Trung-Nhut/Database_Elearning)
 2. Nếu bạn chạy cơ sở dữ liệu nội bộ, chuyển hướng đến thư mục **backend** và chạy lệnh: `docker compose up`, để khơi động cơ sở dữ liệu nội bộ.
-3. Chuyển hướng đến **backend**, chạy lệnh `npm run start` để khởi chạy backend hoặc chạy lệnh `npm run dev` để chạy dưới chế độ *developer*
-4. Chuyển hướng đến **frontend**, chạy lệnh `npm ...` để khơi chạy frontend
+3. Chuyển hướng đến **backend**, chạy lệnh `npm install` để tải các gói cần thiết về rồi chạy lệnh `npm run start` để khởi chạy backend hoặc chạy lệnh `npm run dev` để chạy dưới chế độ *developer*
+4. Chuyển hướng đến **frontend**, chạy lệnh `npm install` để tải các gói cần thiết về rồi chạy lệnh `npm ...` để khơi chạy frontend
 5. Chạy lệnh `npm run studio` để xem dữ liệu trực quan hơn.
 6. Nếu bạn xây dựng lại *schema*, chạy lệnh `npm run generate` sau đó là `npm run create:tables` (Cơ sở dữ liệu phải được khởi chạy trước đó).
 
