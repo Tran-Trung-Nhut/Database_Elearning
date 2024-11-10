@@ -1,4 +1,3 @@
-import { table } from "console";
 import { pgTable, uuid, date, integer, varchar, text, unique, primaryKey } from "drizzle-orm/pg-core";
 
 export const user = pgTable("user", {

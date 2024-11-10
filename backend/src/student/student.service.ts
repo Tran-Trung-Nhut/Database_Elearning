@@ -14,7 +14,7 @@ class StudentService{
             role: user.role,
             email: user.email,
             bankName: user.bankName,
-            bankAccout: user.bankAccount,
+            bankAccount: user.bankAccount,
             studentId: student.studentId,
             enrollmentDate: student.enrollmentDate,
             numberCourseEnrolled: student.numberCoursesEnrolled,
@@ -34,7 +34,7 @@ class StudentService{
             role: user.role,
             email: user.email,
             bankName: user.bankName,
-            bankAccout: user.bankAccount,
+            bankAccount: user.bankAccount,
             studentId: student.studentId,
             enrollmentDate: student.enrollmentDate,
             numberCourseEnrolled: student.numberCoursesEnrolled,
@@ -48,9 +48,8 @@ class StudentService{
     public createStudent = async (
         firstName: string,
         lastName: string,
-        userName: string,
+        username: string,
         password: string,
-        role: string,
         email: string,
         bankName: string,
         bankAccount: string,
@@ -59,10 +58,10 @@ class StudentService{
         const newUser = await userService.createNewUser(
             firstName,
             lastName,
-            userName,
-            password,
-            role,
             email,
+            username,
+            password,
+            'student',
             bankName,
             bankAccount
         )
@@ -111,22 +110,23 @@ class StudentService{
         id: string,
         firstName: string,
         lastName: string,
-        userName: string,
+        username: string,
         password: string,
         role: string,
         email: string,
         bankName: string,
         bankAccount: string,
-        numberCourseEnrolled: number,
-        numberCourseCompleted: number,
+        numberCoursesEnrolled: number,
+        numberCoursesCompleted: number,
         hashedPassword: string     
     ) => {
+
         const updateUser = await userService.updateUser(
             id,
             firstName,
             lastName,
             email,
-            userName,
+            username,
             password,
             role,
             bankName,
@@ -140,9 +140,10 @@ class StudentService{
         const updatedStudent = await db
         .update(student)
         .set({
-            numberCoursesCompleted: numberCourseCompleted,
-            numberCoursesEnrolled: numberCourseEnrolled
+            numberCoursesCompleted: numberCoursesCompleted,
+            numberCoursesEnrolled: numberCoursesEnrolled
         })
+        .where(eq(student.userId, id))
         .returning({
             studentId: student.studentId,
             enrollmentDate: student.enrollmentDate,

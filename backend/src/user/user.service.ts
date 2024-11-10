@@ -113,7 +113,7 @@
                 lastName,
                 email,
                 username,
-                password: hashedPassword,
+                password: changedPassword,
                 role,
                 bankAccount,
                 bankName
