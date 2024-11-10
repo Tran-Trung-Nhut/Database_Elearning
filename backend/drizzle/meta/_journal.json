@@ -15,6 +15,13 @@
       "when": 1730736672973,
       "tag": "0001_classy_molten_man",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1731211839004,
+      "tag": "0002_heavy_shard",
+      "breakpoints": true
     }
   ]
 }

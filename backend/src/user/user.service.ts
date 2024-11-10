@@ -81,7 +81,7 @@
                 role: user.role,
                 email: user.email,
                 bankName: user.bankName,
-                bankAccout: user.bankAccount,
+                bankAccount: user.bankAccount,
             })
 
             return newUser
@@ -113,7 +113,7 @@
                 lastName,
                 email,
                 username,
-                password: hashedPassword,
+                password: changedPassword,
                 role,
                 bankAccount,
                 bankName
@@ -127,14 +127,14 @@
                 role: user.role,
                 email: user.email,
                 bankName: user.bankName,
-                bankAccout: user.bankAccount,
+                bankAccount: user.bankAccount,
             })
 
             return data
         }
 
-        public deleteUser= async (id: string) => {
-            const data = await db
+        public deleteUser= async (id: string, deleteStudentOrteacher: any) => {
+            const deleteUser = await db
             .delete(user)
             .where(eq(user.id,id))
             .returning({
@@ -145,10 +145,27 @@
                 role: user.role,
                 email: user.email,
                 bankName: user.bankName,
-                bankAccout: user.bankAccount,
+                bankAccount: user.bankAccount,
             })
 
-            return data
+            if(!deleteUser || deleteUser.length === 0){
+                return null
+            }
+
+            return {
+                id: deleteUser[0].id,
+                firstName: deleteUser[0].firstName,
+                lastName: deleteUser[0].lastName,
+                username: deleteUser[0].username,
+                role: deleteUser[0].role,
+                email: deleteUser[0].email,
+                bankName: deleteUser[0].bankName,
+                bankAccount: deleteUser[0].bankAccount,
+                studentId: deleteStudentOrteacher[0].studentId,
+                enrollmentDate: deleteStudentOrteacher[0].enrollmentDate,
+                numberCoursesEnrolled: deleteStudentOrteacher[0].numberCoursesEnrolled,
+                numberCoursesCompleted: deleteStudentOrteacher[0].numberCoursesCompleted,
+            }
         }
 
         public getUserByUsername = async (username: string) => {
