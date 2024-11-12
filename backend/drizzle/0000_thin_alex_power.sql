@@ -131,9 +131,9 @@ CREATE TABLE IF NOT EXISTS "section" (
 CREATE TABLE IF NOT EXISTS "student" (
 	"userId" uuid PRIMARY KEY NOT NULL,
 	"studentId" varchar(255) NOT NULL,
-	"enrollment_date" date NOT NULL,
-	"number_courses_enrolled" integer DEFAULT 0 NOT NULL,
-	"number_courses_completed" integer DEFAULT 0 NOT NULL,
+	"enrollmentDate" date NOT NULL,
+	"numberCoursesEnrolled" integer DEFAULT 0 NOT NULL,
+	"numberCoursesCompleted" integer DEFAULT 0 NOT NULL,
 	CONSTRAINT "student_studentId_unique" UNIQUE("studentId")
 );
 --> statement-breakpoint
@@ -143,22 +143,23 @@ CREATE TABLE IF NOT EXISTS "teacher" (
 	CONSTRAINT "teacher_teacherId_unique" UNIQUE("teacherId")
 );
 --> statement-breakpoint
-CREATE TABLE IF NOT EXISTS "teacher_qualification" (
-	"teacher_id" varchar(255) NOT NULL,
+CREATE TABLE IF NOT EXISTS "teacherQualification" (
+	"teacherId" varchar(255) NOT NULL,
 	"qualification" varchar(255) NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "user" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"email" varchar(255),
-	"first_name" varchar(10),
-	"last_name" varchar(30),
-	"user_name" varchar(30) NOT NULL,
+	"email" varchar(255) NOT NULL,
+	"firstName" varchar(10) NOT NULL,
+	"lastName" varchar(30) NOT NULL,
+	"username" varchar(30) NOT NULL,
 	"password" varchar(255) NOT NULL,
 	"role" varchar(255) NOT NULL,
-	"bank_name" varchar(20),
-	"bank_account" varchar(255) NOT NULL,
-	CONSTRAINT "user_user_name_unique" UNIQUE("user_name"),
+	"bankName" varchar(20) NOT NULL,
+	"bankAccount" varchar(255) NOT NULL,
+	CONSTRAINT "user_email_unique" UNIQUE("email"),
+	CONSTRAINT "user_username_unique" UNIQUE("username"),
 	CONSTRAINT "user_password_unique" UNIQUE("password")
 );
 --> statement-breakpoint

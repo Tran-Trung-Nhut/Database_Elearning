@@ -148,7 +148,9 @@ export const answerRecord = pgTable('answerRecord', {
     studentId: uuid('studentId').notNull().references(() => student.userId),
     questionId: uuid('questionId').notNull().references(() => question.id),
     studentAns: text('studentAns')
-})
+}, () => ({
+    primaryKey: ['quizId', 'studentId']
+}))
 
 export const lecture = pgTable('lecture', {
     id: uuid('id').defaultRandom().primaryKey(),

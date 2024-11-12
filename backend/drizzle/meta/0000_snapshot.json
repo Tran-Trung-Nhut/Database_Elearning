@@ -1,5 +1,5 @@
 {
-  "id": "1fbed854-4a2d-4502-afa6-bae14ec7eca1",
+  "id": "e0aa0629-c56b-4a2f-84ba-be294360224f",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -1086,21 +1086,21 @@
           "primaryKey": false,
           "notNull": true
         },
-        "enrollment_date": {
-          "name": "enrollment_date",
+        "enrollmentDate": {
+          "name": "enrollmentDate",
           "type": "date",
           "primaryKey": false,
           "notNull": true
         },
-        "number_courses_enrolled": {
-          "name": "number_courses_enrolled",
+        "numberCoursesEnrolled": {
+          "name": "numberCoursesEnrolled",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
           "default": 0
         },
-        "number_courses_completed": {
-          "name": "number_courses_completed",
+        "numberCoursesCompleted": {
+          "name": "numberCoursesCompleted",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
@@ -1178,12 +1178,12 @@
         }
       }
     },
-    "public.teacher_qualification": {
-      "name": "teacher_qualification",
+    "public.teacherQualification": {
+      "name": "teacherQualification",
       "schema": "",
       "columns": {
-        "teacher_id": {
-          "name": "teacher_id",
+        "teacherId": {
+          "name": "teacherId",
           "type": "varchar(255)",
           "primaryKey": false,
           "notNull": true
@@ -1215,22 +1215,22 @@
           "name": "email",
           "type": "varchar(255)",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
-        "first_name": {
-          "name": "first_name",
+        "firstName": {
+          "name": "firstName",
           "type": "varchar(10)",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
-        "last_name": {
-          "name": "last_name",
+        "lastName": {
+          "name": "lastName",
           "type": "varchar(30)",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
-        "user_name": {
-          "name": "user_name",
+        "username": {
+          "name": "username",
           "type": "varchar(30)",
           "primaryKey": false,
           "notNull": true
@@ -1247,14 +1247,14 @@
           "primaryKey": false,
           "notNull": true
         },
-        "bank_name": {
-          "name": "bank_name",
+        "bankName": {
+          "name": "bankName",
           "type": "varchar(20)",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
-        "bank_account": {
-          "name": "bank_account",
+        "bankAccount": {
+          "name": "bankAccount",
           "type": "varchar(255)",
           "primaryKey": false,
           "notNull": true
@@ -1264,11 +1264,18 @@
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "user_user_name_unique": {
-          "name": "user_user_name_unique",
+        "user_email_unique": {
+          "name": "user_email_unique",
           "nullsNotDistinct": false,
           "columns": [
-            "user_name"
+            "email"
+          ]
+        },
+        "user_username_unique": {
+          "name": "user_username_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "username"
           ]
         },
         "user_password_unique": {
