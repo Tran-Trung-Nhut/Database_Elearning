@@ -3,6 +3,7 @@ import { db } from "../db/db"
 import { student, user } from "../db/schema"
 import userService from "../user/user.service"
 
+
 class StudentService{
     public getAllStudents = async () => {
         return await db
@@ -191,3 +192,6 @@ class StudentService{
 }
 
 export default new StudentService()
+
+
+

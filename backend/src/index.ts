@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import { createServer } from "http";
 import userRoutes from "./user/user.route"
 import authRoutes from "./auth/auth.route"
+import teacherRoutes from "./teacher/teacher.route"
 import studentRoutes from "./student/student.route"
 
 dotenv.config();
@@ -13,6 +14,7 @@ const port = process.env.PORT || 4000;
 app.use(express.json())
 app.use('/user',userRoutes)
 app.use('/student', studentRoutes)
+app.use('/teacher', teacherRoutes)
 app.use('/auth', authRoutes)
 
 const server = createServer(app)
