@@ -1,6 +1,8 @@
 import exp from 'constants'
 import teacherService from './teacher.service'
 import { Response, Request } from 'express'
+import { error } from 'console'
+import userService from '../user/user.service'
 class TeacherController{
 
     public getAllTeachers = async (req: Request, res: Response) => {
@@ -58,7 +60,9 @@ class TeacherController{
                 bankAccount,
                 teacherId
             } = req.body
-
+            
+            console.log(req.body)
+            console.log(firstName, lastName, username, password, email, bankName, bankAccount, teacherId)
             const newTeacher = await teacherService.createNewTeacher(
                 firstName,
                 lastName,
@@ -67,7 +71,7 @@ class TeacherController{
                 email,
                 bankName,
                 bankAccount,
-                teacherId
+                teacherId,
             )
 
             if(!newTeacher){
@@ -79,6 +83,74 @@ class TeacherController{
             return res.status(200).json({
                 message: 'success',
                 data: newTeacher
+            })
+        }catch(e:any){
+            // console.log(e, e.message)
+            // console.log(password, saltRounds)
+            res.status(500).json({
+                message: e.message
+            })
+        }
+    }
+
+    public updateTeacher = async (req: Request, res: Response) => {
+        try{
+            const {
+                id,
+                firstName,
+                lastName,
+                username,
+                password,
+                role,
+                email,
+                bankName,
+                bankAccount,
+            } = req.body
+            const existUser = await userService.getUserByIdWithPassword(id)
+            const updateTeacher = await teacherService.updateTeacher(
+                id,
+                firstName,
+                lastName,
+                username,
+                password,
+                role,
+                email,
+                bankName,
+                bankAccount,
+                existUser[0].password
+            )
+            if(!updateTeacher){
+                return res.status(400).json({
+                    message: 'Failed to update teacher'
+                })
+            }
+
+            return res.status(200).json({
+                message: 'success',
+                data: updateTeacher
+            })
+        }catch(e:any){
+            res.status(500).json({
+                message: e.message
+            })
+        }
+    }
+
+    public deleteTeacher = async (req: Request, res: Response) => {
+        try{
+            const { id } = req.params
+
+            const teacher = await teacherService.deleteTeacher(id)
+
+            if(!teacher){
+                return res.status(404).json({
+                    message: 'Teacher does not exist'
+                })
+            }
+
+            return res.status(200).json({
+                message: 'success',
+                data: teacher
             })
         }catch(e){
             res.status(500).json({

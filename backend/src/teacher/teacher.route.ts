@@ -11,4 +11,10 @@ router.get('/:id', teacherController.getTeacherById as any)
 
 // create new teacher
 router.post('/create', teacherController.createNewTeacher as any)
+
+// update teacher
+router.put('/update', teacherController.updateTeacher as any)
+
+// delete teacher
+router.delete('/delete/:id', teacherController.deleteTeacher as any)
 export default router

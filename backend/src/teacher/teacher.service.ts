@@ -54,7 +54,6 @@ class TeacherService {
         bankAccount: string,
         teacherId: string,
     ) => {
-        
         const newUser = await userService.createNewUser(
             firstName,
             lastName,
@@ -63,10 +62,11 @@ class TeacherService {
             password,
             'teacher',
             bankName,
-            bankAccount,
+            bankAccount
         )
-    
+        
         if(!newUser){
+            console.log('error user')
             return null
         }
 
@@ -83,6 +83,7 @@ class TeacherService {
         })
 
         if (!newTeacher || newTeacher.length === 0){
+            console.log('error teacher')
             return null
         }
 
@@ -96,6 +97,85 @@ class TeacherService {
             bankName: newUser[0].bankName,
             bankAccount: newUser[0].bankAccount,
             teacherId: newTeacher[0].teacherId,
+        }
+    }
+
+    public updateTeacher = async (
+        id: string,
+        firstName: string,
+        lastName: string,
+        username: string,
+        password: string,
+        role: string,
+        email: string,
+        bankName: string,
+        bankAccount: string,
+        hashedPassword: string
+    ) => {
+        console.log(id, firstName, lastName, username, password, role, email, bankName, bankAccount, hashedPassword)
+        const updateUser = await userService.updateUser(
+            id,
+            firstName,
+            lastName,
+            email,
+            username,
+            password,
+            role,
+            bankName,
+            bankAccount,
+            hashedPassword
+        )
+
+        if(!updateUser || updateUser.length === 0){
+            return null
+        }
+        const updateTeacher = await db
+        .update(teacher)
+        .set({
+            userId: updateUser[0].id
+        })
+        .where(eq(teacher.userId, id))
+        .returning({
+            teacherId: teacher.teacherId,
+        })
+
+        if(!updateTeacher || updateTeacher.length === 0){
+            return null
+        }
+        console.log(password)
+        return {
+            id: updateUser[0].id,
+            firstName: updateUser[0].firstName,
+            lastName: updateUser[0].lastName,
+            username: updateUser[0].username,
+            role: updateUser[0].role,
+            email: updateUser[0].email,
+            bankName: updateUser[0].bankName,
+            bankAccount: updateUser[0].bankAccount,
+            teacherId: updateTeacher[0].teacherId,
+        }
+    }
+
+    public deleteTeacher = async (id: string) => {
+        const teacherToDelete = await db
+        .delete(teacher)
+        .where(eq(teacher.userId, id))
+        .returning({
+            teacherId: teacher.teacherId,
+        })
+
+        if(!teacherToDelete || teacherToDelete.length === 0){
+            return null
+        }
+
+        const userToDelete = await userService.deleteUser(id, teacherToDelete)
+
+        if(!userToDelete){
+            return null
+        }
+
+        return {
+            userToDelete
         }
     }
 }
