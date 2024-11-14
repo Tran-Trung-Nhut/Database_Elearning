@@ -367,4 +367,4 @@ DO $$ BEGIN
  ALTER TABLE "viewRoadMap" ADD CONSTRAINT "viewRoadMap_studentId_student_userId_fk" FOREIGN KEY ("studentId") REFERENCES "public"."student"("userId") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
-END $$;
+ END $$;
