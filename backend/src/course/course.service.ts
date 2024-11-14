@@ -1,6 +1,7 @@
 import { course, teacher } from "../db/schema"
 import { db } from "../db/db"
 import { eq } from "drizzle-orm"
+import  teacherService  from "../teacher/teacher.service"
 class CourseService{
     private FormatDate = (date: string) => {
         const dateObj = new Date(date)
@@ -11,6 +12,7 @@ class CourseService{
         .select({
             courseId: course.id,
             courseName: course.name,
+            languege: course.language,
             description: course.description,
             teacherId: course.teacherId,
             creationTime: course.creTime,
@@ -21,10 +23,12 @@ class CourseService{
     }
     
     public getCourseById = async (id: string) => {
-        return await db
+
+        const returnCourse = await db
         .select({
             courseId: course.id,
             courseName: course.name,
+            language: course.language,
             description: course.description,
             teacherId: course.teacherId,
             creationTime: course.creTime,
@@ -33,13 +37,20 @@ class CourseService{
         })
         .from(course)
         .where(eq(course.id, id))
+
+        if (!returnCourse || returnCourse.length === 0){
+            return null
+        }
+
+        return returnCourse[0]
     }
 
     public getCourseByName = async (name: string) => {
-        return await db
+        const courseByName = await db
         .select({
             courseId: course.id,
             courseName: course.name,
+            language: course.language,
             description: course.description,
             teacherId: course.teacherId,
             creationTime: course.creTime,
@@ -48,6 +59,12 @@ class CourseService{
         })
         .from(course)
         .where(eq(course.name, name))
+
+        if (!courseByName || courseByName.length === 0){
+            return null
+        }
+
+        return courseByName[0]
     }
 
     public createNewCourse = async (
@@ -60,23 +77,27 @@ class CourseService{
         console.log(this.FormatDate(new Date().toISOString()))
         // find course exist or not
         const courseExist = await this.getCourseByName(courseName)
-
-        if (courseExist && courseExist.length > 0){
+        if (courseExist){
             return null
         }
+        // find teacher by teacherId
+        const teacherExist = await teacherService.getTeacherByTeacherId(teacherId)
+        if (!teacherExist || teacherExist.length === 0){
+            return null
+        }
+
         
         const newCourse = await db.insert(course).values({
             name: courseName,
             language: language,
             description: description,
-            teacherId: teacherId,
+            teacherId: teacherExist[0].id,
             creTime: new Date().toISOString(),
             avgQuiz: 0,
             price: price,
         })
         .returning({
             courseId: course.id,
-            teacherId: course.teacherId,
         })
 
         if (!newCourse || newCourse.length === 0){
@@ -88,11 +109,140 @@ class CourseService{
             courseId: newCourse[0].courseId,
             courseName: courseName,
             description: description,
-            teacherId: newCourse[0].teacherId,
+            teacherId: teacherId,
             creationTime: new Date().toISOString(),
             avgQuiz: 0,
             price: price,
         }
+    }
+
+    public deleteCourseById = async (id: string) => {
+        const courseExist = await this.getCourseById(id)
+        if (!courseExist){
+            return null
+        }
+
+        const deletedCourse = await db.delete(course).where(eq(course.id, id))
+        if (!deletedCourse){
+            return null
+        }
+
+        return courseExist
+    }
+
+    public deleteCourseByName = async (name: string) => {
+        const courseExist = await this.getCourseByName(name)
+        if (!courseExist){
+            return null
+        }
+
+        const deletedCourse = await db.delete(course).where(eq(course.name, name))
+        if (!deletedCourse){
+            return null
+        }
+
+        return courseExist
+    }
+
+    public updateCourseById = async (
+        id: string,
+        courseName: string,
+        language: string,
+        description: string,
+        avgQuiz: number,
+        price: number,
+    ) => {
+        const courseExist = await this.getCourseById(id)
+        if (!courseExist){
+            return null
+        }
+
+        const updatedCourse = await db.update(course)
+        .set({
+            name: courseName? courseName: courseExist.courseName,
+            language: language? language: courseExist.language,
+            description: description? description: courseExist.description,
+            price: price? price: courseExist.price,
+            avgQuiz: avgQuiz? avgQuiz: courseExist.avgQuiz,
+        })
+        .returning({
+            teacherId: course.teacherId,
+            price: course.price,
+            avgQuiz: course.avgQuiz,
+            language: course.language,
+            name: course.name,
+            description: course.description,
+            creTime: course.creTime,
+            id: course.id,
+        })
+        .where(eq(course.id, id))
+
+        if (!updatedCourse){
+            return null
+        }
+
+        return {
+            courseId: updatedCourse[0].id,
+            courseName: updatedCourse[0].name,
+            language: updatedCourse[0].language,
+            description: updatedCourse[0].description,
+            teacherId: updatedCourse[0].teacherId,
+            creationTime: updatedCourse[0].creTime,
+            avgQuiz: updatedCourse[0].avgQuiz,
+            price: updatedCourse[0].price,
+        }
+    }
+
+    public updateCourseByName = async (
+        name: string,
+        newName: string,
+        language: string,
+        description: string,
+        avgQuiz: number,
+        price: number,
+
+    ) => {
+        const courseExist = await this.getCourseByName(name)
+        if (!courseExist){
+            return null
+        }
+
+        const updatedCourse = await db.update(course)
+        .set({
+            name: newName? newName: courseExist.courseName,
+            language: language? language: courseExist.language,
+            description: description? description: courseExist.description,
+            price: price? price: courseExist.price,
+            avgQuiz: avgQuiz? avgQuiz: courseExist.avgQuiz
+        })
+        .returning({
+            teacherId: course.teacherId,
+            price: course.price,
+            avgQuiz: course.avgQuiz,
+            language: course.language,
+            name: course.name,
+            description: course.description,
+            creTime: course.creTime,
+            id: course.id,
+        })
+        .where(eq(course.name, name))
+
+        if (!updatedCourse){
+            return null
+        }
+
+        return {
+            courseId: updatedCourse[0].id,
+            courseName: updatedCourse[0].name,
+            language: updatedCourse[0].language,
+            description: updatedCourse[0].description,
+            teacherId: updatedCourse[0].teacherId,
+            creationTime: updatedCourse[0].creTime,
+            avgQuiz: updatedCourse[0].avgQuiz,
+            price: updatedCourse[0].price,
+        }
+
+
     }
 }
 

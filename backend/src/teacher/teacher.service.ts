@@ -44,6 +44,25 @@ class TeacherService {
         return teacher;
     }
 
+    public getTeacherByTeacherId = async (teacherId: string) => {
+        const teacherByTeacherId = await db.select(
+            {
+                id: user.id,
+                firstName: user.firstName,
+                lastName: user.lastName,
+                username: user.username,
+                role: user.role,
+                email: user.email,
+                bankName: user.bankName,
+                bankAccount: user.bankAccount,
+                teacherId: teacher.teacherId,
+            }
+        ).from(user)
+        .innerJoin(teacher, eq(teacher.userId, user.id))
+        .where(eq(teacher.teacherId, teacherId))
+        
+        return teacherByTeacherId;
+    }
     public createNewTeacher = async (
         firstName: string,
         lastName: string,
