@@ -1,5 +1,5 @@
 {
-  "id": "e0aa0629-c56b-4a2f-84ba-be294360224f",
+  "id": "1cac2b44-3811-4774-b961-11067d56732b",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -1184,7 +1184,7 @@
       "columns": {
         "teacherId": {
           "name": "teacherId",
-          "type": "varchar(255)",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
@@ -1196,7 +1196,21 @@
         }
       },
       "indexes": {},
-      "foreignKeys": {},
+      "foreignKeys": {
+        "teacherQualification_teacherId_teacher_userId_fk": {
+          "name": "teacherQualification_teacherId_teacher_userId_fk",
+          "tableFrom": "teacherQualification",
+          "tableTo": "teacher",
+          "columnsFrom": [
+            "teacherId"
+          ],
+          "columnsTo": [
+            "userId"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
