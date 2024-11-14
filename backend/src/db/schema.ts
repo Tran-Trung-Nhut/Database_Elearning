@@ -26,7 +26,7 @@ export const teacher = pgTable("teacher", {
 })
 
 export const teacherQualification = pgTable('teacherQualification', {
-    teacherId: varchar('teacherId', { length: 255 }).notNull(),
+    teacherId: uuid('teacherId').notNull().references(() => teacher.userId),
     qualification: varchar('qualification', { length: 255 }).notNull()
 }, () => ({
     primaryKey: ['teacherId', 'qualification']
