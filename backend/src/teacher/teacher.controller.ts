@@ -1,7 +1,5 @@
-import exp from 'constants'
 import teacherService from './teacher.service'
 import { Response, Request } from 'express'
-import { error } from 'console'
 import userService from '../user/user.service'
 class TeacherController{
 
