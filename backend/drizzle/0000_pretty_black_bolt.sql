@@ -144,7 +144,7 @@ CREATE TABLE IF NOT EXISTS "teacher" (
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "teacherQualification" (
-	"teacherId" varchar(255) NOT NULL,
+	"teacherId" uuid NOT NULL,
 	"qualification" varchar(255) NOT NULL
 );
 --> statement-breakpoint
@@ -347,6 +347,12 @@ END $$;
 --> statement-breakpoint
 DO $$ BEGIN
  ALTER TABLE "teacher" ADD CONSTRAINT "teacher_userId_user_id_fk" FOREIGN KEY ("userId") REFERENCES "public"."user"("id") ON DELETE no action ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "teacherQualification" ADD CONSTRAINT "teacherQualification_teacherId_teacher_userId_fk" FOREIGN KEY ("teacherId") REFERENCES "public"."teacher"("userId") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
