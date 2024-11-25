@@ -161,7 +161,6 @@ class TeacherService {
         if(!updateTeacher || updateTeacher.length === 0){
             return null
         }
-        console.log(password)
         return {
             id: updateUser[0].id,
             firstName: updateUser[0].firstName,

@@ -4,9 +4,7 @@ import courseService from './course.service'
 class CourseController {
     public async getAllCourses(req: Request, res: Response) {
         try {
-            console.log('get all courses')
             const courses = await courseService.getAllCourses()
-            console.log('get all courses1')
 
             if (courses.length === 0 || !courses) {
                 return res.status(404).json({
