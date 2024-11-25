@@ -27,7 +27,7 @@ class teacherQualificationService {
         }
     }
 
-    public async getTeacherQualificationByTeacherId(teacherId: string){
+    public async getTeacherQualificationByUserId(userId: string){
         try {
             const teacherQualificationByTeacherId = await db.select(
                 {
@@ -36,7 +36,7 @@ class teacherQualificationService {
                 }
             )
             .from(teacherQualification)
-            .where(eq(teacherQualification.teacherId, teacherId))
+            .where(eq(teacherQualification.teacherId, userId))
 
             return {
                 status: 200,
@@ -54,11 +54,12 @@ class teacherQualificationService {
 
     public async findTeacherQualificationByTeacherEmail(email: string){
         try{
+            console.log(email)
             // find teacher by email first
             const teacherByEmail = await db.select(
                 {
                     email: user.email,
-                    teacherId: teacher.teacherId
+                    teacherId: teacher.userId
                 }
             )
             .from(user)
@@ -72,7 +73,7 @@ class teacherQualificationService {
                     message: "Teacher not found"
                 }
             }
-
+            console.log(teacherByEmail)
             // find teacher qualification by teacherId
             const teacherQualificationByTeacherId = await db.select(
                 {
@@ -98,10 +99,25 @@ class teacherQualificationService {
         }
     }
 
-    public async createTeacherQualification(teacherId: string, qualification: string){
+    public async createTeacherQualification(userId: string, qualification: string){
         try{
+            // check if teacherId exist
+            const teacherExist = await db.select(
+                {
+                    teacherId: teacherQualification.teacherId
+                }
+            )
+            .from(teacherQualification)
+            .where(eq(teacherQualification.teacherId, userId))
+
+            if (teacherExist.length !== 0){
+                return {
+                    status: 404,
+                    message: "This qualification already exist"
+                }
+            }
             const teacherQualificationData = {
-                teacherId: teacherId,
+                teacherId: userId,
                 qualification: qualification
             }
 
@@ -131,7 +147,89 @@ class teacherQualificationService {
         }
     }
 
+    public async updateTeacherQualification(userId: string, qualification: string){
+        try{
+            // check if teacherId exist
+            const teacherExist = await db.select(
+                {
+                    teacherId: teacherQualification.teacherId
+                }
+            )
+            .from(teacherQualification)
+            .where(eq(teacherQualification.teacherId, userId))
+
+            if (teacherExist.length === 0){
+                return {
+                    status: 404,
+                    message: "This qualification does not exist"
+                }
+            }
+
+            const teacherQualificationData = {
+                teacherId: userId,
+                qualification: qualification
+            }
+
+            const newQuali = await db.update(teacherQualification)
+                    .set(teacherQualificationData)
+                    .where(eq(teacherQualification.teacherId, userId))
+                    .returning(
+                        {
+                            teacherId: teacherQualification.teacherId,
+                            qualification: teacherQualification.qualification
+                        }
+                    )
+
+            return {
+                status: 200,
+                message: "Successfully",
+                data: {
+                    teacherId: newQuali[0].teacherId,
+                    qualification: newQuali[0].qualification
+                }
+            }
+        }
+        catch(e){
+            return {
+                status: 500,
+                message: "Internal link server"
+            }
+        }
+    }
     
+    public async deleteTeacherQualification(userId: string){
+        try{
+            // check if teacherId exist
+            const teacherExist = await db.select(
+                {
+                    teacherId: teacherQualification.teacherId
+                }
+            )
+            .from(teacherQualification)
+            .where(eq(teacherQualification.teacherId, userId))
+
+            if (teacherExist.length === 0){
+                return {
+                    status: 404,
+                    message: "This qualification does not exist"
+                }
+            }
+
+            await db.delete(teacherQualification)
+                    .where(eq(teacherQualification.teacherId, userId))
+
+            return {
+                status: 200,
+                message: "Successfully"
+            }
+        }
+        catch(e){
+            return {
+                status: 500,
+                message: "Internal link server"
+            }
+        }
+    }
 }
 
 
