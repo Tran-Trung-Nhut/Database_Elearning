@@ -11,6 +11,7 @@ import courseTopicRoutes from "./courseTopic/courseTopic.route";
 import sectionRoutes from "./section/section.route";
 import quizRoutes from "./quiz/quiz.route";
 import questionRoutes from "./question/question.route";
+import optionRoutes from "./option/option.route";
 dotenv.config();
 
 const app: Express = express();
@@ -27,6 +28,7 @@ app.use('/courseTopic', courseTopicRoutes)
 app.use('/section', sectionRoutes)
 app.use('/quiz', quizRoutes)
 app.use('/question', questionRoutes)
+app.use('/option', optionRoutes)
 const server = createServer(app)
 
 
