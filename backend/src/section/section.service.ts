@@ -2,6 +2,7 @@ import { time } from "console";
 import { db } from "../db/db";
 import { course, section, teacher } from "../db/schema";
 import { eq } from "drizzle-orm";
+import quizService from "../quiz/quiz.service";
 
 class sectionService{
     public async getSectionById(id : string){
@@ -187,7 +188,8 @@ class sectionService{
                     status: 404
                 }
             }
-
+            // delete all quizzes in this section first
+            quizService.deleteAllQuizInSection(id)
             const deletedSection = await db.delete(section)
                                         .where(eq(section.id, id))
 
@@ -211,18 +213,18 @@ class sectionService{
             .from(section)
             .where(eq(section.courseId, courseId))
 
-            console.log(sections)
-            console.log(courseId)
             if (sections.length === 0){
                 return {
                     message: "No sections found",
                     status: 404
                 }
             }
-
+            // delete all quizzes in these sections first
+            sections.forEach(async (section) => {
+                await quizService.deleteAllQuizInSection(section.id)
+            })
             const deletedSections = await db.delete(section)
                                         .where(eq(section.courseId, courseId))
-
             return {
                 message: "Sections deleted successfully",
                 status: 200

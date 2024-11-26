@@ -174,6 +174,40 @@ class courseTopicService {
             }
         }
     }
+
+    public async deleteAllCourseTopicsInThisCourse(courseId: string) {
+        try {
+            // find course topic by courseId
+            const courseTopicByCourseId = await db.select(
+                {
+                    courseId: courseTopic.courseId,
+                    topic: courseTopic.topic
+                }
+            ).from(courseTopic)
+            .where(eq(courseTopic.courseId, courseId));
+
+            if (courseTopicByCourseId.length === 0) {
+                return {
+                    status: 404,
+                    message: "Course topic not found"
+                }
+            }
+
+            // delete all course topics in this course
+            await db.delete(courseTopic)
+                    .where(eq(courseTopic.courseId, courseId));
+
+            return {
+                message: "Successfully deleted all course topics in this course",
+                status: 200
+            }
+        }catch(err) {
+            return {
+                status: 500,
+                message: err
+            }
+        }
+    }
 }
 
 

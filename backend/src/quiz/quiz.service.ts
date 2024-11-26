@@ -1,7 +1,7 @@
 import { eq } from "drizzle-orm";
 import { db } from "../db/db";
 import { quiz, section, teacher } from "../db/schema";
-
+import questionService from "../question/question.service";
 class quizService {
     public async getAllQuiz() {
         try {
@@ -197,6 +197,9 @@ class quizService {
                     message: "Quiz not found"
                 }
             }
+            // delete all questions of this quiz first
+            questionService.deleteAllQuestionsInQuiz(id);
+
             const deletedQuiz = await db.delete(quiz).where(eq(quiz.id, id));
             return {
                 status: 200,
@@ -219,7 +222,35 @@ class quizService {
                     message: "Quiz not found"
                 }
             }
+            // delete all questions in this quiz first
+            questionService.deleteAllQuestionsInQuiz(quizExists[0].id);
             const deletedQuiz = await db.delete(quiz).where(eq(quiz.name, name));
+            return {
+                status: 200,
+                message: "Successfully deleted quiz"
+            }
+        } catch (error) {
+            return {
+                status: 500,
+                message: error
+            }
+        }
+    }
+
+    public async deleteAllQuizInSection(sectionId: string){
+        try {
+            const quizExists = await db.select({ id: quiz.id }).from(quiz).where(eq(quiz.sectionId, sectionId));
+            if (quizExists.length === 0) {
+                return {
+                    status: 404,
+                    message: "Quiz not found"
+                }
+            }
+            for (let i = 0; i < quizExists.length; i++) {
+                // delete all questions in this quiz first
+                questionService.deleteAllQuestionsInQuiz(quizExists[i].id);
+            }
+            const deletedQuiz = await db.delete(quiz).where(eq(quiz.sectionId, sectionId));
             return {
                 status: 200,
                 message: "Successfully deleted quiz"

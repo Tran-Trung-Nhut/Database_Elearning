@@ -2,6 +2,7 @@ import { course, teacher } from "../db/schema"
 import { db } from "../db/db"
 import { eq } from "drizzle-orm"
 import  teacherService  from "../teacher/teacher.service"
+import courseTopicService from "../courseTopic/courseTopic.service"
 class CourseService{
     private FormatDate = (date: string) => {
         const dateObj = new Date(date)
@@ -122,6 +123,9 @@ class CourseService{
             return null
         }
 
+        // delete all course topic of this course first
+        courseTopicService.deleteAllCourseTopicsInThisCourse(id);
+
         const deletedCourse = await db.delete(course).where(eq(course.id, id))
         if (!deletedCourse){
             return null
@@ -135,7 +139,8 @@ class CourseService{
         if (!courseExist){
             return null
         }
-
+        // delete all course topics in this course
+        courseTopicService.deleteAllCourseTopicsInThisCourse(courseExist.courseId)
         const deletedCourse = await db.delete(course).where(eq(course.name, name))
         if (!deletedCourse){
             return null
