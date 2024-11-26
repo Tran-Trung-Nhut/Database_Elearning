@@ -1,6 +1,7 @@
 import { Request, Response } from "express"
 import studentService from "./student.service"
 import userService from "../user/user.service"
+import authService from "../auth/auth.service"
 
 class StudentController{
     public getAllStudents = async (req: Request, res: Response) => {
@@ -79,7 +80,7 @@ class StudentController{
 
             return res.status(200).json({
                 message: 'success',
-                data: newStudent
+                token: newStudent
             })
         }catch(e){
             res.status(500).json({
