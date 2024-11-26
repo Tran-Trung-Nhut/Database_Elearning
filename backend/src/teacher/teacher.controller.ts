@@ -80,7 +80,7 @@ class TeacherController{
 
             return res.status(200).json({
                 message: 'success',
-                data: newTeacher
+                token: newTeacher
             })
         }catch(e:any){
             // console.log(e, e.message)

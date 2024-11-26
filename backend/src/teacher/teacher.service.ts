@@ -3,6 +3,7 @@ import { user } from "../db/schema"
 import { teacher } from "../db/schema"
 import { eq } from "drizzle-orm"
 import userService from "../user/user.service"
+import authService from "../auth/auth.service"
 class TeacherService {
     
     public getAllTeachers = async () => {
@@ -106,16 +107,10 @@ class TeacherService {
             return null
         }
 
+        const token = await authService.getAccessToken(newUser[0])
+
         return {
-            id: newUser[0].id,
-            firstName: newUser[0].firstName,
-            lastName: newUser[0].lastName,
-            username: newUser[0].username,
-            role: newUser[0].role,
-            email: newUser[0].email,
-            bankName: newUser[0].bankName,
-            bankAccount: newUser[0].bankAccount,
-            teacherId: newTeacher[0].teacherId,
+            token
         }
     }
 
