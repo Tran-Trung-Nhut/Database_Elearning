@@ -7,6 +7,10 @@ import teacherRoutes from "./teacher/teacher.route"
 import studentRoutes from "./student/student.route"
 import courseRoutes from "./course/course.route"
 import teacherQualificationRoutes from "./teacherQualification/teacherQualification.route";
+import courseTopicRoutes from "./courseTopic/courseTopic.route";
+import sectionRoutes from "./section/section.route";
+import quizRoutes from "./quiz/quiz.route";
+import questionRoutes from "./question/question.route";
 dotenv.config();
 
 const app: Express = express();
@@ -19,6 +23,10 @@ app.use('/teacher', teacherRoutes)
 app.use('/auth', authRoutes)
 app.use('/course', courseRoutes)
 app.use('/teacherQualification', teacherQualificationRoutes)
+app.use('/courseTopic', courseTopicRoutes)
+app.use('/section', sectionRoutes)
+app.use('/quiz', quizRoutes)
+app.use('/question', questionRoutes)
 const server = createServer(app)
 
 

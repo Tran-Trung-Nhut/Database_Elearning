@@ -73,7 +73,6 @@ class teacherQualificationService {
                     message: "Teacher not found"
                 }
             }
-            console.log(teacherByEmail)
             // find teacher qualification by teacherId
             const teacherQualificationByTeacherId = await db.select(
                 {
