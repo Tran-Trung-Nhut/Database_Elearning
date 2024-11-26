@@ -8,6 +8,13 @@
       "when": 1731568933821,
       "tag": "0000_pretty_black_bolt",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1732616646434,
+      "tag": "0001_third_blackheart",
+      "breakpoints": true
     }
   ]
 }

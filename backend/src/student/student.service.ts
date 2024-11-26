@@ -2,6 +2,7 @@ import { eq, sql } from "drizzle-orm"
 import { db } from "../db/db"
 import { student, user } from "../db/schema"
 import userService from "../user/user.service"
+import authService from "../auth/auth.service"
 
 
 class StudentService{
@@ -91,19 +92,10 @@ class StudentService{
             return null
         }
 
+        const token = await authService.getAccessToken(newUser[0])
+
         return {
-            id: newUser[0].id,
-            firstName: newUser[0].firstName,
-            lastName: newUser[0].lastName,
-            username: newUser[0].username,
-            role: newUser[0].role,
-            email: newUser[0].email,
-            bankName: newUser[0].bankName,
-            bankAccount: newUser[0].bankAccount,
-            studentId: newStudent[0].studentId,
-            enrollmentDate: newStudent[0].enrollmentDate,
-            numberCoursesEnrolled: newStudent[0].numberCoursesEnrolled,
-            numberCoursesCompleted: newStudent[0].numberCoursesCompleted,
+            token
         }
     }
 
