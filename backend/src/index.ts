@@ -12,6 +12,7 @@ import sectionRoutes from "./section/section.route";
 import quizRoutes from "./quiz/quiz.route";
 import questionRoutes from "./question/question.route";
 import optionRoutes from "./option/option.route";
+import roadMapRoutes from "./roadMap/roadMap.route";
 dotenv.config();
 
 const app: Express = express();
@@ -29,6 +30,7 @@ app.use('/section', sectionRoutes)
 app.use('/quiz', quizRoutes)
 app.use('/question', questionRoutes)
 app.use('/option', optionRoutes)
+app.use('/roadMap', roadMapRoutes)
 const server = createServer(app)
 
 
