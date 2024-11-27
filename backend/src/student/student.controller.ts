@@ -59,7 +59,7 @@ class StudentController{
                 email,
                 bankName,
                 bankAccount,
-                studentId} = req.body
+                } = req.body
 
             const newStudent = await studentService.createStudent(
                 firstName,
@@ -68,8 +68,7 @@ class StudentController{
                 password,
                 email,
                 bankName,
-                bankAccount,
-                studentId
+                bankAccount,   
             )
 
             if(!newStudent){
