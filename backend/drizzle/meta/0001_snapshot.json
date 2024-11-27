@@ -1,6 +1,6 @@
 {
-  "id": "bb9e9f6f-bb04-430c-82c3-801793365688",
-  "prevId": "1cac2b44-3811-4774-b961-11067d56732b",
+  "id": "30bac560-1000-47b9-9d31-1a4a037afb86",
+  "prevId": "119f3b43-e885-4dd7-8ebf-b00768f724d5",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -75,7 +75,15 @@
           "onUpdate": "no action"
         }
       },
-      "compositePrimaryKeys": {},
+      "compositePrimaryKeys": {
+        "pk_answerRecord": {
+          "name": "pk_answerRecord",
+          "columns": [
+            "questionId",
+            "studentId"
+          ]
+        }
+      },
       "uniqueConstraints": {}
     },
     "public.certification": {
@@ -262,7 +270,15 @@
           "onUpdate": "no action"
         }
       },
-      "compositePrimaryKeys": {},
+      "compositePrimaryKeys": {
+        "pk_courseTopic": {
+          "name": "pk_courseTopic",
+          "columns": [
+            "courseId",
+            "topic"
+          ]
+        }
+      },
       "uniqueConstraints": {}
     },
     "public.dO": {
@@ -324,7 +340,15 @@
           "onUpdate": "no action"
         }
       },
-      "compositePrimaryKeys": {},
+      "compositePrimaryKeys": {
+        "pk_dO": {
+          "name": "pk_dO",
+          "columns": [
+            "quizId",
+            "studentId"
+          ]
+        }
+      },
       "uniqueConstraints": {}
     },
     "public.includeCourse": {
@@ -379,7 +403,15 @@
           "onUpdate": "no action"
         }
       },
-      "compositePrimaryKeys": {},
+      "compositePrimaryKeys": {
+        "pk_includeCourse": {
+          "name": "pk_includeCourse",
+          "columns": [
+            "rmId",
+            "courseId"
+          ]
+        }
+      },
       "uniqueConstraints": {}
     },
     "public.interact": {
@@ -428,7 +460,15 @@
           "onUpdate": "no action"
         }
       },
-      "compositePrimaryKeys": {},
+      "compositePrimaryKeys": {
+        "pk_interact": {
+          "name": "pk_interact",
+          "columns": [
+            "lectureId",
+            "studentId"
+          ]
+        }
+      },
       "uniqueConstraints": {}
     },
     "public.join": {
@@ -469,7 +509,7 @@
         },
         "GPA": {
           "name": "GPA",
-          "type": "integer",
+          "type": "double precision",
           "primaryKey": false,
           "notNull": false
         }
@@ -503,7 +543,15 @@
           "onUpdate": "no action"
         }
       },
-      "compositePrimaryKeys": {},
+      "compositePrimaryKeys": {
+        "pk_join": {
+          "name": "pk_join",
+          "columns": [
+            "courseId",
+            "studentId"
+          ]
+        }
+      },
       "uniqueConstraints": {}
     },
     "public.lecture": {
@@ -609,7 +657,15 @@
           "onUpdate": "no action"
         }
       },
-      "compositePrimaryKeys": {},
+      "compositePrimaryKeys": {
+        "pk_option": {
+          "name": "pk_option",
+          "columns": [
+            "questionId",
+            "option"
+          ]
+        }
+      },
       "uniqueConstraints": {}
     },
     "public.question": {
@@ -691,7 +747,15 @@
           "onUpdate": "no action"
         }
       },
-      "compositePrimaryKeys": {},
+      "compositePrimaryKeys": {
+        "pk_question": {
+          "name": "pk_question",
+          "columns": [
+            "id",
+            "quizId"
+          ]
+        }
+      },
       "uniqueConstraints": {
         "question_id_unique": {
           "name": "question_id_unique",
@@ -846,7 +910,15 @@
           "onUpdate": "no action"
         }
       },
-      "compositePrimaryKeys": {},
+      "compositePrimaryKeys": {
+        "pk_requireCourse": {
+          "name": "pk_requireCourse",
+          "columns": [
+            "courseId",
+            "rCourseId"
+          ]
+        }
+      },
       "uniqueConstraints": {}
     },
     "public.roadCertification": {
@@ -1082,7 +1154,7 @@
         },
         "studentId": {
           "name": "studentId",
-          "type": "varchar(255)",
+          "type": "varchar(10)",
           "primaryKey": false,
           "notNull": true
         },
@@ -1146,7 +1218,7 @@
         },
         "teacherId": {
           "name": "teacherId",
-          "type": "varchar(255)",
+          "type": "varchar(10)",
           "primaryKey": false,
           "notNull": true
         }
@@ -1211,7 +1283,15 @@
           "onUpdate": "no action"
         }
       },
-      "compositePrimaryKeys": {},
+      "compositePrimaryKeys": {
+        "pk_teacherQualification": {
+          "name": "pk_teacherQualification",
+          "columns": [
+            "teacherId",
+            "qualification"
+          ]
+        }
+      },
       "uniqueConstraints": {}
     },
     "public.user": {
