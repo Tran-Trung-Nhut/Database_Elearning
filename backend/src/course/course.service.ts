@@ -1,6 +1,6 @@
 import { course, teacher } from "../db/schema"
 import { db } from "../db/db"
-import { eq } from "drizzle-orm"
+import { and, eq } from "drizzle-orm"
 import  teacherService  from "../teacher/teacher.service"
 import courseTopicService from "../courseTopic/courseTopic.service"
 class CourseService{
@@ -75,45 +75,40 @@ class CourseService{
         teacherId: string,
         price: number,
     ) => {
-        console.log(this.FormatDate(new Date().toISOString()))
-        // find course exist or not
-        const courseExist = await this.getCourseByName(courseName)
-        if (courseExist){
-            return null
-        }
-        // find teacher by teacherId
-        const teacherExist = await teacherService.getTeacherByTeacherId(teacherId)
-        if (!teacherExist || teacherExist.length === 0){
-            return null
-        }
+        try {
+            // check if course already exist
+            const courseExist = await db.select({})
+                                        .from(course)
+                                        .where(and(eq(course.name, courseName), 
+                                                   eq(course.teacherId, teacherId)))
+            
+            if (courseExist.length !== 0){
+                return {
+                    message: "Course already exist",
+                    status: 400
+                }
+            }
+            
+            const newCourse = await db.insert(course).values({
+                name: courseName,
+                language: language,
+                description: description,
+                teacherId: teacherId,
+                creTime: new Date().toISOString(),
+                avgQuiz: 0,
+                price: price,
+            })
 
-        
-        const newCourse = await db.insert(course).values({
-            name: courseName,
-            language: language,
-            description: description,
-            teacherId: teacherExist[0].id,
-            creTime: new Date().toISOString(),
-            avgQuiz: 0,
-            price: price,
-        })
-        .returning({
-            courseId: course.id,
-        })
-
-        if (!newCourse || newCourse.length === 0){
-            return null;
-        }
-
-
-        return {
-            courseId: newCourse[0].courseId,
-            courseName: courseName,
-            description: description,
-            teacherId: teacherId,
-            creationTime: new Date().toISOString(),
-            avgQuiz: 0,
-            price: price,
+            return {
+                message: "Successfully created new course",
+                status: 200,
+            }
+        } catch (error) {
+            return {
+                message: error,
+                status: 500
+            }
+            
         }
     }
 

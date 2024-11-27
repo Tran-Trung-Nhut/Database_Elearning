@@ -18,6 +18,9 @@ import certificationRoutes from "./certification/certification.route";
 import joinRoutes from "./join/join.route";
 import dORoutes from "./dO/dO.route";
 import answerRecordRoutes from "./answerRecord/answerRecord.route";
+import lectureRoutes from "./lecture/lecture.route";
+import interactRoutes from "./interact/interact.route"; 
+import includeCourseRoutes from "./includeCourse/includeCourse.route";
 dotenv.config();
 
 const app: Express = express();
@@ -41,6 +44,9 @@ app.use('/certification', certificationRoutes)
 app.use('/join', joinRoutes)
 app.use('/dO', dORoutes)
 app.use('/answerRecord', answerRecordRoutes)
+app.use('/lecture', lectureRoutes)
+app.use('/interact', interactRoutes)
+app.use('/includeCourse', includeCourseRoutes)
 const server = createServer(app)
 
 

@@ -99,19 +99,7 @@ class sectionService{
     }
     public async createSection(name: string, numOfLecture: number, timeToComplete: number, teacherId: string, courseId: string){
         try {
-            // check if section exists
-            const sectionExists = await db.select({
-                id: section.id
-            })
-            .from(section)
-            .where(eq(section.name, name))
-
-            if (sectionExists.length > 0){
-                return {
-                    message: "Section already exists",
-                    status: 409
-                }
-            }
+            
             const newSection = await db.insert(section)
                                         .values({
                                             name: name,
@@ -151,17 +139,22 @@ class sectionService{
                     status: 404
                 }
             }
-
             const updatedSection = await db.update(section)
                                         .set({
                                             name: name,
-                                            numOfLecture: numOfLecture? numOfLecture : sectionExists[0].numOfLecture,
-                                            timeToComplete: timeToComplete ? timeToComplete : sectionExists[0].timeToComplete,
-                                            teacherId: teacherId ? teacherId : sectionExists[0].teacherId,
-                                            courseId: courseId? courseId : sectionExists[0].courseId
+                                            numOfLecture: numOfLecture,
+                                            timeToComplete: timeToComplete,
+                                            teacherId: teacherId,
+                                            courseId: courseId
                                         })
                                         .where(eq(section.id, id))
-            
+
+            if (updatedSection === null){
+                return {
+                    message: "Section not found",
+                    status: 404
+                }
+            }
             return {
                 message: "Section updated successfully",
                 status: 200
