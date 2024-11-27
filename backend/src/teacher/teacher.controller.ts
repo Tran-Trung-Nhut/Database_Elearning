@@ -55,12 +55,9 @@ class TeacherController{
                 password,
                 email,
                 bankName,
-                bankAccount,
-                teacherId
+                bankAccount
             } = req.body
             
-            console.log(req.body)
-            console.log(firstName, lastName, username, password, email, bankName, bankAccount, teacherId)
             const newTeacher = await teacherService.createNewTeacher(
                 firstName,
                 lastName,
@@ -69,7 +66,6 @@ class TeacherController{
                 email,
                 bankName,
                 bankAccount,
-                teacherId,
             )
 
             if(!newTeacher){
@@ -83,8 +79,7 @@ class TeacherController{
                 token: newTeacher
             })
         }catch(e:any){
-            // console.log(e, e.message)
-            // console.log(password, saltRounds)
+
             res.status(500).json({
                 message: e.message
             })
