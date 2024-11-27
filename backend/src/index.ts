@@ -14,6 +14,7 @@ import questionRoutes from "./question/question.route";
 import optionRoutes from "./option/option.route";
 import roadMapRoutes from "./roadMap/roadMap.route";
 import requireCourseRoutes from "./requireCourse/requireCourse.route";
+import certificationRoutes from "./certification/certification.route";
 dotenv.config();
 
 const app: Express = express();
@@ -33,6 +34,7 @@ app.use('/question', questionRoutes)
 app.use('/option', optionRoutes)
 app.use('/roadMap', roadMapRoutes)
 app.use('/requireCourse', requireCourseRoutes)
+app.use('/certification', certificationRoutes)
 const server = createServer(app)
 
 

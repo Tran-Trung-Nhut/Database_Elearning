@@ -198,7 +198,7 @@ class quizService {
                 }
             }
             // delete all questions of this quiz first
-            questionService.deleteAllQuestionsInQuiz(id);
+            // questionService.deleteAllQuestionsInQuiz(id);
 
             const deletedQuiz = await db.delete(quiz).where(eq(quiz.id, id));
             return {
@@ -223,7 +223,7 @@ class quizService {
                 }
             }
             // delete all questions in this quiz first
-            questionService.deleteAllQuestionsInQuiz(quizExists[0].id);
+            // questionService.deleteAllQuestionsInQuiz(quizExists[0].id);
             const deletedQuiz = await db.delete(quiz).where(eq(quiz.name, name));
             return {
                 status: 200,
@@ -246,10 +246,10 @@ class quizService {
                     message: "Quiz not found"
                 }
             }
-            for (let i = 0; i < quizExists.length; i++) {
+            // for (let i = 0; i < quizExists.length; i++) {
                 // delete all questions in this quiz first
-                questionService.deleteAllQuestionsInQuiz(quizExists[i].id);
-            }
+            //     questionService.deleteAllQuestionsInQuiz(quizExists[i].id);
+            // }
             const deletedQuiz = await db.delete(quiz).where(eq(quiz.sectionId, sectionId));
             return {
                 status: 200,
