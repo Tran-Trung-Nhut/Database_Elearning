@@ -133,18 +133,18 @@ class certificationService {
         // Create a new certification
         try {
             // check if this certification already exists
-            const certificationExists = await db.select({
-                id: certification.id
-            })
-            .from(certification)
-            .where(and(eq(certification.courseId, data.courseId), eq(certification.studentId, data.studentId)))
+            // const certificationExists = await db.select({
+            //     id: certification.id
+            // })
+            // .from(certification)
+            // .where(and(eq(certification.courseId, data.courseId), eq(certification.studentId, data.studentId)))
 
-            if (certificationExists.length !== 0) {
-                return {
-                    message: "Certification already exists",
-                    status: 409
-                }
-            }
+            // if (certificationExists.length !== 0) {
+            //     return {
+            //         message: "Certification already exists",
+            //         status: 409
+            //     }
+            // }
             const newCert = await db.insert(
                 certification
             )
@@ -157,7 +157,6 @@ class certificationService {
             })
 
             return {
-                data: newCert,
                 status: 200,
                 message: "Successfully created certification"
             }

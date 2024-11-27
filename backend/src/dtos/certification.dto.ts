@@ -1,8 +1,8 @@
 export interface certificationDto{
     id: string;
     name: string;
-    issueDate: Date;
-    expDate: Date;
+    issueDate: string;
+    expDate: string;
     courseId: string;
     studentId: string;
 }

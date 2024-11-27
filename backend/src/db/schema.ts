@@ -1,4 +1,4 @@
-import { pgTable, uuid, date, integer, varchar, text, unique, primaryKey } from "drizzle-orm/pg-core";
+import { pgTable, uuid, date, integer, varchar, text, unique, primaryKey, foreignKey } from "drizzle-orm/pg-core";
 
 export const user = pgTable("user", {
     id: uuid("id").defaultRandom().primaryKey(),
@@ -143,14 +143,30 @@ export const dO = pgTable('dO', {
     primaryKey: ['quizId','studentId']
 }))
 
-export const answerRecord = pgTable('answerRecord', {
-    quizId: uuid('quizId').notNull().references(() => quiz.id, {onDelete: "cascade"}),
-    studentId: uuid('studentId').notNull().references(() => student.userId, {onDelete: "cascade"}),
-    questionId: uuid('questionId').notNull().references(() => question.id, {onDelete: "cascade"}),
-    studentAns: text('studentAns')
-}, () => ({
-    primaryKey: ['quizId', 'studentId']
-}))
+export const answerRecord = pgTable("answerRecord", {
+    quizId: uuid("quizId").notNull(),
+    studentId: uuid("studentId").notNull(),
+    questionId: uuid("questionId").notNull(),
+    studentAns: text("studentAns"),
+  }, (table) => {
+    return {
+      pk: primaryKey({ columns: [table.questionId, table.studentId], name: "pk_answerRecord" }),
+      quizReference: foreignKey({
+        columns: [table.quizId],
+        foreignColumns: [quiz.id],
+        name: "fk_quiz_answerRecord",
+      }).onDelete("cascade"),
+      studentReference: foreignKey({
+        columns: [table.studentId],
+        foreignColumns: [student.userId],
+        name: "fk_student_answerRecord",
+      }).onDelete("cascade"),
+      questionReference: foreignKey({
+        columns: [table.questionId],
+        foreignColumns: [question.id],
+        name: "fk_question_answerRecord",
+      }).onDelete("cascade"),
+    }})
 
 export const lecture = pgTable('lecture', {
     id: uuid('id').defaultRandom().primaryKey(),
