@@ -6,6 +6,18 @@ import authRoutes from "./auth/auth.route"
 import teacherRoutes from "./teacher/teacher.route"
 import studentRoutes from "./student/student.route"
 import courseRoutes from "./course/course.route"
+import teacherQualificationRoutes from "./teacherQualification/teacherQualification.route";
+import courseTopicRoutes from "./courseTopic/courseTopic.route";
+import sectionRoutes from "./section/section.route";
+import quizRoutes from "./quiz/quiz.route";
+import questionRoutes from "./question/question.route";
+import optionRoutes from "./option/option.route";
+import roadMapRoutes from "./roadMap/roadMap.route";
+import requireCourseRoutes from "./requireCourse/requireCourse.route";
+import certificationRoutes from "./certification/certification.route";
+import joinRoutes from "./join/join.route";
+import dORoutes from "./dO/dO.route";
+import answerRecordRoutes from "./answerRecord/answerRecord.route";
 dotenv.config();
 
 const app: Express = express();
@@ -17,6 +29,18 @@ app.use('/student', studentRoutes)
 app.use('/teacher', teacherRoutes)
 app.use('/auth', authRoutes)
 app.use('/course', courseRoutes)
+app.use('/teacherQualification', teacherQualificationRoutes)
+app.use('/courseTopic', courseTopicRoutes)
+app.use('/section', sectionRoutes)
+app.use('/quiz', quizRoutes)
+app.use('/question', questionRoutes)
+app.use('/option', optionRoutes)
+app.use('/roadMap', roadMapRoutes)
+app.use('/requireCourse', requireCourseRoutes)
+app.use('/certification', certificationRoutes)
+app.use('/join', joinRoutes)
+app.use('/dO', dORoutes)
+app.use('/answerRecord', answerRecordRoutes)
 const server = createServer(app)
 
 
