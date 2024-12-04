@@ -58,7 +58,7 @@ class StudentController{
                 password,
                 email,
                 bankName,
-                bankAccount,
+                bankAccount
                 } = req.body
 
             const newStudent = await studentService.createStudent(
@@ -70,6 +70,7 @@ class StudentController{
                 bankName,
                 bankAccount,   
             )
+
 
             if(!newStudent){
                 return res.status(500).json({

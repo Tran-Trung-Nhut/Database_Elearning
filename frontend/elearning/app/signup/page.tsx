@@ -2,10 +2,20 @@
 import Image from "next/image";
 import logo from "../public/Logo.png";
 import React, { useState } from "react";
+import axios from "axios";
 import { useRouter } from "next/navigation";
+
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [bankName, setBankName] = useState("");
+  const [bankAccountNumber, setBankAccountNumber] = useState("");
+  const [role, setRole] = useState("Teacher"); // default role
+  const [password, setPassword] = useState("");
 
   const togglePasswordVisibility = () => {
     setShowPassword((prev) => !prev);
@@ -15,6 +25,35 @@ export default function Login() {
     router.push('login');
   };
 
+
+  function sendSignUpRequestAsStudent() {
+    axios
+      .post("http://localhost:4000/auth/register-as-student", {
+        firstName: firstName,
+        lastName: lastName,
+        username: username,
+        password: password,
+        email: email,
+        bankName: bankName,
+        bankAccount: bankAccountNumber,
+        studentId: "2222222",
+      })
+      .then((response) => {
+        if (response.status === 200) {
+          alert("Sign up successfully!");
+          router.push('login');
+        } else {
+          alert("Sign up failed!");
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        alert("Sign up failed!");
+      });
+  }
+  function sendSignUpRequestAsTeacher() {
+
+  }
   return (
     <div className="bg-background">
       <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8 bg-white ">
@@ -47,6 +86,7 @@ export default function Login() {
                   autoComplete="email"
                   required
                   className="px-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
+                  onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
             </div>
@@ -67,6 +107,7 @@ export default function Login() {
                   autoComplete="username"
                   required
                   className="px-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
+                  onChange={(e) => setUsername(e.target.value)}
                 />
               </div>
             </div>
@@ -86,6 +127,7 @@ export default function Login() {
                   type="text"
                   required
                   className="px-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
+                  onChange={(e) => setFirstName(e.target.value)}
                 />
               </div>
             </div>
@@ -94,15 +136,16 @@ export default function Login() {
                 htmlFor="class-name"
                 className="block text-sm/6 font-medium text-gray-900"
               >
-                Class Name
+                Last Name
               </label>
               <div className="mt-2">
                 <input
-                  id="class-name"
-                  name="class-name"
+                  id="last-name"
+                  name="last-name"
                   type="text"
                   required
                   className="px-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
+                  onChange={(e) => setLastName(e.target.value)}
                 />
               </div>
             </div>
@@ -122,6 +165,7 @@ export default function Login() {
                   type="text"
                   required
                   className="px-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
+                  onChange={(e) => setBankName(e.target.value)}
                 />
               </div>
             </div>
@@ -136,9 +180,10 @@ export default function Login() {
                 <input
                   id="bank-account"
                   name="bank-account"
-                  type="text"
+                  type="number"
                   required
                   className="px-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
+                  onChange={(e) => setBankAccountNumber(e.target.value)}
                 />
               </div>
             </div>
@@ -157,6 +202,7 @@ export default function Login() {
                   name="role"
                   required
                   className="px-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
+                  onChange={(e) => setRole(e.target.value)}
                 >
                   <option value="teacher">Teacher</option>
                   <option value="student">Student</option>
@@ -180,6 +226,7 @@ export default function Login() {
                   autoComplete="current-password"
                   required
                   className="px-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
+                  onChange={(e) => setPassword(e.target.value)}
                 />
                 <button
                   type="button"
@@ -230,8 +277,9 @@ export default function Login() {
             {/* Submit Button */}
             <div>
               <button
-                type="submit"
+                type="button"
                 className="flex w-full justify-center rounded-md bg-hcmutDarkBlue px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-hcmutLightBlue focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                onClick={() => role === "student" ? sendSignUpRequestAsStudent() : sendSignUpRequestAsTeacher()}
               >
                 Sign up
               </button>
