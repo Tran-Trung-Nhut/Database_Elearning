@@ -14,13 +14,13 @@ export default function Login() {
   const [lastName, setLastName] = useState("");
   const [bankName, setBankName] = useState("");
   const [bankAccountNumber, setBankAccountNumber] = useState("");
-  const [role, setRole] = useState("Teacher"); // default role
+  const [role, setRole] = useState("Teacher"); 
   const [password, setPassword] = useState("");
 
   const togglePasswordVisibility = () => {
     setShowPassword((prev) => !prev);
   };
-  const router = useRouter(); // Access the router object
+  const router = useRouter();
   const navigateToLogin = () => {
     router.push('login');
   };
@@ -36,7 +36,6 @@ export default function Login() {
         email: email,
         bankName: bankName,
         bankAccount: bankAccountNumber,
-        studentId: "2222222",
       })
       .then((response) => {
         if (response.status === 200) {
