@@ -1,10 +1,32 @@
 import { db } from "../db/db"
 import { user } from "../db/schema"
 import { teacher } from "../db/schema"
-import { eq } from "drizzle-orm"
+import { eq, sql } from "drizzle-orm"
 import userService from "../user/user.service"
+import authService from "../auth/auth.service"
 class TeacherService {
     
+    private generateUniqueTeacherId =  async () => {
+        const prefix = 'GV';
+        let uniqueId: string | null = null;
+    
+        while (!uniqueId) {
+            const randomId = Math.floor(10000000 + Math.random() * 90000000).toString();
+            const candidateId = `${prefix}${randomId}`;
+    
+            const existingTeacher = await db
+                .select()
+                .from(teacher)
+                .where(sql`${teacher.teacherId} = ${candidateId}`)
+    
+            if (existingTeacher.length === 0) {
+                uniqueId = candidateId;
+            }
+        }
+    
+        return uniqueId;
+    }
+
     public getAllTeachers = async () => {
         const teachers = await db.select(
             {
@@ -71,7 +93,6 @@ class TeacherService {
         email: string,
         bankName: string,
         bankAccount: string,
-        teacherId: string,
     ) => {
         const newUser = await userService.createNewUser(
             firstName,
@@ -88,6 +109,8 @@ class TeacherService {
             console.log('error user')
             return null
         }
+
+        const teacherId = await this.generateUniqueTeacherId()
 
         const newTeacher = await db
         .insert(teacher)
@@ -106,16 +129,10 @@ class TeacherService {
             return null
         }
 
+        const token = await authService.getAccessToken(newUser[0])
+
         return {
-            id: newUser[0].id,
-            firstName: newUser[0].firstName,
-            lastName: newUser[0].lastName,
-            username: newUser[0].username,
-            role: newUser[0].role,
-            email: newUser[0].email,
-            bankName: newUser[0].bankName,
-            bankAccount: newUser[0].bankAccount,
-            teacherId: newTeacher[0].teacherId,
+            token
         }
     }
 
@@ -161,7 +178,6 @@ class TeacherService {
         if(!updateTeacher || updateTeacher.length === 0){
             return null
         }
-        console.log(password)
         return {
             id: updateUser[0].id,
             firstName: updateUser[0].firstName,

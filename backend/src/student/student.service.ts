@@ -2,9 +2,31 @@ import { eq, sql } from "drizzle-orm"
 import { db } from "../db/db"
 import { student, user } from "../db/schema"
 import userService from "../user/user.service"
+import authService from "../auth/auth.service"
 
 
 class StudentService{
+    private generateUniqueStudentId =  async () => {
+        const prefix = 'SV';
+        let uniqueId: string | null = null;
+    
+        while (!uniqueId) {
+            const randomId = Math.floor(10000000 + Math.random() * 90000000).toString();
+            const candidateId = `${prefix}${randomId}`;
+    
+            const existingStudent = await db
+                .select()
+                .from(student)
+                .where(sql`${student.studentId} = ${candidateId}`)
+    
+            if (existingStudent.length === 0) {
+                uniqueId = candidateId;
+            }
+        }
+    
+        return uniqueId;
+    }
+
     public getAllStudents = async () => {
         return await db
         .select({
@@ -54,7 +76,6 @@ class StudentService{
         email: string,
         bankName: string,
         bankAccount: string,
-        studentId: string,
     ) => {
         const newUser = await userService.createNewUser(
             firstName,
@@ -70,6 +91,8 @@ class StudentService{
         if(!newUser || newUser.length === 0){
             return null
         }
+
+        const studentId = await this.generateUniqueStudentId()
 
         const newStudent = await db
         .insert(student)
@@ -91,19 +114,10 @@ class StudentService{
             return null
         }
 
+        const token = await authService.getAccessToken(newUser[0])
+
         return {
-            id: newUser[0].id,
-            firstName: newUser[0].firstName,
-            lastName: newUser[0].lastName,
-            username: newUser[0].username,
-            role: newUser[0].role,
-            email: newUser[0].email,
-            bankName: newUser[0].bankName,
-            bankAccount: newUser[0].bankAccount,
-            studentId: newStudent[0].studentId,
-            enrollmentDate: newStudent[0].enrollmentDate,
-            numberCoursesEnrolled: newStudent[0].numberCoursesEnrolled,
-            numberCoursesCompleted: newStudent[0].numberCoursesCompleted,
+            token
         }
     }
 

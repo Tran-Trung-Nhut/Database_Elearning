@@ -78,6 +78,7 @@
                 firstName: user.firstName,
                 lastName: user.lastName,
                 username: user.username,
+                password: user.password,
                 role: user.role,
                 email: user.email,
                 bankName: user.bankName,

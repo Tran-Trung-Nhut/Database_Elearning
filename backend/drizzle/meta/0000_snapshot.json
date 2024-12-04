@@ -1,5 +1,5 @@
 {
-  "id": "1cac2b44-3811-4774-b961-11067d56732b",
+  "id": "119f3b43-e885-4dd7-8ebf-b00768f724d5",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -45,7 +45,7 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         },
         "answerRecord_studentId_student_userId_fk": {
@@ -58,7 +58,7 @@
           "columnsTo": [
             "userId"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         },
         "answerRecord_questionId_question_id_fk": {
@@ -71,11 +71,19 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
-      "compositePrimaryKeys": {},
+      "compositePrimaryKeys": {
+        "pk_answerRecord": {
+          "name": "pk_answerRecord",
+          "columns": [
+            "questionId",
+            "studentId"
+          ]
+        }
+      },
       "uniqueConstraints": {}
     },
     "public.certification": {
@@ -133,7 +141,7 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         },
         "certification_studentId_student_userId_fk": {
@@ -146,7 +154,7 @@
           "columnsTo": [
             "userId"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
@@ -222,7 +230,7 @@
           "columnsTo": [
             "userId"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
@@ -258,11 +266,19 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
-      "compositePrimaryKeys": {},
+      "compositePrimaryKeys": {
+        "pk_courseTopic": {
+          "name": "pk_courseTopic",
+          "columns": [
+            "courseId",
+            "topic"
+          ]
+        }
+      },
       "uniqueConstraints": {}
     },
     "public.dO": {
@@ -307,7 +323,7 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         },
         "dO_studentId_student_userId_fk": {
@@ -320,11 +336,19 @@
           "columnsTo": [
             "userId"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
-      "compositePrimaryKeys": {},
+      "compositePrimaryKeys": {
+        "pk_dO": {
+          "name": "pk_dO",
+          "columns": [
+            "quizId",
+            "studentId"
+          ]
+        }
+      },
       "uniqueConstraints": {}
     },
     "public.includeCourse": {
@@ -362,7 +386,7 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         },
         "includeCourse_courseId_course_id_fk": {
@@ -375,11 +399,19 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
-      "compositePrimaryKeys": {},
+      "compositePrimaryKeys": {
+        "pk_includeCourse": {
+          "name": "pk_includeCourse",
+          "columns": [
+            "rmId",
+            "courseId"
+          ]
+        }
+      },
       "uniqueConstraints": {}
     },
     "public.interact": {
@@ -411,7 +443,7 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         },
         "interact_studentId_student_userId_fk": {
@@ -424,11 +456,19 @@
           "columnsTo": [
             "userId"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
-      "compositePrimaryKeys": {},
+      "compositePrimaryKeys": {
+        "pk_interact": {
+          "name": "pk_interact",
+          "columns": [
+            "lectureId",
+            "studentId"
+          ]
+        }
+      },
       "uniqueConstraints": {}
     },
     "public.join": {
@@ -469,7 +509,7 @@
         },
         "GPA": {
           "name": "GPA",
-          "type": "integer",
+          "type": "double precision",
           "primaryKey": false,
           "notNull": false
         }
@@ -486,7 +526,7 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         },
         "join_studentId_student_userId_fk": {
@@ -499,11 +539,19 @@
           "columnsTo": [
             "userId"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
-      "compositePrimaryKeys": {},
+      "compositePrimaryKeys": {
+        "pk_join": {
+          "name": "pk_join",
+          "columns": [
+            "courseId",
+            "studentId"
+          ]
+        }
+      },
       "uniqueConstraints": {}
     },
     "public.lecture": {
@@ -561,7 +609,7 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
@@ -605,11 +653,19 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
-      "compositePrimaryKeys": {},
+      "compositePrimaryKeys": {
+        "pk_option": {
+          "name": "pk_option",
+          "columns": [
+            "questionId",
+            "option"
+          ]
+        }
+      },
       "uniqueConstraints": {}
     },
     "public.question": {
@@ -674,7 +730,7 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         },
         "question_teacherId_teacher_userId_fk": {
@@ -687,11 +743,19 @@
           "columnsTo": [
             "userId"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
-      "compositePrimaryKeys": {},
+      "compositePrimaryKeys": {
+        "pk_question": {
+          "name": "pk_question",
+          "columns": [
+            "id",
+            "quizId"
+          ]
+        }
+      },
       "uniqueConstraints": {
         "question_id_unique": {
           "name": "question_id_unique",
@@ -772,7 +836,7 @@
           "columnsTo": [
             "userId"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         },
         "quiz_sectionId_section_id_fk": {
@@ -785,7 +849,7 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
@@ -829,7 +893,7 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         },
         "requireCours_rCourseId_course_id_fk": {
@@ -842,11 +906,19 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
-      "compositePrimaryKeys": {},
+      "compositePrimaryKeys": {
+        "pk_requireCourse": {
+          "name": "pk_requireCourse",
+          "columns": [
+            "courseId",
+            "rCourseId"
+          ]
+        }
+      },
       "uniqueConstraints": {}
     },
     "public.roadCertification": {
@@ -904,7 +976,7 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         },
         "roadCertification_studentId_student_userId_fk": {
@@ -917,7 +989,7 @@
           "columnsTo": [
             "userId"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
@@ -972,7 +1044,7 @@
           "columnsTo": [
             "userId"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
@@ -1042,7 +1114,7 @@
           "columnsTo": [
             "userId"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         },
         "section_courseId_course_id_fk": {
@@ -1055,7 +1127,7 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
@@ -1082,7 +1154,7 @@
         },
         "studentId": {
           "name": "studentId",
-          "type": "varchar(255)",
+          "type": "varchar(10)",
           "primaryKey": false,
           "notNull": true
         },
@@ -1119,7 +1191,7 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
@@ -1146,7 +1218,7 @@
         },
         "teacherId": {
           "name": "teacherId",
-          "type": "varchar(255)",
+          "type": "varchar(10)",
           "primaryKey": false,
           "notNull": true
         }
@@ -1163,7 +1235,7 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
@@ -1190,7 +1262,7 @@
         },
         "qualification": {
           "name": "qualification",
-          "type": "varchar(255)",
+          "type": "varchar(8)",
           "primaryKey": false,
           "notNull": true
         }
@@ -1207,11 +1279,19 @@
           "columnsTo": [
             "userId"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
-      "compositePrimaryKeys": {},
+      "compositePrimaryKeys": {
+        "pk_teacherQualification": {
+          "name": "pk_teacherQualification",
+          "columns": [
+            "teacherId",
+            "qualification"
+          ]
+        }
+      },
       "uniqueConstraints": {}
     },
     "public.user": {
@@ -1351,7 +1431,7 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         },
         "viewRoadMap_studentId_student_userId_fk": {
@@ -1364,7 +1444,7 @@
           "columnsTo": [
             "userId"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },

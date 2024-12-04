@@ -1,0 +1,145 @@
+import { eq } from "drizzle-orm";
+import { db } from "../db/db";
+import { option } from "../db/schema";
+import questionService from "../question/question.service";
+
+class optionService {
+    public async getAllOptions() {
+        try {
+            const getAllOptions = await db.select({
+                questionId: option.questionId,
+                option: option.option
+            })
+            .from(option)
+
+            return {
+                message: "Successfully fetched all options",
+                data: getAllOptions,
+                status: 200
+            }
+        } catch (error) {
+            return {
+                message: error,
+                status: 500
+            }
+        }
+    }
+
+    public async getOptionByQuestionId(questionId: string) {
+        try {
+            const getOptionByQuestionId = await db.select({
+                questionId: option.questionId,
+                option: option.option
+            })
+            .from(option)
+            .where(eq(option.questionId, questionId))
+
+            if (getOptionByQuestionId.length === 0) {
+                return {
+                    message: "Option not found",
+                    status: 404
+                }
+            }
+            return {
+                message: "Successfully fetched option",
+                data: getOptionByQuestionId,
+                status: 200
+            }
+        } catch (error) {
+            return {
+                message: error,
+                status: 500
+            }
+        }
+    }
+
+    public async createOption(questionId: string, optionStr: string) {
+        try {
+
+            // find question first
+            const findFirst = await questionService.getQuestionById(questionId)
+            
+            if (findFirst.status != 200){
+                return {
+                    message: "Question not found",
+                    status: 404
+                }
+            }
+
+            const createOption = await db
+            .insert(option)
+            .values({
+                questionId: questionId,
+                option: optionStr
+            })
+
+            return {
+                message: "Successfully created option",
+                status: 201
+            }
+        } catch (error) {
+            return {
+                message: error,
+                status: 500
+            }
+        }
+    }   
+
+    public async updateOption(questionId: string, optionStr: string) {
+        try {
+            // find first
+            const findFirst = await this.getOptionByQuestionId(questionId)
+            if (findFirst.status != 200){
+                return {
+                    message: "Option not found",
+                    status: 404
+                }
+            }
+            const updateOption = await db
+            .update(option)
+            .set({
+                option: optionStr
+            })
+            .where(eq(option.questionId, questionId))
+
+            return {
+                message: "Successfully updated option",
+                status: 200
+            }
+        } catch (error) {
+            return {
+                message: error,
+                status: 500
+            }
+        }
+    }
+
+
+    public async deleteAllOptionsInQuestion(questionId: string) {
+        try {
+            // find first
+            const findFirst = await this.getOptionByQuestionId(questionId)
+            if (findFirst.status != 200){
+                return {
+                    message: "Option not found",
+                    status: 404
+                }
+            }
+            const deleteOption = await db
+            .delete(option)
+            .where(eq(option.questionId, questionId))
+
+            return {
+                message: "Successfully deleted all options in question",
+                status: 200
+            }
+        } catch (error) {
+            return {
+                message: error,
+                status: 500
+            }
+        }
+    }
+}
+
+export default new optionService();
