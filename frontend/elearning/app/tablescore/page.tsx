@@ -6,11 +6,11 @@ const Tablescore = () =>{
         <>
         <BKNavbar2 />
         <div className="px-8 py-8 flex flex-col items-center justify-center">
-        <h2 className="font-bold text-4xl mb-4">Bảng điểm</h2>
-        <div className="w-full">
-        <TableScore />
+            <h2 className="font-bold text-4xl mb-4">Bảng điểm</h2>
+            <div className="w-full">
+                <TableScore />
+            </div>
         </div>
-</div>
         </>
     );
 }

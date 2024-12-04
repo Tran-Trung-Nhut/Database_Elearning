@@ -1,7 +1,7 @@
 
 import BKNavbar2 from "@/components/BKNavbar2";
-import ContributorCard from "@/components/ContributorCard";
 import CourseDropdown from "@/components/CourseDrop";
+import Footer from "@/components/Footer";
 
 const Studentdb = () =>{
   return (
@@ -16,7 +16,7 @@ const Studentdb = () =>{
           <CourseDropdown title="Chương 3"/>
         </div>
       </div>
-      <ContributorCard />
+      <Footer />
     </>
   );
 }

@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 
-function CourseDropdown(props) {
+function CourseDropdown(props: any) {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleDropdown = () => {
