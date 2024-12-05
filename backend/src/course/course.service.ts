@@ -21,7 +21,8 @@ class CourseService{
                     creationTime: course.creTime,
                     avgQuiz: course.avgQuiz,
                     price: course.price,
-                    teacherName: user.lastName,
+                    teacherLastName: user.lastName,
+                    teacherFirstName: user.firstName,
                 })
                 .from(course)
                 .innerJoin(user, eq(course.teacherId, user.id)); // Assuming foreign key relationship
