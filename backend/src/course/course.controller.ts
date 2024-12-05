@@ -25,6 +25,27 @@ class CourseController {
         }
     }
 
+    public async getAllCourseWithTeacherInfo(req: Request, res: Response){
+        try {
+            const courses = await courseService.getAllCoursesWithTeacherInfo();
+            if (courses.length === 0 || !courses) {
+                return res.status(404).json({
+                    message: 'No courses found',
+                })
+            }
+
+            return res.status(200).json({
+                message: 'success',
+                data: courses
+            })
+        } catch (error) {
+            return {
+                message: "Invalid: " + error,
+                status: 500
+            }
+        }
+    }
+
     public async getCourseById(req: Request, res: Response) {
         try {
             const { id } = req.params
@@ -72,9 +93,9 @@ class CourseController {
 
     public async createNewCourse(req: Request, res: Response) {
         try {
-            const {courseName, language, description, teacherId, price } = req.body
+            const {courseName, language, description, teacherId, price, topics } = req.body
             console.log(req.body)
-            const newCourse : any = await courseService.createNewCourse(courseName, language, description, teacherId, price)
+            const newCourse : any = await courseService.createNewCourse(courseName, language, description, teacherId, price, topics)
 
             return res.status(newCourse.status).send(newCourse)
         } catch (error) {
