@@ -1,4 +1,4 @@
 export interface requireCourseDto{
-    courseId: string;
-    rCourseId: string;
+    courseId: number;
+    rCourseId: number;
 }

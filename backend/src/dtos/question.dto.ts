@@ -1,6 +1,6 @@
 export interface questionDto{
-    id: string;
-    quizId: string;
+    id: number;
+    quizId: number;
     type:   string;
     answer: string;
     content: string;

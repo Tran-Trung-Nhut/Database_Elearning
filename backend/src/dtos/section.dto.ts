@@ -1,9 +1,9 @@
 export interface SectionDto {
-    id: string;
-    naame: string;
+    id: number;
+    name: string;
     numOfLecture: number;
     timeToComplete: number;
-    teacherId: string;
-    courseId: string;
+    teacherId: number;
+    courseId: number;
     creTime: Date;
 }

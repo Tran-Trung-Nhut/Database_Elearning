@@ -1,8 +1,8 @@
 export interface roadCertificationDto {
-    id: string;
+    id: number;
     name: string;
     expDate: string;
     issueDate: string;
-    courseId: string;
-    studentId: string;
+    courseId: number;
+    studentId: number;
 }

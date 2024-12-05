@@ -1,6 +1,6 @@
 export interface viewRoadMapDto {
-    rmId: string;
-    studentId: string;
+    rmId: number;
+    studentId: number;
     suitability: number;
     timeSuitabilty: number;
     courseSui: number;

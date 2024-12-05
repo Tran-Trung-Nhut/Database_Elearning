@@ -1,5 +1,5 @@
 export interface includeCourseDto{
-    rmId: string;
-    courseId: string;
+    rmId: number;
+    courseId: number;
     order: number;
 }

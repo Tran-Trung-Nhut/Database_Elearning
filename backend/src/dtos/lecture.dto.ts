@@ -1,8 +1,8 @@
 export interface lectureDto {
-    id: string;
+    id: number;
     name: string;
     state: string;
     material: string;
     reference: string;
-    sectionId: string;
+    sectionId: number;
 }

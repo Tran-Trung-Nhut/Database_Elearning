@@ -1,1 +1,0 @@
-ALTER TABLE "teacherQualification" ALTER COLUMN "qualification" SET DATA TYPE varchar(255);

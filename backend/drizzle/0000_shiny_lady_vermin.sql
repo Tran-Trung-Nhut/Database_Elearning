@@ -1,61 +1,61 @@
 CREATE TABLE IF NOT EXISTS "answerRecord" (
-	"quizId" uuid NOT NULL,
-	"studentId" uuid NOT NULL,
-	"questionId" uuid NOT NULL,
+	"quizId" serial NOT NULL,
+	"studentId" serial NOT NULL,
+	"questionId" serial NOT NULL,
 	"studentAns" text,
 	CONSTRAINT "pk_answerRecord" PRIMARY KEY("questionId","studentId")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "certification" (
-	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"id" serial PRIMARY KEY NOT NULL,
 	"name" varchar(50) NOT NULL,
 	"issueDate" date DEFAULT now() NOT NULL,
 	"expDate" date,
-	"courseId" uuid NOT NULL,
-	"studentId" uuid NOT NULL
+	"courseId" serial NOT NULL,
+	"studentId" serial NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "course" (
-	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"id" serial PRIMARY KEY NOT NULL,
 	"name" varchar(80) NOT NULL,
 	"language" varchar(255) NOT NULL,
 	"description" text NOT NULL,
-	"teacherId" uuid NOT NULL,
+	"teacherId" serial NOT NULL,
 	"creTime" date DEFAULT now() NOT NULL,
 	"avgQuiz" integer DEFAULT 0 NOT NULL,
 	"price" integer DEFAULT 0 NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "courseTopic" (
-	"courseId" uuid NOT NULL,
+	"courseId" serial NOT NULL,
 	"topic" varchar(255) NOT NULL,
 	CONSTRAINT "pk_courseTopic" PRIMARY KEY("courseId","topic")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "dO" (
-	"quizId" uuid NOT NULL,
-	"studentId" uuid NOT NULL,
+	"quizId" serial NOT NULL,
+	"studentId" serial NOT NULL,
 	"score" integer,
 	"attemptOrder" integer DEFAULT 1 NOT NULL,
 	CONSTRAINT "pk_dO" PRIMARY KEY("quizId","studentId")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "includeCourse" (
-	"rmId" uuid NOT NULL,
-	"courseId" uuid NOT NULL,
+	"rmId" serial NOT NULL,
+	"courseId" serial NOT NULL,
 	"order" integer NOT NULL,
 	CONSTRAINT "pk_includeCourse" PRIMARY KEY("rmId","courseId")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "interact" (
-	"lectureId" uuid NOT NULL,
-	"studentId" uuid NOT NULL,
+	"lectureId" serial NOT NULL,
+	"studentId" serial NOT NULL,
 	CONSTRAINT "pk_interact" PRIMARY KEY("lectureId","studentId")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "join" (
-	"courseId" uuid NOT NULL,
-	"studentId" uuid NOT NULL,
+	"courseId" serial NOT NULL,
+	"studentId" serial NOT NULL,
 	"dateComplete" date,
 	"dateStart" date DEFAULT now() NOT NULL,
 	"progress" integer DEFAULT 0 NOT NULL,
@@ -64,81 +64,81 @@ CREATE TABLE IF NOT EXISTS "join" (
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "lecture" (
-	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"id" serial PRIMARY KEY NOT NULL,
 	"name" varchar(255) NOT NULL,
 	"state" varchar(255) DEFAULT 'uncomplete' NOT NULL,
 	"material" varchar(255),
 	"reference" varchar(255),
-	"sectionId" uuid NOT NULL,
+	"sectionId" serial NOT NULL,
 	CONSTRAINT "lecture_name_unique" UNIQUE("name")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "option" (
-	"questionId" uuid NOT NULL,
+	"questionId" serial NOT NULL,
 	"option" varchar(1024) NOT NULL,
 	CONSTRAINT "pk_option" PRIMARY KEY("questionId","option")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "question" (
-	"id" uuid DEFAULT gen_random_uuid(),
-	"quizId" uuid NOT NULL,
+	"id" serial NOT NULL,
+	"quizId" serial NOT NULL,
 	"type" varchar(255) DEFAULT 'multiple choice' NOT NULL,
 	"answer" varchar(255) NOT NULL,
 	"content" text NOT NULL,
 	"creTime" date DEFAULT now() NOT NULL,
-	"teacherId" uuid NOT NULL,
+	"teacherId" serial NOT NULL,
 	CONSTRAINT "pk_question" PRIMARY KEY("id","quizId"),
 	CONSTRAINT "question_id_unique" UNIQUE("id")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "quiz" (
-	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"id" serial PRIMARY KEY NOT NULL,
 	"name" varchar(512) NOT NULL,
 	"state" varchar(255) DEFAULT 'opened' NOT NULL,
 	"attempt" integer DEFAULT 1 NOT NULL,
 	"duration" integer DEFAULT 10 NOT NULL,
-	"teacherId" uuid NOT NULL,
-	"sectionId" uuid NOT NULL,
+	"teacherId" serial NOT NULL,
+	"sectionId" serial NOT NULL,
 	"creTime" date DEFAULT now() NOT NULL,
 	CONSTRAINT "quiz_name_unique" UNIQUE("name")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "requireCours" (
-	"courseId" uuid NOT NULL,
-	"rCourseId" uuid NOT NULL,
+	"courseId" serial NOT NULL,
+	"rCourseId" serial NOT NULL,
 	CONSTRAINT "pk_requireCourse" PRIMARY KEY("courseId","rCourseId")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "roadCertification" (
-	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"id" serial PRIMARY KEY NOT NULL,
 	"name" varchar(50) NOT NULL,
 	"expDate" date,
 	"issueDate" date DEFAULT now() NOT NULL,
-	"courseId" uuid NOT NULL,
-	"studentId" uuid NOT NULL
+	"courseId" serial NOT NULL,
+	"studentId" serial NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "roadMap" (
-	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"id" serial PRIMARY KEY NOT NULL,
 	"instruction" text NOT NULL,
 	"description" text,
 	"name" varchar(255) NOT NULL,
-	"teacherId" uuid NOT NULL
+	"teacherId" serial NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "section" (
-	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"id" serial PRIMARY KEY NOT NULL,
 	"name" varchar(255) NOT NULL,
 	"numOfLecture" integer DEFAULT 0 NOT NULL,
 	"timeTocomplete" integer DEFAULT 12 NOT NULL,
-	"teacherId" uuid NOT NULL,
-	"courseId" uuid NOT NULL,
+	"teacherId" serial NOT NULL,
+	"courseId" serial NOT NULL,
 	"creTime" date DEFAULT now() NOT NULL,
 	CONSTRAINT "section_name_unique" UNIQUE("name")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "student" (
-	"userId" uuid PRIMARY KEY NOT NULL,
+	"userId" serial PRIMARY KEY NOT NULL,
 	"studentId" varchar(10) NOT NULL,
 	"enrollmentDate" date NOT NULL,
 	"numberCoursesEnrolled" integer DEFAULT 0 NOT NULL,
@@ -147,19 +147,19 @@ CREATE TABLE IF NOT EXISTS "student" (
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "teacher" (
-	"userId" uuid PRIMARY KEY NOT NULL,
+	"userId" serial PRIMARY KEY NOT NULL,
 	"teacherId" varchar(10) NOT NULL,
 	CONSTRAINT "teacher_teacherId_unique" UNIQUE("teacherId")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "teacherQualification" (
-	"teacherId" uuid NOT NULL,
-	"qualification" varchar(8) NOT NULL,
+	"teacherId" serial NOT NULL,
+	"qualification" varchar(255) NOT NULL,
 	CONSTRAINT "pk_teacherQualification" PRIMARY KEY("teacherId","qualification")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "user" (
-	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"id" serial PRIMARY KEY NOT NULL,
 	"email" varchar(255) NOT NULL,
 	"firstName" varchar(10) NOT NULL,
 	"lastName" varchar(30) NOT NULL,
@@ -174,8 +174,8 @@ CREATE TABLE IF NOT EXISTS "user" (
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "viewRoadMap" (
-	"rmId" uuid NOT NULL,
-	"studentId" uuid NOT NULL,
+	"rmId" serial NOT NULL,
+	"studentId" serial NOT NULL,
 	"suitability" integer DEFAULT 0 NOT NULL,
 	"timeSuitability" integer DEFAULT 0 NOT NULL,
 	"courseSui" integer DEFAULT 0 NOT NULL

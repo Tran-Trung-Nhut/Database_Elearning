@@ -1,4 +1,4 @@
 export interface courseTopicDto {
-    courseId: string
+    courseId: number
     topic: string
 }
