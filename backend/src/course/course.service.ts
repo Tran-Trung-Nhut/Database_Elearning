@@ -8,6 +8,11 @@ class CourseService{
         const dateObj = new Date(date)
         return `${dateObj.getFullYear()}-${dateObj.getMonth()}-${dateObj.getDate()}`
     }
+
+    public getAllCoursesWithTeacherInfo = async () => {
+        return await db.select({
+        })
+    }
     public getAllCourses = async () => {
         return await db
         .select({
