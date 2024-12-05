@@ -78,7 +78,7 @@ function CourseCard(props: any) {
                   type="button"
                   className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 dark:bg-blue-500 dark:hover:bg-blue-600 dark:focus:ring-blue-700 transition transform hover:scale-105"
                 >
-                  Thanh toán
+                  Mua ngay
                 </button>
               </div>
             </div>
