@@ -4,7 +4,7 @@ import { dO } from "../db/schema";
 import { dODto } from "../dtos/dO.dto";
 
 class dOService {
-    public async getDOByQuizId(quizId: string){
+    public async getDOByQuizId(quizId: number){
         try {
             const dOData = await db.select({
                 quizId: dO.quizId,
@@ -33,7 +33,7 @@ class dOService {
         }
     }
 
-    public async getDOByStudentId(studentId: string){
+    public async getDOByStudentId(studentId: number){
         try {
             const dOData = await db.select({
                 quizId: dO.quizId,
@@ -84,7 +84,7 @@ class dOService {
         }
     }
 
-    public async getDOByQuizIdAndStudentId(quizId: string, studentId: string){
+    public async getDOByQuizIdAndStudentId(quizId: number, studentId: number){
         try {
             const dOData = await db.select({
                 quizId: dO.quizId,
@@ -184,7 +184,7 @@ class dOService {
         }
     }
 
-    public async deleteDO(quizId: string, studentId: string){
+    public async deleteDO(quizId: number, studentId: number){
         try {
             // check if the DO exists
             const checkDO = await db.select({

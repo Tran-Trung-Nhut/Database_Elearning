@@ -30,7 +30,7 @@ class certificationService {
         }
     }
 
-    public async getCertificationById(id: string) {
+    public async getCertificationById(id: number) {
         // Get a certification by id
         try {
             const certificationById = await db.select({
@@ -63,7 +63,7 @@ class certificationService {
         }
     }
 
-    public async getCertificationByCourseId(courseId: string) {
+    public async getCertificationByCourseId(courseId: number) {
         // Get a certification by courseId
         try {
             const certificationByCourseId = await db.select({
@@ -96,7 +96,7 @@ class certificationService {
         }
     }
 
-    public async getCertificationByStudentId(studentId: string) {
+    public async getCertificationByStudentId(studentId: number) {
         // Get a certification by studentId
         try {
             const certificationByStudentId = await db.select({
@@ -208,7 +208,7 @@ class certificationService {
         }
     }
 
-    public async deleteCertification(id: string){
+    public async deleteCertification(id: number){
         // Delete a certification
         try {
             // check if this certification exists
@@ -240,7 +240,7 @@ class certificationService {
         }
     }
 
-    public async deleteCertificationByCourseId(courseId: string){
+    public async deleteCertificationByCourseId(courseId: number){
         // Delete a certification by courseId
         try {
             // check if this certification exists
@@ -272,7 +272,7 @@ class certificationService {
         }
     }
 
-    public async deleteCertificationByStudentId(studentId: string){
+    public async deleteCertificationByStudentId(studentId: number){
         // Delete a certification by studentId
         try {
             // check if this certification exists

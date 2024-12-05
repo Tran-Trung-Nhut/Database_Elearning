@@ -15,7 +15,7 @@ class certificationController{
 
     public async getCertificationById(req: Request, res: Response) {
         try {
-            const response = await certificationService.getCertificationById(req.params.id);
+            const response = await certificationService.getCertificationById(Number(req.params.id));
             return res.status(response.status).send(response);
         } catch (error) {
             return {
@@ -27,7 +27,7 @@ class certificationController{
 
      public async getCertificationByCourseId(req: Request, res: Response) {
         try {
-            const response = await certificationService.getCertificationByCourseId(req.params.courseId);
+            const response = await certificationService.getCertificationByCourseId(Number(req.params.courseId));
             return res.status(response.status).send(response);
         } catch (error) {
             return {
@@ -39,7 +39,7 @@ class certificationController{
     
     public async getCertificationByStudentId(req: Request, res: Response) {
         try {
-            const response = await certificationService.getCertificationByStudentId(req.params.studentId);
+            const response = await certificationService.getCertificationByStudentId(Number(req.params.studentId));
             return res.status(response.status).send(response);
         } catch (error) {
             return {
@@ -75,7 +75,7 @@ class certificationController{
 
     public async deleteCertification(req: Request, res: Response) {
         try {
-            const response = await certificationService.deleteCertification(req.params.id);
+            const response = await certificationService.deleteCertification(Number(req.params.id));
             return res.status(response.status).send(response);
         } catch (error) {
             return {
@@ -87,7 +87,7 @@ class certificationController{
 
     public async deleteCertificationByCourseId(req: Request, res: Response) {
         try {
-            const response = await certificationService.deleteCertificationByCourseId(req.params.courseId);
+            const response = await certificationService.deleteCertificationByCourseId(Number(req.params.courseId));
             return res.status(response.status).send(response);
         } catch (error) {
             return {
@@ -99,7 +99,7 @@ class certificationController{
 
     public async deleteCertificationByStudentId(req: Request, res: Response) {
         try {
-            const response = await certificationService.deleteCertificationByStudentId(req.params.studentId);
+            const response = await certificationService.deleteCertificationByStudentId(Number(req.params.studentId));
             return res.status(response.status).send(response);
         } catch (error) {
             return {
