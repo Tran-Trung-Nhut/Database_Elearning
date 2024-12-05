@@ -6,6 +6,9 @@ import authRoutes from "./auth/auth.route"
 import teacherRoutes from "./teacher/teacher.route"
 import studentRoutes from "./student/student.route"
 import courseRoutes from "./course/course.route"
+
+import cors from "cors";
+
 import teacherQualificationRoutes from "./teacherQualification/teacherQualification.route";
 import courseTopicRoutes from "./courseTopic/courseTopic.route";
 import sectionRoutes from "./section/section.route";
@@ -27,6 +30,7 @@ dotenv.config();
 const app: Express = express();
 const port = process.env.PORT || 4000;
 
+app.use(cors()); // Enable CORS
 app.use(express.json())
 app.use('/user',userRoutes)
 app.use('/student', studentRoutes)

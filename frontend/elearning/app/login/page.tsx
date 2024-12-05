@@ -3,17 +3,71 @@ import Image from "next/image";
 import logo from "../public/Logo.png";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import axios from "axios";
+import { UserLoginDto } from "../dtos/user.dto";
+import { useSetRecoilState } from "recoil";
+import { userLoginState } from "@/state";
+
+const jwt = require("jsonwebtoken");
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const setUserLogin = useSetRecoilState(userLoginState)
+  const router = useRouter();
 
   const togglePasswordVisibility = () => {
     setShowPassword((prev) => !prev);
   };
-  const router = useRouter(); // Access the router object
+
+  const handleLogin = async (event: React.FormEvent) => {
+    event.preventDefault(); // Prevent default form submission behavior
+
+    if (!username || !password) {
+      alert("Vui lòng nhập đầy đủ thông tin!");
+      return;
+    }
+
+    try {
+      const response = await axios.post('http://localhost:4000/auth/login', {
+        username,
+        password,
+      });
+
+      console.log(response.data);
+      const decoded = jwt.decode(response.data.token);
+
+      const data: UserLoginDto = {
+        id: decoded.id,
+        role: decoded.role,
+        firstName: decoded.firstName,
+        lastName: decoded.lastName,
+        token: response.data.token,
+        email: decoded.email,
+      };
+      console.log(data);
+      setUserLogin(data);
+
+      sessionStorage.setItem('userLogin', JSON.stringify(data));
+
+      alert("Đăng nhập thành công");
+
+      router.push('/');
+    } catch (e: any) {
+      if(e.response.data.message === "Invalid username"){
+        alert("Tên đăng nhập không chính xác! vui lòng kiểm tra lại! Nếu bạn chưa có tài khoản, hãy đăng ký ngay!")
+      }
+      if(e.response.data.message === "Invalid password"){
+        alert("Mật khẩu không chính xác! Vui lòng đăng nhập lại")
+      }
+    }
+  };
+
   const navigateToSignUp = () => {
     router.push('signup');
   };
+
   return (
     <div className="bg-white">
       <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
@@ -29,21 +83,22 @@ export default function Login() {
         </div>
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form className="space-y-6" action="#" method="POST">
+          <form className="space-y-6" onSubmit={handleLogin}> {/* Handle form submission here */}
             <div>
               <label
                 htmlFor="email"
                 className="block text-sm/6 font-medium text-gray-900"
               >
-                Email address
+                User Name
               </label>
               <div className="mt-2">
                 <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  autoComplete="email"
+                  id="username"
+                  name="username"
+                  type="username"
+                  autoComplete="username"
                   required
+                  onChange={(e) => setUsername(e.target.value)}
                   className="px-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
                 />
               </div>
@@ -66,6 +121,7 @@ export default function Login() {
                   autoComplete="current-password"
                   required
                   className="px-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
+                  onChange={(e) => setPassword(e.target.value)}
                 />
                 <button
                   type="button"
@@ -85,7 +141,7 @@ export default function Login() {
                       <path
                         strokeLinecap="round"
                         strokeLinejoin="round"
-                        d="M3.98 8.223A10.477 10.477 0 0112 6c2.945 0 5.678.994 7.796 2.646M12 18c-2.945 0-5.678-.994-7.796-2.646M3.98 15.777A10.477 10.477 0 0112 18c2.945 0 5.678-.994 7.796-2.646M15.454 12A3.454 3.454 0 1112 8.546 3.454 3.454 0 0115.454 12z"
+                        d="M3.98 8.223A10.477 10.477 0 0112 6c2.945 0 5.678.994 7.796 2.646M12 18c-2.945 0-5.678-.994-7.796-2.646M3.98 15.777A10.477 10.477 0 0112 18c2.945 0 5.678-.994-7.796-2.646M15.454 12A3.454 3.454 0 1112 8.546 3.454 3.454 0 0115.454 12z"
                       />
                       <path
                         strokeLinecap="round"
@@ -115,7 +171,7 @@ export default function Login() {
 
             <div>
               <button
-                type="submit"
+                type="submit" // This will now correctly trigger form submission
                 className="flex w-full justify-center rounded-md bg-hcmutDarkBlue px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-hcmutLightBlue focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               >
                 Sign in
@@ -137,3 +193,4 @@ export default function Login() {
     </div>
   );
 }
+
