@@ -17,7 +17,7 @@ class interactController{
 
     public async getInteractionsByLectureId(req: Request, res: Response){
         try {
-            const All = await interactService.getInteractionsByLectureId(req.params.lectureId);
+            const All = await interactService.getInteractionsByLectureId(Number(req.params.lectureId));
 
             return res.status(All.status).send(All);
         } catch (error) {
@@ -30,7 +30,7 @@ class interactController{
 
     public async getInteractionsByStudentId(req: Request, res: Response){
         try {
-            const All = await interactService.getInteractionsByStudentId(req.params.studentId);
+            const All = await interactService.getInteractionsByStudentId(Number(req.params.studentId));
 
             return res.status(All.status).send(All);
         } catch (error) {
@@ -43,7 +43,7 @@ class interactController{
 
     public async getInteractionsByLectureIdAndStudentId(req: Request, res: Response){
         try {
-            const All = await interactService.getInteractionsByLectureIdAndStudentId(req.params.lectureId, req.params.studentId);
+            const All = await interactService.getInteractionsByLectureIdAndStudentId(Number(req.params.lectureId), Number(req.params.studentId));
 
             return res.status(All.status).send(All);
         } catch (error) {
@@ -69,7 +69,7 @@ class interactController{
 
     public async deleteInteraction(req: Request, res: Response){
         try {
-            const All = await interactService.deleteInteraction(req.params.lectureId, req.params.studentId);
+            const All = await interactService.deleteInteraction(Number(req.params.lectureId), Number(req.params.studentId));
 
             return res.status(All.status).send(All);
         } catch (error) {

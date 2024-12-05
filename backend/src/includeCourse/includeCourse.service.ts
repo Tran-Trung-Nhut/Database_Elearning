@@ -25,7 +25,7 @@ class includeCourseService {
         }
     }
 
-    public async getIncludeCourseById(rmId: string, courseId: string){
+    public async getIncludeCourseById(rmId: number, courseId: number){
         try {
             const All = await db.select({
                 rmId: includeCourse.rmId,
@@ -90,7 +90,7 @@ class includeCourseService {
         }
     }
 
-    public async deleteIncludeCourse(rmId: string, courseId: string){
+    public async deleteIncludeCourse(rmId: number, courseId: number){
         try {
             await db.delete(includeCourse)
             .where(and(eq(includeCourse.rmId, rmId), eq(includeCourse.courseId, courseId)))

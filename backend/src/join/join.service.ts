@@ -28,7 +28,7 @@ class joinService {
         }
     }
 
-    public async getJoinById(courseId: string, studentId: string){
+    public async getJoinById(courseId: number, studentId: number){
         try {
             const joinData = await db.select({
                 courseId: join.courseId,
@@ -59,7 +59,7 @@ class joinService {
         }
     }
 
-    public async getJoinByCourseId(courseId: string){
+    public async getJoinByCourseId(courseId: number){
         try {
             const joinData = await db.select({
                 courseId: join.courseId,
@@ -90,7 +90,7 @@ class joinService {
         }
     }
 
-    public async getJoinByStudentId(studentId: string){
+    public async getJoinByStudentId(studentId: number){
         try {
             const joinData = await db.select({
                 courseId: join.courseId,
@@ -198,7 +198,7 @@ class joinService {
         }
     }
 
-    public async deleteJoin(courseId: string, studentId: string){
+    public async deleteJoin(courseId: number, studentId: number){
         try {
             // check if exists
             const checkJoin = await db.select({

@@ -25,7 +25,7 @@ class optionService {
         }
     }
 
-    public async getOptionByQuestionId(questionId: string) {
+    public async getOptionByQuestionId(questionId: number) {
         try {
             const getOptionByQuestionId = await db.select({
                 questionId: option.questionId,
@@ -53,7 +53,7 @@ class optionService {
         }
     }
 
-    public async createOption(questionId: string, optionStr: string) {
+    public async createOption(questionId: number, optionStr: string) {
         try {
 
             // // find question first
@@ -90,7 +90,7 @@ class optionService {
         }
     }   
 
-    public async updateOption(questionId: string, optionStr: string) {
+    public async updateOption(questionId: number, optionStr: string) {
         try {
             // find first
             const findFirst = await this.getOptionByQuestionId(questionId)
@@ -120,7 +120,7 @@ class optionService {
     }
 
 
-    public async deleteAllOptionsInQuestion(questionId: string) {
+    public async deleteAllOptionsInQuestion(questionId: number) {
         try {
             // find first
             const findFirst = await this.getOptionByQuestionId(questionId)

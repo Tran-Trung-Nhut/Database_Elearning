@@ -16,7 +16,7 @@ class includeCourseController {
 
     public async getIncludeCourseById(req: Request, res: Response) {
         try {
-            const All = await includeCourseService.getIncludeCourseById(req.params.rmId, req.params.courseId);
+            const All = await includeCourseService.getIncludeCourseById(Number(req.params.rmId), Number(req.params.courseId));
 
             return res.status(All.status).send(All);
         } catch (error) {
@@ -54,7 +54,7 @@ class includeCourseController {
     }
     public async  deleteIncludeCourse(req: Request, res: Response) {
         try {
-            await includeCourseService.deleteIncludeCourse(req.params.rmId, req.params.courseId);
+            await includeCourseService.deleteIncludeCourse(Number(req.params.rmId), Number(req.params.courseId));
 
             return res.status(200).send();
         } catch (error) {

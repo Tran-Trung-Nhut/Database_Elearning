@@ -24,7 +24,7 @@ class interactService {
         }
     }
 
-    public async getInteractionsByLectureId(lectureId: string) {
+    public async getInteractionsByLectureId(lectureId: number) {
         try {
             const All = await db.select({
                 lectureId: interact.lectureId,
@@ -45,7 +45,7 @@ class interactService {
         }
     }
 
-    public async getInteractionsByStudentId(studentId: string) {
+    public async getInteractionsByStudentId(studentId: number) {
         try {
             const All = await db.select({
                 lectureId: interact.lectureId,
@@ -66,7 +66,7 @@ class interactService {
         }
     }
 
-    public async getInteractionsByLectureIdAndStudentId(lectureId: string, studentId: string) {
+    public async getInteractionsByLectureIdAndStudentId(lectureId: number, studentId: number) {
         try {
             const All = await db.select({
                 lectureId: interact.lectureId,
@@ -87,7 +87,7 @@ class interactService {
         }
     }
 
-    public async createInteraction(lectureId: string, studentId: string) {
+    public async createInteraction(lectureId: number, studentId: number) {
         try {
 
             const newInteraction = await db.insert(interact)
@@ -108,7 +108,7 @@ class interactService {
         }
     }
 
-    public async deleteInteraction(lectureId: string, studentId: string) {
+    public async deleteInteraction(lectureId: number, studentId: number) {
         try {
             const deleted = await db.delete(interact)
             .where(and(eq(interact.lectureId, lectureId), eq(interact.studentId, studentId)))
