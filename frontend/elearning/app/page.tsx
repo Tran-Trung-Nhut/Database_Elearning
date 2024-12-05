@@ -7,13 +7,25 @@ import BKNavbar2 from "@/components/BKNavbar2";
 import { useRouter } from "next/navigation";
 import { useRecoilState } from "recoil";
 import { userLoginState } from "@/state";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { CourseDto } from "./dtos/course.dto";
 
 export default function Home() {
 
   const [userLogin, setUserLogin] = useRecoilState(userLoginState)
+  const [course, setCourse] = useState<CourseDto[]>([])
   const isLoggedIn : boolean = userLogin.id !== "" ? true : false;
   const router = useRouter()
+
+  const fetchCourse = async () => {
+    try{
+      const response = await axios.get('http://localhost:4000/course')
+      setCourse(response.data.data)
+    }catch(e){
+      console.log(e)
+    }
+  }
 
   useEffect(() => {
     if(userLogin.id !== "") return
@@ -23,6 +35,8 @@ export default function Home() {
     if(!userFromSessionRaw) return
 
     setUserLogin(JSON.parse(userFromSessionRaw))  
+
+    fetchCourse()
   })
 
   return (
@@ -59,7 +73,7 @@ export default function Home() {
                     type="button"
                     className="bg-transparent border border-white text-white font-medium text-sm px-6 py-3 rounded-lg hover:bg-white hover:text-blue-600 transition duration-300"
                   >
-                    Cập nhật hồ sơ
+                    Về chúng tôi
                   </button>
                 </div>
               </>
@@ -100,24 +114,13 @@ export default function Home() {
             Các khóa học bán chạy
           </h2>
           <div className="flex flex-wrap justify-center gap-8 px-8">
-            <CourseCard
-              image="https://images.unsplash.com/photo-1607799279861-4dd421887fb3?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cHJvZ3JhbW1pbmd8ZW58MHx8MHx8fDA%3D"
-              namecourse="Cấu trúc dữ liệu và giải thuật"
-              teacher="Nguyễn Văn A"
-              price="₫1.099.000"
-            />
-            <CourseCard
-              image="https://plus.unsplash.com/premium_photo-1661882403999-46081e67c401?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8cHJvZ3JhbW1pbmd8ZW58MHx8MHx8fDA%3D"
-              namecourse="Mạng máy tính"
-              teacher="Nguyễn Minh Triết"
-              price="₫1.999.000"
-            />
-            <CourseCard
-              image="https://media.istockphoto.com/id/2149530993/photo/digital-human-head-concept-for-ai-metaverse-and-facial-recognition-technology.webp?a=1&b=1&s=612x612&w=0&k=20&c=nyP4c-s5cSZy1nv1K0xn1ynC-Xuc1sY4Y29ZQqcrztA="
-              namecourse="Học máy"
-              teacher="Nguyễn Quang Đức"
-              price="₫2.999.000"
-            />
+            {course.map((cour, index) => (
+              <CourseCard
+              courseName={cour.courseName}
+              teacher={"Unknown"}
+              price={cour.price}
+              />
+            ))}
           </div>
         </section>
 
