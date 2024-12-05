@@ -55,7 +55,7 @@ class lectureService {
         }
     }
 
-    public async getLectureBySectionId(sectionId: string){
+    public async getLectureBySectionId(sectionId: number){
         try {
             const lectures = db.select({
                 id: lecture.id,
@@ -115,7 +115,7 @@ class lectureService {
         }
     }
 
-    public async deleteLecture(id: string){
+    public async deleteLecture(id: number){
         try {
             const returnVal = await db.delete(lecture).where(eq(lecture.id, id))
 

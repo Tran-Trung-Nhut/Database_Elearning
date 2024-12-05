@@ -23,7 +23,7 @@
             return all;
         }
 
-        public getUserById = async (id: string) => {
+        public getUserById = async (id: number) => {
             const data = await db
             .select({
                 id: user.id,
@@ -41,7 +41,7 @@
             return data;
         }
 
-        public getUserByIdWithPassword = async (id: string) => {
+        public getUserByIdWithPassword = async (id: number) => {
             const data = await db
             .select()
             .from(user)
@@ -89,7 +89,7 @@
         }
 
         public updateUser = async (
-            id: string,
+            id: number,
             firstName: string, 
             lastName: string,
             email: string, 
@@ -134,7 +134,7 @@
             return data
         }
 
-        public deleteUser= async (id: string, deleteStudentOrteacher: any) => {
+        public deleteUser= async (id: number, deleteStudentOrteacher: any) => {
             const deleteUser = await db
             .delete(user)
             .where(eq(user.id,id))

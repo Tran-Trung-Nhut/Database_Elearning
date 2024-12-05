@@ -3,7 +3,7 @@ import optionService from "./option.service";
 class optionController {
     public async getOptionByQuestionId(req: Request, res: Response) {
         try {
-            const questionId = req.params.questionId;
+            const questionId = Number(req.params.questionId);
             optionService.getOptionByQuestionId(questionId);
 
             return res.status(200).json({

@@ -31,7 +31,7 @@ class lectureController{
     public async getLectureBySectionId(req: Request, res: Response){
         try {
             const sectionId = req.params.sectionId;
-            const lecture = await lectureService.getLectureBySectionId(sectionId);
+            const lecture = await lectureService.getLectureBySectionId(Number(sectionId));
 
             return res.status(lecture.status).send(lecture);
         } catch (error) {
@@ -73,7 +73,7 @@ class lectureController{
     public async deleteLecture(req: Request, res: Response){
         try {
             const id = req.params.id;
-            const deleteLecture = await lectureService.deleteLecture(id);
+            const deleteLecture = await lectureService.deleteLecture(Number(id));
 
             return res.status(deleteLecture.status).send(deleteLecture);
         } catch (error) {
