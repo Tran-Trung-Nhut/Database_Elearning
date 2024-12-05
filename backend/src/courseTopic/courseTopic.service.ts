@@ -20,7 +20,7 @@ class courseTopicService {
         }
     }
 
-    public async getCourseTopicById(courseId: string) {
+    public async getCourseTopicById(courseId: number) {
         try {
             // find course topic by courseId
             const courseTopicByCourseId = await db.select(
@@ -38,7 +38,7 @@ class courseTopicService {
         }
     }
 
-    public async createCourseTopic(courseId: string, topic: string) {
+    public async createCourseTopic(courseId: number, topic: string) {
         try {
             // find course by courseId
             // const courseByCourseId = await db.select(
@@ -96,7 +96,7 @@ class courseTopicService {
         }   
     }
 
-    public async updateCourseTopic(courseId: string, topic: string) {
+    public async updateCourseTopic(courseId: number, topic: string) {
         try{
             // find courseTopic by courseId
             const courseTopicByCourseId = await db.select(
@@ -141,7 +141,7 @@ class courseTopicService {
         }
     }
 
-    public async deleteCourseTopic(courseId: string) {
+    public async deleteCourseTopic(courseId: number) {
         try {
             // find course topic by courseId
             const courseTopicByCourseId = await db.select(
@@ -175,7 +175,7 @@ class courseTopicService {
         }
     }
 
-    public async deleteAllCourseTopicsInThisCourse(courseId: string) {
+    public async deleteAllCourseTopicsInThisCourse(courseId: number) {
         try {
             // find course topic by courseId
             const courseTopicByCourseId = await db.select(

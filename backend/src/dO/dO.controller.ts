@@ -18,7 +18,7 @@ class dOController{
     public async getDOByQuizId(req: Request, res: Response){
         try {
             const quizId = req.params.quizId;
-            const dOData = await dOService.getDOByQuizId(quizId);
+            const dOData = await dOService.getDOByQuizId(Number(quizId));
 
             return res.status(dOData.status).send(dOData);
         } catch (error) {
@@ -32,7 +32,7 @@ class dOController{
     public async getDOByStudentId(req: Request, res: Response){
         try {
             const studentId = req.params.studentId;
-            const dOData = await dOService.getDOByStudentId(studentId);
+            const dOData = await dOService.getDOByStudentId(Number(studentId));
 
             return res.status(dOData.status).send(dOData);
         } catch (error) {
@@ -47,7 +47,7 @@ class dOController{
         try {
             const quizId = req.params.quizId;
             const studentId = req.params.studentId;
-            const dOData = await dOService.getDOByQuizIdAndStudentId(quizId, studentId);
+            const dOData = await dOService.getDOByQuizIdAndStudentId(Number(quizId), Number(studentId));
 
             return res.status(dOData.status).send(dOData);
         } catch (error) {
@@ -90,7 +90,7 @@ class dOController{
         try {
             const quizId = req.params.quizId;
             const studentId = req.params.studentId;
-            const dOData = await dOService.deleteDO(quizId, studentId);
+            const dOData = await dOService.deleteDO(Number(quizId), Number(studentId));
 
             return res.status(dOData.status).send(dOData);
         } catch (error) {

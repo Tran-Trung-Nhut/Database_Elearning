@@ -16,7 +16,7 @@ class joinController {
 
     public async getJoinById(req: Request, res: Response) {
         try {
-            const response = await joinService.getJoinById(req.params.courseId, req.params.studentId);
+            const response = await joinService.getJoinById(Number(req.params.courseId), Number(req.params.studentId));
 
             return res.status(response.status).send(response);
         } catch (error) {
@@ -29,7 +29,7 @@ class joinController {
 
     public async getJoinByCourseId(req: Request, res: Response) {
         try {
-            const response = await joinService.getJoinByCourseId(req.params.courseId);
+            const response = await joinService.getJoinByCourseId(Number(req.params.courseId));
 
             return res.status(response.status).send(response);
         } catch (error) {
@@ -42,7 +42,7 @@ class joinController {
 
     public async getJoinByStudentId(req: Request, res: Response) {
         try {
-            const response = await joinService.getJoinByStudentId(req.params.studentId);
+            const response = await joinService.getJoinByStudentId(Number(req.params.studentId));
 
             return res.status(response.status).send(response);
         } catch (error) {
@@ -81,7 +81,7 @@ class joinController {
 
     public async deleteJoin(req: Request, res: Response) {
         try {
-            const response = await joinService.deleteJoin(req.params.courseId, req.params.studentId);
+            const response = await joinService.deleteJoin(Number(req.params.courseId), Number(req.params.studentId));
 
             return res.status(response.status).send(response);
         } catch (error) {

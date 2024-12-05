@@ -48,7 +48,7 @@ class CourseService{
         .from(course)
     }
     
-    public getCourseById = async (id: string) => {
+    public getCourseById = async (id: number) => {
 
         const returnCourse = await db
         .select({
@@ -97,7 +97,7 @@ class CourseService{
         courseName: string,
         language: string,
         description: string,
-        teacherId: string,
+        teacherId: number,
         price: number,
         topics: string[]
     ) => {
@@ -145,7 +145,7 @@ class CourseService{
         }
     }
 
-    public deleteCourseById = async (id: string) => {
+    public deleteCourseById = async (id: number) => {
         const courseExist = await this.getCourseById(id)
         if (!courseExist){
             return null
@@ -178,7 +178,7 @@ class CourseService{
     }
 
     public updateCourseById = async (
-        id: string,
+        id: number,
         courseName: string,
         language: string,
         description: string,

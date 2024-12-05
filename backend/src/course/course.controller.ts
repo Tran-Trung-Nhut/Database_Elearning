@@ -49,7 +49,7 @@ class CourseController {
     public async getCourseById(req: Request, res: Response) {
         try {
             const { id } = req.params
-            const course = await courseService.getCourseById(id)
+            const course = await courseService.getCourseById(Number(id))
 
             if (!course) {
                 return res.status(404).json({
@@ -110,7 +110,7 @@ class CourseController {
     public async deleteCourseById(req: Request, res: Response) {
         try {
             const { id } = req.params
-            const course = await courseService.deleteCourseById(id)
+            const course = await courseService.deleteCourseById(Number(id))
 
             if (!course) {
                 return res.status(404).json({
@@ -156,7 +156,7 @@ class CourseController {
             const { id } = req.params   
             const {courseName, language, description, avgQuiz, price } = req.body
             console.log(req.body)
-            const course = await courseService.updateCourseById(id, courseName, language, description,avgQuiz, price)
+            const course = await courseService.updateCourseById(Number(id), courseName, language, description,avgQuiz, price)
 
             if (!course) {
                 return res.status(404).json({

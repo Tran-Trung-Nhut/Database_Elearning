@@ -21,7 +21,7 @@ class courseTopicController {
     public getCourseTopicById = async (req: Request, res: Response) => {
         try {
             const courseId = req.params.courseId;
-            const courseTopicByCourseId = await courseTopicService.getCourseTopicById(courseId);
+            const courseTopicByCourseId = await courseTopicService.getCourseTopicById(Number(courseId));
 
             return res.status(200).json( {
                 message: 'Successfully',
@@ -68,7 +68,7 @@ class courseTopicController {
     public deleteCourseTopic = async (req: Request, res: Response) => {
         try {
             const courseId = req.params.courseId;
-            const newCourseTopic : any = await courseTopicService.deleteCourseTopic(courseId);
+            const newCourseTopic : any = await courseTopicService.deleteCourseTopic(Number(courseId));
 
             if (newCourseTopic.status !== 200){
                 return res.status(newCourseTopic.status).json( {

@@ -26,7 +26,7 @@ class answerRecordService {
         }
     }
 
-    public async getRecordByStudentId(quizId: string, studentId: string) {
+    public async getRecordByStudentId(quizId: number, studentId: number) {
         try {
             const record = await db.select({
                 quizId: answerRecord.quizId,
@@ -57,7 +57,7 @@ class answerRecordService {
         }
     }
 
-    public async getRecordByQuizId(quizId: string) {
+    public async getRecordByQuizId(quizId: number) {
         try {
             const record = await db.select({
                 quizId: answerRecord.quizId,
@@ -88,7 +88,7 @@ class answerRecordService {
         }
     }
 
-    public async getRecordByQuestionId(questionId: string) {
+    public async getRecordByQuestionId(questionId: number) {
         try {
             const record = await db.select({
                 quizId: answerRecord.quizId,
@@ -119,7 +119,7 @@ class answerRecordService {
         }
     }
 
-    public async getRecordByQuizIdAndStudentId(quizId: string, studentId: string) {
+    public async getRecordByQuizIdAndStudentId(quizId: number, studentId: number) {
         try {
             const record = await db.select({
                 quizId: answerRecord.quizId,
@@ -152,7 +152,7 @@ class answerRecordService {
         }
     }
 
-    public async getRecordByQuizIdAndStudentIdAndQuestionId(quizId: string, studentId: string, questionId: string) {
+    public async getRecordByQuizIdAndStudentIdAndQuestionId(quizId: number, studentId: number, questionId: number) {
         try {
             const record = await db.select({
                 quizId: answerRecord.quizId,
@@ -245,7 +245,7 @@ class answerRecordService {
         }
     }
 
-    public async deleteRecord(quizId: string, studentId: string, questionId: string){
+    public async deleteRecord(quizId: number, studentId: number, questionId: number){
         try {
             const deletedRecord = await db.delete(answerRecord).where(and(
                 eq(answerRecord.quizId, quizId),
