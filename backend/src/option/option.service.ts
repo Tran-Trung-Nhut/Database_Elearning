@@ -56,15 +56,15 @@ class optionService {
     public async createOption(questionId: string, optionStr: string) {
         try {
 
-            // find question first
-            const findFirst = await questionService.getQuestionById(questionId)
+            // // find question first
+            // const findFirst = await questionService.getQuestionById(questionId)
             
-            if (findFirst.status != 200){
-                return {
-                    message: "Question not found",
-                    status: 404
-                }
-            }
+            // if (findFirst.status != 200){
+            //     return {
+            //         message: "Question not found",
+            //         status: 404
+            //     }
+            // }
 
             const createOption = await db
             .insert(option)
@@ -72,7 +72,12 @@ class optionService {
                 questionId: questionId,
                 option: optionStr
             })
-
+            if (createOption === null){
+                return {
+                    message: "Failed to create option",
+                    status: 500
+                }
+            }
             return {
                 message: "Successfully created option",
                 status: 201

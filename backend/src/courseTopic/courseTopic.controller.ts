@@ -41,16 +41,7 @@ class courseTopicController {
             const topic = req.body.topic;
             const newCourseTopic : any = await courseTopicService.createCourseTopic(courseId, topic);
 
-            if (newCourseTopic.status !== 200){
-                return res.status(newCourseTopic.status).json( {
-                    message: newCourseTopic.message,
-                    status: newCourseTopic.status,
-                })
-            }
-            return res.status(200).json( {
-                message: newCourseTopic.message,
-                status: 200
-            })
+            return res.status(newCourseTopic.status).send(newCourseTopic);
         }catch(err) {
             return res.status(500).json( {
                 status: 500,
@@ -65,16 +56,7 @@ class courseTopicController {
             const topic = req.body.topic;
             const newCourseTopic : any = await courseTopicService.updateCourseTopic(courseId, topic);
 
-            if (newCourseTopic.status !== 200){
-                return res.status(newCourseTopic.status).json( {
-                    message: newCourseTopic.message,
-                    status: newCourseTopic.status,
-                })
-            }
-            return res.status(200).json( {
-                message: newCourseTopic.message,
-                status: 200
-            })
+            return res.status(newCourseTopic.status).send(newCourseTopic);
         }catch(err) {
             return res.status(500).json( {
                 status: 500,

@@ -1,6 +1,7 @@
 
 import { Request, Response } from 'express'
 import courseService from './course.service'
+import { stat } from 'fs'
 class CourseController {
     public async getAllCourses(req: Request, res: Response) {
         try {
@@ -21,6 +22,27 @@ class CourseController {
             res.status(500).json({
                 message: error
             })            
+        }
+    }
+
+    public async getAllCourseWithTeacherInfo(req: Request, res: Response){
+        try {
+            const courses = await courseService.getAllCoursesWithTeacherInfo();
+            if (courses.length === 0 || !courses) {
+                return res.status(404).json({
+                    message: 'No courses found',
+                })
+            }
+
+            return res.status(200).json({
+                message: 'success',
+                data: courses
+            })
+        } catch (error) {
+            return {
+                message: "Invalid: " + error,
+                status: 500
+            }
         }
     }
 
@@ -71,23 +93,15 @@ class CourseController {
 
     public async createNewCourse(req: Request, res: Response) {
         try {
-            const {courseName, language, description, teacherId, price } = req.body
+            const {courseName, language, description, teacherId, price, topics } = req.body
             console.log(req.body)
-            const newCourse = await courseService.createNewCourse(courseName, language, description, teacherId, price)
+            const newCourse : any = await courseService.createNewCourse(courseName, language, description, teacherId, price, topics)
 
-            if (!newCourse) {
-                return res.status(400).json({
-                    message: 'Error creating course'
-                })
-            }
-
-            return res.status(201).json({
-                message: 'success',
-                data: newCourse
-            })
+            return res.status(newCourse.status).send(newCourse)
         } catch (error) {
             res.status(500).json({
-                message: error
+                message: error,
+                status: 500
             })
         }
     }

@@ -133,8 +133,6 @@ class quizService {
 
     public async createQuiz(name: string, state: string, attempt: number, duration: number, teacherId: string, sectionId: string) {
         try {
-            // check if quiz already exists
-            const quizExists = await db.select({ id: quiz.id }).from(quiz).where(eq(quiz.name, name));
             const newQuiz = await db.insert(
                                         quiz
                                     ).values({
