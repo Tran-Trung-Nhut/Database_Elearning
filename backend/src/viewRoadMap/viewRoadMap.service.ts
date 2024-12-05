@@ -28,7 +28,7 @@ class viewRoadMapService {
         }
     }
 
-    public async getRoadMapById(id: string){
+    public async getRoadMapById(id: number){
         try {
             const roadMap = db.select({
                 rmId: viewRoadMap.rmId,
@@ -53,7 +53,7 @@ class viewRoadMapService {
         }
     }
 
-    public async getRoadMapByStudentId(id: string){
+    public async getRoadMapByStudentId(id: number){
         try {
             const roadMap = db.select({
                 rmId: viewRoadMap.rmId,
@@ -78,7 +78,7 @@ class viewRoadMapService {
         }
     }
 
-    public async getRoadMapByStudentIdAndRoadMapId(studentId: string, roadMapId: string){
+    public async getRoadMapByStudentIdAndRoadMapId(studentId: number, roadMapId: number){
         try {
             const roadMap = db.select({
                 rmId: viewRoadMap.rmId,
@@ -140,7 +140,7 @@ class viewRoadMapService {
             }
         }
     }
-    public async deleteRoadMap(rmId: string, studentId: string){
+    public async deleteRoadMap(rmId: number, studentId: number){
         try {
             const roadMap = db.delete(viewRoadMap)
             .where(and(eq(viewRoadMap.rmId, rmId), eq(viewRoadMap.studentId, studentId)))

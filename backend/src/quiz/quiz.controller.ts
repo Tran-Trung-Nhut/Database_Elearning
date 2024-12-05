@@ -17,7 +17,7 @@ class quizController {
 
     public async getQuizById(req: Request, res: Response) {
         try {
-            const quizById = await quizService.getQuizById(req.params.id);
+            const quizById = await quizService.getQuizById(Number(req.params.id));
             
             return res.status(quizById.status).send(quizById.data);
             
@@ -45,7 +45,7 @@ class quizController {
 
     public async getQuizBySectionId(req: Request, res: Response) {
         try {
-            const quizBySectionId = await quizService.getQuizBySection(req.params.sectionId);
+            const quizBySectionId = await quizService.getQuizBySection(Number(req.params.sectionId));
             
             return res.status(quizBySectionId.status).send(quizBySectionId.data || quizBySectionId.message);
             
@@ -101,7 +101,7 @@ class quizController {
 
     public async deleteQuizById(req: Request, res: Response) {
         try {
-            const quiz = await quizService.deleteQuizById(req.params.id);
+            const quiz = await quizService.deleteQuizById(Number(req.params.id));
             
             return res.status(quiz.status).send(quiz.message);
             

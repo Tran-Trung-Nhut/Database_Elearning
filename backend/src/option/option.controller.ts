@@ -4,7 +4,7 @@ class optionController {
     public async getOptionByQuestionId(req: Request, res: Response) {
         try {
             const questionId = req.params.questionId;
-            optionService.getOptionByQuestionId(questionId);
+            optionService.getOptionByQuestionId(Number(questionId));
 
             return res.status(200).json({
                 message: "Successfully fetched option",

@@ -46,7 +46,7 @@ class TeacherService {
         return teachers;
     }
 
-    public getTeacherById = async (id: string) => {
+    public getTeacherById = async (id: number) => {
         const teacherById = await db.select(
             {
                 id: user.id,
@@ -66,7 +66,7 @@ class TeacherService {
         return teacher;
     }
 
-    public getTeacherByTeacherId = async (teacherId: string) => {
+    public getTeacherByTeacherId = async (teacherId: number) => {
         const teacherByTeacherId = await db.select(
             {
                 id: user.id,
@@ -137,7 +137,7 @@ class TeacherService {
     }
 
     public updateTeacher = async (
-        id: string,
+        id: number,
         firstName: string,
         lastName: string,
         username: string,
@@ -191,7 +191,7 @@ class TeacherService {
         }
     }
 
-    public deleteTeacher = async (id: string) => {
+    public deleteTeacher = async (id: number) => {
         const teacherToDelete = await db
         .delete(teacher)
         .where(eq(teacher.userId, id))

@@ -5,7 +5,7 @@ import { eq } from "drizzle-orm";
 import quizService from "../quiz/quiz.service";
 
 class sectionService{
-    public async getSectionById(id : string){
+    public async getSectionById(id : number){
         try {
             const sectionById = await db.select({
                 id: section.id,
@@ -65,7 +65,7 @@ class sectionService{
         }
     }
 
-    public async getSectionsInCourse(courseId: string){
+    public async getSectionsInCourse(courseId: number){
         try {
             const sections = await db.select({
                 id: section.id,
@@ -97,7 +97,7 @@ class sectionService{
             }
         }
     }
-    public async createSection(name: string, numOfLecture: number, timeToComplete: number, teacherId: string, courseId: string){
+    public async createSection(name: string, numOfLecture: number, timeToComplete: number, teacherId: number, courseId: number){
         try {
             
             const newSection = await db.insert(section)
@@ -121,7 +121,7 @@ class sectionService{
         }
     }
 
-    public async updateSection(id: string, name: string, numOfLecture: number, timeToComplete: number, teacherId: string, courseId: string){
+    public async updateSection(id: number, name: string, numOfLecture: number, timeToComplete: number, teacherId: number, courseId: number){
         try {
             const sectionExists = await db.select({
                 id: section.id,
@@ -167,7 +167,7 @@ class sectionService{
         }
     }
 
-    public deleteSection = async (id: string) => {
+    public deleteSection = async (id: number) => {
         try {
             const sectionExists = await db.select({
                 id: section.id
@@ -198,7 +198,7 @@ class sectionService{
         }
     }
 
-    public async deleteSectionsInCourse(courseId: string){
+    public async deleteSectionsInCourse(courseId: number){
         try {
             const sections = await db.select({
                 id: section.id

@@ -20,7 +20,7 @@ class teacherQualificationController {
 
     public async getTeacherQualificationByUserId(req: Request, res: Response){
         const {userId }= req.params;
-        const result = teacherQualificationService.getTeacherQualificationByUserId(userId);
+        const result = teacherQualificationService.getTeacherQualificationByUserId(Number(userId));
 
         if ((await result).status === 200){
             return res.status(200).json({

@@ -27,7 +27,7 @@ class TeacherController{
         try{
             const { id } = req.params
 
-            const teacher = await teacherService.getTeacherById(id)
+            const teacher = await teacherService.getTeacherById(Number(id))
 
             if(!teacher){
                 return res.status(404).json({
@@ -133,7 +133,7 @@ class TeacherController{
         try{
             const { id } = req.params
 
-            const teacher = await teacherService.deleteTeacher(id)
+            const teacher = await teacherService.deleteTeacher(Number(id))
 
             if(!teacher){
                 return res.status(404).json({

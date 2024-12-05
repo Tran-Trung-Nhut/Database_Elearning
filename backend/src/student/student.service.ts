@@ -47,7 +47,7 @@ class StudentService{
         .innerJoin(student, eq(student.userId, user.id))
     }
 
-    public getStudentById = async (id: string) =>{
+    public getStudentById = async (id: number) =>{
         return await db
         .select({
             id: user.id,
@@ -122,7 +122,7 @@ class StudentService{
     }
 
     public updateStudent = async (
-        id: string,
+        id: number,
         firstName: string,
         lastName: string,
         username: string,
@@ -186,7 +186,7 @@ class StudentService{
         }
     }
 
-    public deleteStudent = async (id: string) => {
+    public deleteStudent = async (id: number) => {
         const deleteStudent = await db
         .delete(student)
         .where(eq(student.userId, id))

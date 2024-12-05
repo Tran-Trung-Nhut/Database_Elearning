@@ -16,7 +16,7 @@ class requireCourseController {
 
     public async getRequireCourseById(req: Request, res: Response) {
         try {
-            const response = await requireCourseService.getRequireCourseById(req.params.courseId);
+            const response = await requireCourseService.getRequireCourseById(Number(req.params.courseId));
 
             return res.status(response.status).send(response);
         } catch (error) {

@@ -17,7 +17,7 @@ class questionController{
 
     public async getQuestionById(req: Request, res: Response) {
         try {
-            const questionById = await questionService.getQuestionById(req.params.id);
+            const questionById = await questionService.getQuestionById(Number(req.params.id));
             
             return res.status(questionById.status).send(questionById.data || questionById.message);
             
@@ -31,7 +31,7 @@ class questionController{
 
     public async getQuestionByQuizId(req: Request, res: Response) {
         try {
-            const questionByQuizId = await questionService.getQuestionByQuizId(req.params.quizId);
+            const questionByQuizId = await questionService.getQuestionByQuizId(Number(req.params.quizId));
             
             return res.status(questionByQuizId.status).send(questionByQuizId.data || questionByQuizId.message);
             
@@ -84,7 +84,7 @@ class questionController{
 
     public async deleteQuestionById(req: Request, res: Response) {
         try {
-            const question = await questionService.deleteQuestionById(req.params.id);
+            const question = await questionService.deleteQuestionById(Number(req.params.id));
             return res.status(question.status).send(question.message);
             
         } catch (error) {
@@ -96,7 +96,7 @@ class questionController{
     }
     public async deleteAllQuestionsInQuiz(req: Request, res: Response) {
         try {
-            const question = await questionService.deleteAllQuestionsInQuiz(req.params.quizId);
+            const question = await questionService.deleteAllQuestionsInQuiz(Number(req.params.quizId));
             return res.status(question.status).send(question.message);
             
         } catch (error) {

@@ -30,7 +30,7 @@ class StudentController{
         try{
             const { id } = req.params
 
-            const student = await studentService.getStudentById(id)
+            const student = await studentService.getStudentById(Number(id))
 
             if(student.length === 0){
                 return res.status(404).json({
@@ -148,7 +148,7 @@ class StudentController{
         try{
             const { id } = req.params
 
-            const existStudent = await studentService.getStudentById(id)
+            const existStudent = await studentService.getStudentById(Number(id))
 
             if(!existStudent || existStudent.length === 0){
                 return res.status(404).json({
@@ -156,7 +156,7 @@ class StudentController{
                 })
             }
 
-            const deleteStudent = await studentService.deleteStudent(id)
+            const deleteStudent = await studentService.deleteStudent(Number(id))
 
             if(!deleteStudent){
                 return res.status(500).json({

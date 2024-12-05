@@ -31,7 +31,7 @@ class roadMapService {
         }
     }
 
-    public async getRoadMapById(id: string){
+    public async getRoadMapById(id: number){
         // Get roadmap by id
         try {
             const roadMapById = await db.select(
@@ -106,7 +106,7 @@ class roadMapService {
         }
     }
 
-    public async deleteRoadMap(id: string){
+    public async deleteRoadMap(id: number){
         // Delete roadmap
         try {
             await db.delete(roadMap).

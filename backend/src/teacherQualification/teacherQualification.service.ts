@@ -27,7 +27,7 @@ class teacherQualificationService {
         }
     }
 
-    public async getTeacherQualificationByUserId(userId: string){
+    public async getTeacherQualificationByUserId(userId: number){
         try {
             const teacherQualificationByTeacherId = await db.select(
                 {
@@ -98,7 +98,7 @@ class teacherQualificationService {
         }
     }
 
-    public async createTeacherQualification(userId: string, qualification: string){
+    public async createTeacherQualification(userId: number, qualification: string){
         try{
             // check if teacherId exist
             const teacherExist = await db.select(
@@ -146,7 +146,7 @@ class teacherQualificationService {
         }
     }
 
-    public async updateTeacherQualification(userId: string, qualification: string){
+    public async updateTeacherQualification(userId: number, qualification: string){
         try{
             // check if teacherId exist
             const teacherExist = await db.select(
@@ -196,7 +196,7 @@ class teacherQualificationService {
         }
     }
     
-    public async deleteTeacherQualification(userId: string){
+    public async deleteTeacherQualification(userId: number){
         try{
             // check if teacherId exist
             const teacherExist = await db.select(

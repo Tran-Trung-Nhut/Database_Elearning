@@ -30,7 +30,7 @@ class questionService {
         }
     }
 
-    public async getQuestionById(id: string) {
+    public async getQuestionById(id: number) {
         try {
             const find = await db.select({
                 id: question.id,
@@ -63,7 +63,7 @@ class questionService {
         }
     }
 
-    public async getQuestionByQuizId(quizId: string) {
+    public async getQuestionByQuizId(quizId: number) {
         try {
             const find = await db.select({
                 id: question.id,
@@ -95,7 +95,7 @@ class questionService {
             }
         }
     }
-    public async createQuestion(quizId: string, type: string, answer: string, content: string, teacherId: string) {
+    public async createQuestion(quizId: number, type: string, answer: string, content: string, teacherId: number) {
         try {
             const create = await db.insert(question)
                                     .values({
@@ -117,7 +117,7 @@ class questionService {
         }
     }
 
-    public async updateQuestion(id: string, quizId: string, type: string, answer: string, content: string, teacherId: string) {
+    public async updateQuestion(id: number, quizId: number, type: string, answer: string, content: string, teacherId: number) {
         try {
             const update = await db.update(question)
                                     .set({
@@ -140,7 +140,7 @@ class questionService {
         }
     }
 
-    public async deleteQuestionById(id: string) {
+    public async deleteQuestionById(id: number) {
         try {
             const del = await db.delete(question)
                             .where(eq(question.id, id))
@@ -156,7 +156,7 @@ class questionService {
         }
     }
 
-    public async deleteAllQuestionsInQuiz(quizId: string) {
+    public async deleteAllQuestionsInQuiz(quizId: number) {
         try {
             const del = await db.delete(question)
                             .where(eq(question.quizId, quizId))

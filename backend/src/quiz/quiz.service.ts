@@ -30,7 +30,7 @@ class quizService {
         }
     }
 
-    public async getQuizById(id: string) {
+    public async getQuizById(id: number) {
         try {
             const quizById = await db.select(
                 {
@@ -96,7 +96,7 @@ class quizService {
         }
     }
 
-    public async getQuizBySection(sectionId: string) {
+    public async getQuizBySection(sectionId: number) {
         try {
             console.log(sectionId)
             const quizBySection = await db.select(
@@ -131,7 +131,7 @@ class quizService {
     }
 
 
-    public async createQuiz(name: string, state: string, attempt: number, duration: number, teacherId: string, sectionId: string) {
+    public async createQuiz(name: string, state: string, attempt: number, duration: number, teacherId: number, sectionId: number) {
         try {
             const newQuiz = await db.insert(
                                         quiz
@@ -157,7 +157,7 @@ class quizService {
         }
     }
 
-    public async updateQuiz(id: string, name: string, state: string, attempt: number, duration: number, teacherId: string, sectionId: string) {
+    public async updateQuiz(id: number, name: string, state: string, attempt: number, duration: number, teacherId: number, sectionId: number) {
         try {
             const quizExists = await db.select({ id: quiz.id }).from(quiz).where(eq(quiz.id, id));
             if (quizExists.length === 0) {
@@ -186,7 +186,7 @@ class quizService {
         }
     }
 
-    public async deleteQuizById(id: string){
+    public async deleteQuizById(id: number){
         try {
             const quizExists = await db.select({ id: quiz.id }).from(quiz).where(eq(quiz.id, id));
             if (quizExists.length === 0) {
@@ -235,7 +235,7 @@ class quizService {
         }
     }
 
-    public async deleteAllQuizInSection(sectionId: string){
+    public async deleteAllQuizInSection(sectionId: number){
         try {
             const quizExists = await db.select({ id: quiz.id }).from(quiz).where(eq(quiz.sectionId, sectionId));
             if (quizExists.length === 0) {

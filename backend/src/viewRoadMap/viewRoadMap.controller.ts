@@ -16,7 +16,7 @@ class viewRoadMapController{
 
     public async getRoadMapById(req: Request, res: Response){
         try {
-            const roadMap = await viewRoadMapService.getRoadMapById(req.params.rmId);
+            const roadMap = await viewRoadMapService.getRoadMapById(Number(req.params.rmId));
             return res.status(roadMap.status).send(roadMap);
         } catch (error) {
             return {
@@ -28,7 +28,7 @@ class viewRoadMapController{
 
     public async getRoadMapByStudentId(req: Request, res: Response){
         try {
-            const roadMap = await viewRoadMapService.getRoadMapByStudentId(req.params.studentId);
+            const roadMap = await viewRoadMapService.getRoadMapByStudentId(Number(req.params.studentId));
             return res.status(roadMap.status).send(roadMap);
         } catch (error) {
             return {
@@ -40,7 +40,7 @@ class viewRoadMapController{
 
     public async getRoadMapByStudentIdAndRmId(req: Request, res: Response){
         try {
-            const roadMap = await viewRoadMapService.getRoadMapByStudentIdAndRoadMapId(req.params.studentId, req.params.rmId);
+            const roadMap = await viewRoadMapService.getRoadMapByStudentIdAndRoadMapId(Number(req.params.studentId), Number(req.params.rmId));
             return res.status(roadMap.status).send(roadMap);
         } catch (error) {
             return {
@@ -78,7 +78,7 @@ class viewRoadMapController{
 
     public async deleteRoadMap(req: Request, res: Response){
         try {
-            const deletedRoadMap = await viewRoadMapService.deleteRoadMap(req.params.rmId, req.params.studentId);
+            const deletedRoadMap = await viewRoadMapService.deleteRoadMap(Number(req.params.rmId), Number(req.params.studentId));
             return res.status(deletedRoadMap.status).send(deletedRoadMap);
         } catch (error) {
             return {

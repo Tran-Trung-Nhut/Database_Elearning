@@ -24,7 +24,7 @@ class requireCourseService {
         }
     }
 
-    public async getRequireCourseById(courseId: string) {
+    public async getRequireCourseById(courseId: number) {
         try {
             const requireCourses = await db.select({
                 courseId: requireCourse.courseId,
@@ -46,7 +46,7 @@ class requireCourseService {
         }
     }
 
-    public async insertRequireCourse(courseId: string, rCourseId: string) {
+    public async insertRequireCourse(courseId: number, rCourseId: number) {
         try{
             // first find requireCourse that has courseId and rCourseId
             const insertedRequireCourse = await db.select({
@@ -82,7 +82,7 @@ class requireCourseService {
         }
     }
 
-    public async updateRequireCourse(courseId: string, rCourseId: string, newRCourseId: string) {
+    public async updateRequireCourse(courseId: number, rCourseId: number, newRCourseId: number) {
         try {
             // first find requireCourse that has courseId and rCourseId
             const requireCourses = await db.select({
@@ -118,7 +118,7 @@ class requireCourseService {
         }
     }
 
-    public async deleteRequireCourse(courseId: string, rCourseId: string) {
+    public async deleteRequireCourse(courseId: number, rCourseId: number) {
         try {
             // first find requireCourse that has courseId and rCourseId
             const requireCourses = await db.select({
@@ -149,7 +149,7 @@ class requireCourseService {
         }
     }
 
-    public async deleteRequireCourseById(courseId: string) {
+    public async deleteRequireCourseById(courseId: number) {
         try {
             // first find requireCourse that has courseId
             const requireCourses = await db.select({

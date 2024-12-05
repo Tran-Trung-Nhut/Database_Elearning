@@ -4,7 +4,7 @@ import { roadCertification } from "../db/schema";
 import { roadCertificationDto } from "../dtos/roadCertification.dto";
 
 class roadCertificationService {
-  public async getRoadCertificationById(id: string) {
+  public async getRoadCertificationById(id: number) {
     // Your code here
     try {
         const returnVal = await db.select({
@@ -101,7 +101,7 @@ class roadCertificationService {
         }
     }
 
-    public async deleteRoadCertification(id: string){
+    public async deleteRoadCertification(id: number){
         // Your code here
         try {
             const returnVal = await db.delete(roadCertification).where(eq(roadCertification.id, id))

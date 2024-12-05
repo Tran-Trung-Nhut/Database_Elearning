@@ -19,7 +19,7 @@ class roadMapController{
         // Get roadmap by id
         try {
             const id = req.params.id;
-            const roadMapById = await roadMapService.getRoadMapById(id);
+            const roadMapById = await roadMapService.getRoadMapById(Number(id));
 
             return res.status(roadMapById.status).send(roadMapById);
             
@@ -65,7 +65,7 @@ class roadMapController{
         // Delete roadmap
         try {
             const id = req.params.id;
-            const deletedRoadMap = await roadMapService.deleteRoadMap(id);
+            const deletedRoadMap = await roadMapService.deleteRoadMap(Number(id));
 
             return res.status(deletedRoadMap.status).send(deletedRoadMap);
         } catch (error) {

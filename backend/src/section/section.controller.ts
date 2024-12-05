@@ -17,7 +17,7 @@ class sectionController {
 
     public getSectionById = async (req: Request, res: Response) => {
         try {
-            const response = await sectionService.getSectionById(req.params.id);
+            const response = await sectionService.getSectionById(Number(req.params.id));
 
             return res.status(response.status).send(response);
         } catch (error) {
@@ -30,7 +30,7 @@ class sectionController {
 
     public getSectionsInCourse = async (req: Request, res: Response) => {
         try {
-            const response = await sectionService.getSectionsInCourse(req.params.courseId);
+            const response = await sectionService.getSectionsInCourse(Number(req.params.courseId));
 
             return res.status(response.status).send(response);
         } catch (error) {
@@ -81,7 +81,7 @@ class sectionController {
         try {
             const id = req.params.id;
 
-            const response = await sectionService.deleteSection(id);
+            const response = await sectionService.deleteSection(Number(id));
             return res.status(response.status).send(response);
         } catch (error) {
             return{
@@ -95,7 +95,7 @@ class sectionController {
         try {
             const id = req.params.courseId;
 
-            const response = await sectionService.deleteSectionsInCourse(id);
+            const response = await sectionService.deleteSectionsInCourse(Number(id));
             return res.status(response.status).send(response);
         } catch (error) {
             return{
