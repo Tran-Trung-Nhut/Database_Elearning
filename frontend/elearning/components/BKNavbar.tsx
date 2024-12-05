@@ -28,14 +28,7 @@ function BKNavbar() {
                                     <span className="sr-only">Close</span>
                                     <svg className="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10" /><path d="m15 9-6 6" /><path d="m9 9 6 6" /></svg>
                                 </button>
-                            </div>
-                            <div className="absolute inset-y-0 end-0 flex items-center pointer-events-none z-20 pe-3 text-gray-400">
-                                <svg className="shrink-0 size-3 text-gray-400 dark:text-white/60" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3" /></svg>
-                                <span className="mx-1">
-                                    <svg className="shrink-0 size-3 text-gray-400 dark:text-white/60" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" /><path d="M12 5v14" /></svg>
-                                </span>
-                                <span className="text-xs">/</span>
-                            </div>
+                            </div>                       
                         </div>
                     </div>
                 </div>
@@ -52,9 +45,7 @@ function BKNavbar() {
                     className="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-2xl bg-white border border-sky-600 text-sky-600 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:hover:bg-white/10 dark:text-white dark:hover:text-white dark:focus:text-white"
                     onClick={() => router.push('signup')}>
                         Đăng kí
-                    </button>
-                    
-                    
+                    </button>     
                 </div>
             </nav>
         </header>
