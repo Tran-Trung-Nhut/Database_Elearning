@@ -74,6 +74,7 @@ export default function Home() {
                   <button
                     type="button"
                     className="bg-transparent border border-white text-white font-medium text-sm px-6 py-3 rounded-lg hover:bg-white hover:text-blue-600 transition duration-300"
+                    onClick={() => router.push('/aboutus')}
                   >
                     Về chúng tôi
                   </button>
@@ -121,6 +122,7 @@ export default function Home() {
               courseName={cour.courseName}
               teacher={cour.teacherFirstName + ' ' + cour.teacherLastName}
               price={cour.price}
+              id={cour.courseId}
               />
             ))}
           </div>

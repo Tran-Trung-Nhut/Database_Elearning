@@ -21,6 +21,8 @@ const AvatarDropdown: React.FC<AvatarDropdownProps> = ({ avatar, name, email }) 
   };
 
   const handeLogout = () => {
+    const confirm = window.confirm("Bạn có chắc chắn muốn đăng xuất không!")
+    if(!confirm) return
     sessionStorage.removeItem('userLogin')
 
     setUserLogin(defaultUserLogin)
