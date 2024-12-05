@@ -2,7 +2,7 @@
 
 import { userLoginState } from '@/state';
 import axios from 'axios';
-import { use, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 
 const CreateCourse = () => {
