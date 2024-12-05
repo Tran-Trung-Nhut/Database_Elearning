@@ -83,10 +83,10 @@ class CourseService{
         }
         // find teacher by teacherId
         const teacherExist = await teacherService.getTeacherByTeacherId(teacherId)
+
         if (!teacherExist || teacherExist.length === 0){
             return null
         }
-
         
         const newCourse = await db.insert(course).values({
             name: courseName,

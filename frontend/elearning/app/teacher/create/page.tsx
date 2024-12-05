@@ -1,16 +1,20 @@
 'use client';
 
-import { useState } from 'react';
+import { userLoginState } from '@/state';
+import axios from 'axios';
+import { use, useEffect, useState } from 'react';
+import { useRecoilValue } from 'recoil';
 
 const CreateCourse = () => {
   const [courseName, setCourseName] = useState('');
   const [language, setLanguage] = useState('Vietnamese');
   const [description, setDescription] = useState('');
-  const [price, setPrice] = useState('');
+  const [price, setPrice] = useState<number>(0);
   const [averageQuizScore, setAverageQuizScore] = useState('');
   const [topics, setTopics] = useState<string[]>([]);
   const [currentTopic, setCurrentTopic] = useState<string>('');
-
+  const user = useRecoilValue(userLoginState)
+  
   const handleAddTopic = () => {
     if (currentTopic.trim() && !topics.includes(currentTopic)) {
       setTopics([...topics, currentTopic]);
@@ -18,6 +22,31 @@ const CreateCourse = () => {
     }
   };
 
+  
+  const handleAddCourse = async () => {
+    if(!courseName || !description || !price || !averageQuizScore || topics.length === 0) {
+      alert('Vui lòng điền đầy đủ thông tin!');
+      return;
+    }
+    try{
+      const response = await axios.post('http://localhost:4000/course/create', {
+        courseName,
+        language,
+        description,
+        price,
+        averageQuizScore,
+        topics,
+        teacherId: user.id
+      });
+      console.log(response.data);
+      alert('Tạo khóa học thành công!');
+    }catch (e: unknown) {
+      if (axios.isAxiosError(e) && e.response) {
+        console.log(e.response.data);
+        alert("Có lỗi xảy ra, vui lòng thử lại sau");
+      }
+    }
+  }
   const handleRemoveTopic = (topicToRemove: string) => {
     setTopics(topics.filter((topic) => topic !== topicToRemove));
   };
@@ -36,6 +65,10 @@ const CreateCourse = () => {
     // Here you can send courseData to the backend API or perform other actions.
     alert('Course created successfully!');
   };
+
+  useEffect(() => {
+    console.log(user.id);
+  }, []);
 
   return (
     <div className="mt-10 create-course-container border-solid border-2 shadow-xl px-6 py-12 lg:px-8 m-100" style={{ padding: '20px', maxWidth: '600px', margin: '0 auto' }}>
@@ -88,7 +121,7 @@ const CreateCourse = () => {
             type="number"
             id="price"
             value={price}
-            onChange={(e) => setPrice(e.target.value)}
+            onChange={(e) => setPrice(Number(e.target.value))}
             required
             style={{ width: '100%', padding: '8px', marginTop: '5px' }}
             className='border-solid border-2 rounded-lg'
@@ -150,6 +183,7 @@ const CreateCourse = () => {
 
         <button type="submit" 
           className='bg-hcmutDarkBlue px-2 py-2 text-white cursor-pointer hover:bg-hcmutLightBlue rounded-xl'
+            onClick={handleAddCourse}
         >
           Create Course
         </button>

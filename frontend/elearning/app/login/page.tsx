@@ -7,8 +7,8 @@ import axios from "axios";
 import { UserLoginDto } from "../dtos/user.dto";
 import { useSetRecoilState } from "recoil";
 import { userLoginState } from "@/state";
+import jwt from "jsonwebtoken";
 
-const jwt = require("jsonwebtoken");
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
@@ -36,30 +36,39 @@ export default function Login() {
       });
 
       console.log(response.data);
-      const decoded = jwt.decode(response.data.token);
+      const decoded = jwt.decode(response.data.token) as jwt.JwtPayload | null;
+
+      if (!decoded) {
+        throw new Error("Invalid token");
+      }
 
       const data: UserLoginDto = {
-        id: decoded.id,
-        role: decoded.role,
-        firstName: decoded.firstName,
-        lastName: decoded.lastName,
+        id: decoded.id as string, 
+        role: decoded.role as string,
+        firstName: decoded.firstName as string,
+        lastName: decoded.lastName as string,
         token: response.data.token,
-        email: decoded.email,
+        email: decoded.email as string,
       };
-      console.log(data);
+      // console.log(data);
       setUserLogin(data);
 
       sessionStorage.setItem('userLogin', JSON.stringify(data));
 
       alert("Đăng nhập thành công");
-
+      if(decoded.role === "student") 
       router.push('/');
-    } catch (e: any) {
-      if(e.response.data.message === "Invalid username"){
-        alert("Tên đăng nhập không chính xác! vui lòng kiểm tra lại! Nếu bạn chưa có tài khoản, hãy đăng ký ngay!")
-      }
-      if(e.response.data.message === "Invalid password"){
-        alert("Mật khẩu không chính xác! Vui lòng đăng nhập lại")
+      else router.push('/teacher');
+    } 
+    
+    catch (e: unknown) {
+      if (axios.isAxiosError(e) && e.response) {
+        if(e.response.data.message === "Invalid username"){
+          alert("Tên đăng nhập không chính xác! vui lòng kiểm tra lại! Nếu bạn chưa có tài khoản, hãy đăng ký ngay!")
+        }
+        if(e.response.data.message === "Invalid password"){
+          alert("Mật khẩu không chính xác! Vui lòng đăng nhập lại")
+        }
       }
     }
   };
