@@ -81,7 +81,7 @@ class TeacherService {
             }
         ).from(user)
         .innerJoin(teacher, eq(teacher.userId, user.id))
-        .where(eq(teacher.teacherId, teacherId))
+        .where(eq(teacher.userId, teacherId))
         
         return teacherByTeacherId;
     }
