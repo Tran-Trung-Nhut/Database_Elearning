@@ -79,7 +79,7 @@ class TeacherController{
                 token: newTeacher
             })
         }catch(e:any){
-
+            console.log(e)
             res.status(500).json({
                 message: e.message
             })

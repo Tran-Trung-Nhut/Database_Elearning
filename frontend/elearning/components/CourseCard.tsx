@@ -19,7 +19,9 @@ function CourseCard(props: any) {
         />
         <div className="p-4">
           <h2 className="font-bold text-lg mb-2">{props.courseName}</h2>
-          <p className="text-gray-600 text-sm">{props.teacher} </p>
+          <p className="text-gray-600 text-sm">
+            {props.teacher} 
+            </p>
           <p className="font-semibold text-xl text-gray-800">
             {props.price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}
           </p>
