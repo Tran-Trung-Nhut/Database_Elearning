@@ -1,11 +1,21 @@
 'use client'; // Add this line at the top to mark this component as a client component
+import { SectionDto } from '@/app/dtos/session.dto';
+import axios from 'axios';
 import React, { useState } from 'react';
 
 function CourseCard(props: any) {
   const [modal, setModal] = useState(false);
+  const [section, setSection] = useState<SectionDto[]>([])
   
   // Toggle modal visibility
-  const toggleModal = () => {
+  const toggleModal = async () => {
+    try {
+      const response = await axios.get(`http://localhost:4000/section/course/${props.id}`)
+      setSection(response.data.data)
+    } catch (error) {
+      console.log(error)
+      alert("Không thể mở khóa học!")
+    }
     setModal(!modal);
   };
 
@@ -40,12 +50,13 @@ function CourseCard(props: any) {
             aria-hidden="true"
             className="fixed inset-0 z-50 flex items-center justify-center w-full h-screen"
           >
-            <div className="relative w-full max-w-2xl bg-white rounded-lg shadow-lg dark:bg-gray-800">
+            
+            <div className="relative w-full max-w-96 bg-white rounded-lg shadow-lg dark:bg-gray-800">
               {/* Modal Header */}
               <div className="flex justify-between items-center p-5 border-b border-gray-200 dark:border-gray-600">
                 <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
-                  {props.namecourse}
                 </h3>
+                <b className='text-2xl'>{props.courseName}</b>
                 <button
                   type="button"
                   className="text-gray-400 hover:text-gray-900 dark:hover:text-white transition"
@@ -57,12 +68,12 @@ function CourseCard(props: any) {
 
               {/* Modal Body */}
               <div className="p-5 space-y-4">
-                <p className="text-base text-gray-600 dark:text-gray-400">
-                  Nội dung khóa học 1
-                </p>
-                <p className="text-base text-gray-600 dark:text-gray-400">
-                  Nội dung khóa học 2
-                </p>
+                
+                {section.map((s, index)=> (
+                  <p className="text-base text-gray-600 dark:text-gray-400">
+                    <b>Chương {index + 1}: {s.name}</b>
+                  </p>
+                ))}
               </div>
 
               {/* Modal Footer */}

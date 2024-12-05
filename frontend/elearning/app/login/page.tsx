@@ -55,7 +55,6 @@ export default function Login() {
 
       sessionStorage.setItem('userLogin', JSON.stringify(data));
 
-      alert("Đăng nhập thành công");
       if(decoded.role === "student") 
       router.push('/');
       else router.push('/teacher');
