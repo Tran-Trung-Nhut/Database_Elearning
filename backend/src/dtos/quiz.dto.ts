@@ -1,10 +1,10 @@
 export interface quizDto {
-    id : string;
+    id : number;
     name: string;
     state: string;
     attempt: number;
     duration: number;
-    teacherId: string;
-    sectionId: string;
+    teacherId: number;
+    sectionId: number;
     creTime: Date;
 }

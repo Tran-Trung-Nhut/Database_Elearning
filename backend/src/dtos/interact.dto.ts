@@ -1,4 +1,4 @@
 export interface interactDto {
-    lectureId: string;
-    studentId: string;
+    lectureId: number;
+    studentId: number;
 }

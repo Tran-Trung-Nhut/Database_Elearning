@@ -1,6 +1,6 @@
 export interface joinDto{
-    courseId: string;
-    studentId: string;
+    courseId: number;
+    studentId: number;
     dateComplete: string;
     dateStart: string;
     progress: number;

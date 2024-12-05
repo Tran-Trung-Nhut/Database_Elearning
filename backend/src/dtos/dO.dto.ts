@@ -1,6 +1,6 @@
 export interface dODto {
-    quizId: string;
-    studentId: string;
+    quizId: number;
+    studentId: number;
     score: number;
     attemptOrder: number;
 }

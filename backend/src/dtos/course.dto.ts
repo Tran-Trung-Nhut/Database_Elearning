@@ -1,5 +1,5 @@
 export interface CourseDto {
-    courseId: string,
+    courseId: number,
     courseName: string,
     language: string,
     description: string,

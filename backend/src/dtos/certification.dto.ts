@@ -1,5 +1,5 @@
 export interface certificationDto{
-    id: string;
+    id: number;
     name: string;
     issueDate: string;
     expDate: string;

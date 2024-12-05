@@ -1,5 +1,5 @@
 export interface answerRecordDto {
-    quizId: string;
+    quizId: number;
     studentId: string;
     questionId: string;
     studentAns: string;

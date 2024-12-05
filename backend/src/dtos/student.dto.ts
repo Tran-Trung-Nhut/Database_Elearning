@@ -1,5 +1,5 @@
 export interface StudentDto{
-    userId: string,
+    userId: number,
     studentId: string,
     enrollmentDate: string;
     numberCourseEnrolled: number;

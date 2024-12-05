@@ -1,7 +1,7 @@
 export interface roadMapDto{
-    id: string;
+    id: number;
     instruction: string;
     description: string;
     name: string;
-    teacherId: string;
+    teacherId: number;
 }

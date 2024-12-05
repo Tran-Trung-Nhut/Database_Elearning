@@ -1,4 +1,4 @@
 export interface teacherQualificationDto{
-    teacherId: string,
+    teacherId: number,
     qualification: string,
 }

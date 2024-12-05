@@ -1,4 +1,4 @@
 export interface TeacherDto{
-    userId: string,
+    userId: number,
     teacherId: string,
 }
