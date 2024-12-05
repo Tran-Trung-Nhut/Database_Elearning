@@ -4,12 +4,12 @@ import { pgTable, serial, date, integer, varchar, text, unique, primaryKey, doub
 export const user = pgTable("user", {
     id: serial("id").primaryKey(),
     email: varchar("email", { length: 255}).notNull().unique(),
-    firstName: varchar("firstName", { length: 10}).notNull(),
-    lastName: varchar("lastName", { length: 30}).notNull(),
-    username: varchar("username", { length: 30}).notNull().unique(),
+    firstName: varchar("firstName", { length: 64}).notNull(),
+    lastName: varchar("lastName", { length: 64}).notNull(),
+    username: varchar("username", { length: 64}).notNull().unique(),
     password: varchar("password", { length: 255}).notNull().unique(),
     role: varchar("role", { length: 255}).notNull(),
-    bankName: varchar("bankName", { length: 20}).notNull(),
+    bankName: varchar("bankName", { length: 255}).notNull(),
     bankAccount: varchar("bankAccount", { length: 255}).notNull()
 });
 
@@ -23,7 +23,7 @@ export const student = pgTable("student", {
 
 export const teacher = pgTable("teacher", {
     userId: serial('userId').notNull().references(() => user.id, { onDelete:'cascade' }).primaryKey(),
-    teacherId: varchar('teacherId', { length: 10}).notNull().unique(),
+    teacherId: varchar('teacherId', { length: 10  }).notNull().unique(),
 })
 
 export const teacherQualification = pgTable('teacherQualification', {

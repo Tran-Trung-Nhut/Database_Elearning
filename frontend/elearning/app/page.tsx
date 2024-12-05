@@ -1,4 +1,5 @@
 "use client"
+
 import BKNavbar from "@/components/BKNavbar";
 import Footer from "@/components/Footer";
 import CourseCard from "@/components/CourseCard";
@@ -9,25 +10,27 @@ import { useRecoilState } from "recoil";
 import { userLoginState } from "@/state";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { CourseDto } from "./dtos/course.dto";
+import { CourseWithTeacherNameDto } from "./dtos/course.dto";
 
 export default function Home() {
 
   const [userLogin, setUserLogin] = useRecoilState(userLoginState)
-  const [course, setCourse] = useState<CourseDto[]>([])
+  const [course, setCourse] = useState<CourseWithTeacherNameDto[]>([])
   const isLoggedIn : boolean = userLogin.id !== "" ? true : false;
   const router = useRouter()
 
   const fetchCourse = async () => {
     try{
-      const response = await axios.get('http://localhost:4000/course')
+      const response = await axios.get('http://localhost:4000/course/teacher')
       setCourse(response.data.data)
+      console.log(response)
     }catch(e){
       console.log(e)
     }
   }
 
   useEffect(() => {
+    fetchCourse()
     if(userLogin.id !== "") return
     
     const userFromSessionRaw = sessionStorage.getItem('userLogin')
@@ -36,8 +39,7 @@ export default function Home() {
 
     setUserLogin(JSON.parse(userFromSessionRaw))  
 
-    fetchCourse()
-  })
+  },[])
 
   return (
     <>
@@ -117,7 +119,7 @@ export default function Home() {
             {course.map((cour, index) => (
               <CourseCard
               courseName={cour.courseName}
-              teacher={"Unknown"}
+              teacher={cour.teacherFirstName + ' ' + cour.teacherLastName}
               price={cour.price}
               />
             ))}

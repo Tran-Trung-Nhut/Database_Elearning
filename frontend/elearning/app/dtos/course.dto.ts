@@ -1,4 +1,4 @@
-export interface CourseDto{
+export interface CourseWithTeacherNameDto{
     avgQuiz: number,
     courseId: string,
     courseName: string
@@ -7,4 +7,6 @@ export interface CourseDto{
     languege: string
     price: number
     teacherId: string
+    teacherLastName: string
+    teacherFirstName: string
 }

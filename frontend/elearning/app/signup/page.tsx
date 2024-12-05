@@ -4,6 +4,10 @@ import logo from "../public/Logo.png";
 import React, { useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import jwt from "jsonwebtoken"
+import { UserLoginDto } from "../dtos/user.dto";
+import { useSetRecoilState } from "recoil";
+import { userLoginState } from "@/state";
 
 
 export default function Login() {
@@ -16,6 +20,7 @@ export default function Login() {
   const [bankAccountNumber, setBankAccountNumber] = useState("");
   const [role, setRole] = useState("Teacher"); 
   const [password, setPassword] = useState("");
+  const setUserLogin = useSetRecoilState(userLoginState)
 
   const togglePasswordVisibility = () => {
     setShowPassword((prev) => !prev);
@@ -39,19 +44,75 @@ export default function Login() {
       })
       .then((response) => {
         if (response.status === 200) {
-          alert("Sign up successfully!");
-          router.push('login');
-        } else {
-          alert("Sign up failed!");
+           console.log(response.data)
+          const decoded = jwt.decode(response.data.token.token) as jwt.JwtPayload | null;
+
+          if (!decoded) {
+            throw new Error("Invalid token");
+          }
+  
+        const data: UserLoginDto = {
+          id: decoded.id as string, 
+          role: decoded.role as string,
+          firstName: decoded.firstName as string,
+          lastName: decoded.lastName as string,
+          token: response.data.token,
+          email: decoded.email as string,
+        };
+
+        setUserLogin(data);
+
+        sessionStorage.setItem('userLogin', JSON.stringify(data));
+          alert("Đăng Ký thành công!");
+          router.push('/');
         }
       })
       .catch((error) => {
         console.log(error);
-        alert("Sign up failed!");
+        alert("Đăng ký thất bại! Vui lòng thử lại sau!");
       });
   }
   function sendSignUpRequestAsTeacher() {
+    axios
+    .post("http://localhost:4000/auth/register-as-teacher", {
+      firstName: firstName,
+      lastName: lastName,
+      username: username,
+      password: password,
+      email: email,
+      bankName: bankName,
+      bankAccount: bankAccountNumber,
+    })
+    .then((response) => {
+      if (response.status === 200) {
 
+        const decoded = jwt.decode(response.data.token.token) as jwt.JwtPayload | null;
+
+        if (!decoded) {
+          throw new Error("Invalid token"); 
+        }
+  
+        const data: UserLoginDto = {
+          id: decoded.id as string, 
+          role: decoded.role as string,
+          firstName: decoded.firstName as string,
+          lastName: decoded.lastName as string,
+          token: response.data.token,
+          email: decoded.email as string,
+        };
+
+        setUserLogin(data);
+
+        sessionStorage.setItem('userLogin', JSON.stringify(data));
+
+        alert("Đăng ký thành công!");
+        router.push('/teacher');
+      } 
+    })
+    .catch((error) => {
+      console.log(error);
+      alert("Đăng ký thất bại! Vui lòng thử lại sau!");
+    });
   }
   return (
     <div className="bg-background">
@@ -278,7 +339,7 @@ export default function Login() {
               <button
                 type="button"
                 className="flex w-full justify-center rounded-md bg-hcmutDarkBlue px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-hcmutLightBlue focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                onClick={() => role === "student" ? sendSignUpRequestAsStudent() : sendSignUpRequestAsTeacher()}
+                onClick={() => role === "Student" ? sendSignUpRequestAsStudent() : sendSignUpRequestAsTeacher()}
               >
                 Sign up
               </button>

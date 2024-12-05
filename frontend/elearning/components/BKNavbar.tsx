@@ -37,13 +37,17 @@ function BKNavbar() {
                     <button 
                     type="button" 
                     className="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-2xl bg-white border border-sky-600 text-sky-600 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:hover:bg-white/10 dark:text-white dark:hover:text-white dark:focus:text-white"
-                    onClick={() => router.push('login')}>
+                    onClick={() => {
+                        router.push('/login')
+                    }}>
                         Đăng nhập
                     </button>
                     <button 
                     type="button" 
                     className="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-2xl bg-white border border-sky-600 text-sky-600 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:hover:bg-white/10 dark:text-white dark:hover:text-white dark:focus:text-white"
-                    onClick={() => router.push('signup')}>
+                    onClick={() => {
+                        router.push('signup')
+                    }}>
                         Đăng kí
                     </button>     
                 </div>

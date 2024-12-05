@@ -6,23 +6,16 @@ import userService from "../user/user.service"
 import authService from "../auth/auth.service"
 class TeacherService {
     
-    private generateUniqueTeacherId =  async () => {
-        const prefix = 'GV';
-        let uniqueId: string | null = null;
+    private generateUniqueTeacherId =  async (id: number) => {
+        let uniqueId: string = 'GV'
     
-        while (!uniqueId) {
-            const randomId = Math.floor(10000000 + Math.random() * 90000000).toString();
-            const candidateId = `${prefix}${randomId}`;
-    
-            const existingTeacher = await db
-                .select()
-                .from(teacher)
-                .where(sql`${teacher.teacherId} = ${candidateId}`)
-    
-            if (existingTeacher.length === 0) {
-                uniqueId = candidateId;
-            }
+        const lenId : number = id.toString().length
+
+        for(let i = 0; i < 8 - lenId; i++){
+            uniqueId += '0'
         }
+
+        uniqueId += id.toString()
     
         return uniqueId;
     }
@@ -110,7 +103,7 @@ class TeacherService {
             return null
         }
 
-        const teacherId = await this.generateUniqueTeacherId()
+        const teacherId = await this.generateUniqueTeacherId(newUser[0].id)
 
         const newTeacher = await db
         .insert(teacher)
@@ -121,7 +114,8 @@ class TeacherService {
             }
         )
         .returning({
-            teacherId: teacher.teacherId,
+            userId: teacher.userId,
+            teacherId: teacher.teacherId
         })
 
         if (!newTeacher || newTeacher.length === 0){
