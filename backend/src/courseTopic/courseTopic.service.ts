@@ -41,35 +41,35 @@ class courseTopicService {
     public async createCourseTopic(courseId: string, topic: string) {
         try {
             // find course by courseId
-            const courseByCourseId = await db.select(
-                {
-                    id: course.id,
-                }
-            ).from(course)
-            .where(eq(course.id, courseId));
+            // const courseByCourseId = await db.select(
+            //     {
+            //         id: course.id,
+            //     }
+            // ).from(course)
+            // .where(eq(course.id, courseId));
 
-            if (courseByCourseId.length === 0) {
-                return {
-                    status: 404,
-                    message: "Course not found"
-                }
-            }
+            // if (courseByCourseId.length === 0) {
+            //     return {
+            //         status: 404,
+            //         message: "Course not found"
+            //     }
+            // }
 
             // check if this course topic already exist
-            const courseTopicExist = await db.select(
-                {
-                    courseId: courseTopic.courseId,
-                    topic: courseTopic.topic
-                }
-            ).from(courseTopic)
-            .where(eq(courseTopic.courseId, courseId))
+            // const courseTopicExist = await db.select(
+            //     {
+            //         courseId: courseTopic.courseId,
+            //         topic: courseTopic.topic
+            //     }
+            // ).from(courseTopic)
+            // .where(eq(courseTopic.courseId, courseId))
 
-            if (courseTopicExist.length !== 0) {
-                return {
-                    status: 404,
-                    message: "This course topic already exist"
-                }
-            }
+            // if (courseTopicExist.length !== 0) {
+            //     return {
+            //         status: 404,
+            //         message: "This course topic already exist"
+            //     }
+            // }
 
 
             // create course topic

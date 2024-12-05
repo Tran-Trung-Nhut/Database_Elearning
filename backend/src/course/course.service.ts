@@ -1,6 +1,6 @@
-import { course, teacher } from "../db/schema"
+import { course, teacher, user } from "../db/schema"
 import { db } from "../db/db"
-import { eq } from "drizzle-orm"
+import { and, eq } from "drizzle-orm"
 import  teacherService  from "../teacher/teacher.service"
 import courseTopicService from "../courseTopic/courseTopic.service"
 class CourseService{
@@ -8,12 +8,37 @@ class CourseService{
         const dateObj = new Date(date)
         return `${dateObj.getFullYear()}-${dateObj.getMonth()}-${dateObj.getDate()}`
     }
+
+    public getAllCoursesWithTeacherInfo = async () => {
+        try {
+            const coursesWithTeachers = await db
+                .select({
+                    courseId: course.id,
+                    courseName: course.name,
+                    language: course.language,
+                    description: course.description,
+                    teacherId: course.teacherId,
+                    creationTime: course.creTime,
+                    avgQuiz: course.avgQuiz,
+                    price: course.price,
+                    teacherName: user.lastName,
+                })
+                .from(course)
+                .innerJoin(user, eq(course.teacherId, user.id)); // Assuming foreign key relationship
+    
+            return coursesWithTeachers;
+        } catch (error) {
+            console.error("Error fetching courses with teacher info:", error);
+            throw new Error("Failed to fetch courses with teacher information");
+        }
+    };
+    
     public getAllCourses = async () => {
         return await db
         .select({
             courseId: course.id,
             courseName: course.name,
-            languege: course.language,
+            language: course.language,
             description: course.description,
             teacherId: course.teacherId,
             creationTime: course.creTime,
@@ -74,46 +99,49 @@ class CourseService{
         description: string,
         teacherId: string,
         price: number,
+        topics: string[]
     ) => {
-        console.log(this.FormatDate(new Date().toISOString()))
-        // find course exist or not
-        const courseExist = await this.getCourseByName(courseName)
-        if (courseExist){
-            return null
-        }
-        // find teacher by teacherId
-        const teacherExist = await teacherService.getTeacherByTeacherId(teacherId)
-        if (!teacherExist || teacherExist.length === 0){
-            return null
-        }
+        try {
+            // check if course already exist
+            const courseExist = await db.select({})
+                                        .from(course)
+                                        .where(and(eq(course.name, courseName), 
+                                                   eq(course.teacherId, teacherId)))
+            
+            if (courseExist.length !== 0){
+                return {
+                    message: "Course already exist",
+                    status: 400
+                }
+            }
+            
+            const newCourse = await db.insert(course).values({
+                name: courseName,
+                language: language,
+                description: description,
+                teacherId: teacherId,
+                creTime: new Date().toISOString(),
+                avgQuiz: 0,
+                price: price,
+            }).returning({
+                courseId: course.id
+            })
 
-        
-        const newCourse = await db.insert(course).values({
-            name: courseName,
-            language: language,
-            description: description,
-            teacherId: teacherExist[0].id,
-            creTime: new Date().toISOString(),
-            avgQuiz: 0,
-            price: price,
-        })
-        .returning({
-            courseId: course.id,
-        })
-
-        if (!newCourse || newCourse.length === 0){
-            return null;
-        }
-
-
-        return {
-            courseId: newCourse[0].courseId,
-            courseName: courseName,
-            description: description,
-            teacherId: teacherId,
-            creationTime: new Date().toISOString(),
-            avgQuiz: 0,
-            price: price,
+            // insert topic into course
+            for (let i = 0 ; i < topics.length; i++){
+                const addTopic = await courseTopicService.createCourseTopic(newCourse[0].courseId, topics[i])
+            }
+            return {
+                message: "Successfully created new course",
+                status: 200,
+                data: newCourse[0].courseId
+            }
+        } catch (error) {
+            return {
+                message: error,
+                status: 500
+            }
+            
         }
     }
 
