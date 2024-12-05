@@ -14,17 +14,15 @@ function CourseCard(props: any) {
       <div className="max-w-sm rounded overflow-hidden shadow-lg border border-gray-200 bg-white" onClick={toggleModal}>
         <img
           className="w-full h-48 object-cover"
-          src={props.image} // Replace with your image URL
+          src={props.image || "https://vnn-imgs-f.vgcloud.vn/2022/03/07/08/7-khoa-hoc-truc-tuyen-ve-khoa-hoc-du-lieu-tot-nhat-cho-sinh-vien.jpg"} // Replace with your image URL
           alt="Course preview"
         />
         <div className="p-4">
-          <h2 className="font-bold text-lg mb-2">{props.namecourse}</h2>
+          <h2 className="font-bold text-lg mb-2">{props.courseName}</h2>
           <p className="text-gray-600 text-sm">{props.teacher} </p>
-          <div className="flex items-center mt-2 mb-4">
-            <span className="text-yellow-500">★★★★☆</span>
-            <span className="text-gray-600 ml-2">(999)</span>
-          </div>
-          <p className="font-semibold text-xl text-gray-800">{props.price}</p>
+          <p className="font-semibold text-xl text-gray-800">
+            {props.price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}
+          </p>
         </div>
       </div>
 
