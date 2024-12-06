@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { useRecoilState } from "recoil";
 import { userLoginState } from "@/state";
 import * as request from '@/app/axios/axios'
+import Link from "next/link";
 
 
 
@@ -64,7 +65,7 @@ const editSectionPage = ({ params }: { params: Promise<{ sectionId: string }> })
         const userFromSessionRaw = sessionStorage.getItem('userLogin')
         if(!userFromSessionRaw) return
         setUserLogin(JSON.parse(userFromSessionRaw))  
-        }, [])
+    }, [])
     
     useEffect(() => {
         if (!rtnParams.sectionId) return;
@@ -140,8 +141,10 @@ const editSectionPage = ({ params }: { params: Promise<{ sectionId: string }> })
                     <ul className="p-4 border-2">
                     {/* Render list of documents here */}
                     {quiz.map((doc, index) => (
-                        <li key={doc.id} className="mb-2">
-                            {doc.name}
+                        <li key={doc.id} className="mb-2" onClick={(()=> {
+                            window.open(`/teacher/edit_quiz/${doc.id}`, '_blank')
+                        })}>
+                                {doc.name}
                         </li>
                     ))}
                     </ul>

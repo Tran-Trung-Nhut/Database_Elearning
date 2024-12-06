@@ -1,8 +1,10 @@
 'use client';
 import { ChangeEvent, useEffect, useState } from "react";
-import Header from "../teacher_components/header"
-import Sidebar from "../teacher_components/sidebar"
+import Header from "../../teacher_components/header"
+import Sidebar from "../../teacher_components/sidebar"
 import { Button } from '@/components/ui/button';
+import { userLoginState } from "@/state";
+import { useRecoilState } from "recoil";
 
 interface Question {
     text: string;
@@ -10,41 +12,53 @@ interface Question {
     answers: string[];
     correctAnswerIndex: number;
 }
-const editQuizPage = () => {
+const editQuizPage = ({ params }: { params: Promise<{ quizId: string }> }) => {
+    const [rtnParams, setRtnParams] = useState<{ quizId: string }>({ quizId: "" });
+    const loadParams = async () => {
+        const unwrappedParams = await params;
+        return { quizId: unwrappedParams.quizId };
+    }
+    const [userLogin, setUserLogin] = useRecoilState(userLoginState)
+    useEffect(() => {
+            loadParams().then((res) => setRtnParams(res));
+            const userFromSessionRaw = sessionStorage.getItem('userLogin')
+            if(!userFromSessionRaw) return
+            setUserLogin(JSON.parse(userFromSessionRaw))  
+        }, [])
     const [questions, setQuestions] = useState<Question[]>([]);
     const [isModalOpen, setModalOpen] = useState(false);
     const sampleQuestions: Question[] = [
-    {
-        text: "What is the capital of France?",
-        type: "multiple",
-        answers: ["Berlin", "Madrid", "Paris", "Rome"],
-        correctAnswerIndex: 2, // Paris
-    },
-    {
-        text: "Which programming language is known as the backbone of web development?",
-        type: "multiple",
-        answers: ["Python", "JavaScript", "C++", "Ruby"],
-        correctAnswerIndex: 1, // JavaScript
-    },
-    {
-        text: "The process of water turning into vapor is called __________.",
-        type: "fill",
-        answers: ["evaporation"],
-        correctAnswerIndex: 0, // Correct answer for fill
-    },
-    {
-        text: "What is 2 + 2?",
-        type: "multiple",
-        answers: ["3", "4", "5", "6"],
-        correctAnswerIndex: 1, // 4
-    },
-    {
-        text: "Complete the phrase: The early bird catches the __________.",
-        type: "fill",
-        answers: ["worm"],
-        correctAnswerIndex: 0, // Correct answer for fill
-    },
-];
+        {
+            text: "What is the capital of France?",
+            type: "multiple",
+            answers: ["Berlin", "Madrid", "Paris", "Rome"],
+            correctAnswerIndex: 2, // Paris
+        },
+        {
+            text: "Which programming language is known as the backbone of web development?",
+            type: "multiple",
+            answers: ["Python", "JavaScript", "C++", "Ruby"],
+            correctAnswerIndex: 1, // JavaScript
+        },
+        {
+            text: "The process of water turning into vapor is called __________.",
+            type: "fill",
+            answers: ["evaporation"],
+            correctAnswerIndex: 0, // Correct answer for fill
+        },
+        {
+            text: "What is 2 + 2?",
+            type: "multiple",
+            answers: ["3", "4", "5", "6"],
+            correctAnswerIndex: 1, // 4
+        },
+        {
+            text: "Complete the phrase: The early bird catches the __________.",
+            type: "fill",
+            answers: ["worm"],
+            correctAnswerIndex: 0, // Correct answer for fill
+        },
+    ];
     useEffect(() => {
         setQuestions(sampleQuestions);
     }, []);
@@ -88,10 +102,12 @@ const editQuizPage = () => {
             );
         }
     };
+
+    console.log(rtnParams)
     return (
         <div className="grid grid-rows-12 grid-cols-12 gap-4 bg-black">
-            <Header></Header>
-            <Sidebar></Sidebar>
+            {Header(userLogin.lastName + ' ' + userLogin.firstName)}
+            {Sidebar(userLogin.firstName, userLogin.lastName)}
             {/* Header */}
             <div className="bg-pink-600 col-start-3 col-span-10 row-span-1 rounded-xl text-3xl text-white font-semibold uppercase items-center p-5 flex flex-col justify-center">
                 <h1 className="self-center">quiz title</h1>
