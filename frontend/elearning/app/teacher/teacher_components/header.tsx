@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { useRouter } from "next/navigation";
 
 
-const Header = () => {
+const Header = (teacherName: string) => {
   const router = useRouter();
 
   return (
@@ -15,8 +15,8 @@ const Header = () => {
         <h1 className="font-mono font-extrabold text-4xl m-4">EZLearn</h1>
       </div>
       <div className="text-center">
-        <h1 className="font-mono font-extrabold text-3xl m-4">Welcome, [teacher name]</h1>
-        <p>your education is your power, create more and more</p>
+        <h1 className="font-mono font-extrabold text-3xl m-4">Welcome, {teacherName}</h1>
+        <p>Your education is your power, create more and more</p>
         <Button className="bg-hcmutLightBlue border-1 border-white m-4"
           onClick={() => router.push('/teacher/create')}
         >

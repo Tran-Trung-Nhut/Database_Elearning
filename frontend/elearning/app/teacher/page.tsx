@@ -4,6 +4,9 @@ import Header from './teacher_components/header';
 import Sidebar from './teacher_components/sidebar';
 import CoursesContent from './teacher_components/courses';
 import ChartContent from './teacher_components/chart';
+import { useRecoilState } from 'recoil';
+import { userLoginState } from '@/state';
+import { useEffect } from 'react';
 
 
 const data = {
@@ -58,12 +61,20 @@ const options = {
 
 
 const DashBoard = () => {
+  const [userLogin, setUserLogin] = useRecoilState(userLoginState)
+
+  useEffect(() => {
+    const userFromSessionRaw = sessionStorage.getItem('userLogin')
+    if(!userFromSessionRaw) return
+    setUserLogin(JSON.parse(userFromSessionRaw))  
+  }, [])
+
   return (
     <div className="bg-black">
       <div className="grid grid-cols-12 grid-rows-12 min-h-screen gap-4">
-        <Header />
-        <Sidebar />
-        <CoursesContent />
+        {Header(userLogin.lastName + ' ' + userLogin.firstName)}
+        {Sidebar(userLogin.firstName, userLogin.lastName)}
+        {CoursesContent(userLogin.id)}
         {/* <ChartContent data={data} options={options} category="line" /> */}
       </div>
     </div>

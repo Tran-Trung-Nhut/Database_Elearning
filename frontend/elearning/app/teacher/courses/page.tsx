@@ -1,9 +1,11 @@
 'use client';
 
-import { useState } from 'react';
-
+import { userLoginState } from '@/state';
+import { useEffect, useState } from 'react';
+import { useRecoilState } from 'recoil';
+import * as request from '@/app/axios/axios';
 interface Course {
-  id: number;
+  courseId: number;
   courseName: string;
   language: string;
   description: string;
@@ -14,35 +16,37 @@ interface Course {
 }
 
 const ManageCourses = () => {
-  const [courses, setCourses] = useState<Course[]>([
-    {
-      id: 1,
-      courseName: 'Introduction to Vietnamese',
-      language: 'Vietnamese',
-      description: 'Learn the basics of Vietnamese language.',
-      price: '50',
-      averageQuizScore: '75',
-      topics: ['Language', 'Basics', 'Culture'],
-      createdAt: new Date().toLocaleString(),
-    },
-    {
-      id: 2,
-      courseName: 'Advanced English Grammar',
-      language: 'English',
-      description: 'Deep dive into advanced English grammar rules.',
-      price: '100',
-      averageQuizScore: '85',
-      topics: ['Grammar', 'Advanced', 'Writing'],
-      createdAt: new Date().toLocaleString(),
-    },
-  ]);
+  const [userLogin, setUserLogin] = useRecoilState(userLoginState)
+  const [courses, setCourses] = useState<Course[]>([]);
+
+  const fetchCourses = async () => {
+    if (userLogin.token === '') return;
+    const data = await request.get(`/course/teacherId/${userLogin.id}`);
+    if (data.status === 200) {
+      console.log(data.data);
+      setCourses(data.data);
+    } else {
+      console.log(data.message);
+    }
+  }
+  useEffect(() => {
+    const userFromSessionRaw = sessionStorage.getItem('userLogin')
+    if(!userFromSessionRaw) return
+    setUserLogin(JSON.parse(userFromSessionRaw))  
+  }, [])
+
+  useEffect(() => {
+    if (!userLogin) return
+    fetchCourses();
+  }, [userLogin]);
 
   const handleDeleteCourse = (id: number) => {
     if (window.confirm('Are you sure you want to delete this course?')) {
-      setCourses(courses.filter((course) => course.id !== id));
+      setCourses(courses.filter((course) => course.courseId !== id));
     }
   };
 
+  if (!userLogin) return <>Loading...</>;
   return (
     <div className="manage-courses-container" style={{ padding: '20px', maxWidth: '800px', margin: '0 auto' }}>
       <h2 className="rounded-lg mt-10 text-center text-2xl/9 font-bold tracking-tight text-white bg-hcmutDarkBlue">
@@ -68,14 +72,14 @@ const ManageCourses = () => {
           </thead>
           <tbody>
             {courses.map((course) => (
-              <tr key={course.id}>
+              <tr key={course.courseId}>
                 <td style={{ border: '1px solid #ddd', padding: '10px' }}>{course.courseName}</td>
                 <td style={{ border: '1px solid #ddd', padding: '10px' }}>{course.language}</td>
                 <td style={{ border: '1px solid #ddd', padding: '10px' }}>{course.price}</td>
                 <td style={{ border: '1px solid #ddd', padding: '10px' }}>{course.createdAt}</td>
                 <td style={{ border: '1px solid #ddd', padding: '10px', textAlign: 'center' }}>
                   <button
-                    onClick={() => handleDeleteCourse(course.id)}
+                    onClick={() => handleDeleteCourse(course.courseId)}
                     style={{
                       background: 'red',
                       color: 'white',
@@ -92,9 +96,7 @@ const ManageCourses = () => {
             ))}
           </tbody>
         </table>
-      ) : (
-        <p style={{ marginTop: '20px' }}>No courses created yet.</p>
-      )}
+      ) : null}
     </div>
   );
 };

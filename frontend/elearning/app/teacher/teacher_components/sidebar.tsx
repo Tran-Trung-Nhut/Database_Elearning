@@ -7,9 +7,7 @@ import { userLoginState } from '@/state';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { defaultUserLogin } from '@/app/dtos/user.dto';
 
-const Sidebar = () => {
-  const user = useRecoilValue(userLoginState);
-  const setUserLogin = useSetRecoilState(userLoginState)
+const Sidebar = (firstName: string, lastName: string) => {
   const router = useRouter();
   const handleBack = () => {
     router.push('/teacher');
@@ -20,7 +18,6 @@ const Sidebar = () => {
   const handeLogout = () => {
   sessionStorage.removeItem('userLogin')
 
-  setUserLogin(defaultUserLogin)
   router.push('/')
   }
   return (
@@ -28,7 +25,7 @@ const Sidebar = () => {
       {/* Profile Section */}
       <div className="bg-gray-200 text-center py-6 rounded-t-xl">
         <Image src={aba} alt="Profile Picture" className="w-20 h-20 mx-auto rounded-full" />
-        <h2 className="mt-4 text-lg font-semibold text-gray-700">{user.firstName + ' ' +  user.lastName}</h2>
+        <h2 className="mt-4 text-lg font-semibold text-gray-700">{firstName + ' ' +  lastName}</h2>
         <p className="text-sm text-gray-500">master CS</p>
       </div>
 

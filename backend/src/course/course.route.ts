@@ -7,6 +7,8 @@ const router = Router();
 router.get('/', courseController.getAllCourses as any)
 // get all courses with teacher info
 router.get('/teacher', courseController.getAllCourseWithTeacherInfo as any)
+// get all courses by teacher id
+router.get('/teacherId/:teacherId', courseController.getAllCourseByTeacherId as any)
 // get course by id
 router.get('/id/:id', courseController.getCourseById as any)
 // get course by name

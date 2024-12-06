@@ -7,17 +7,7 @@ class CourseController {
         try {
             const courses = await courseService.getAllCourses()
 
-            if (courses.length === 0 || !courses) {
-                return res.status(404).json({
-                    message: 'No courses found',
-                })
-            }
-
-            return res.status(200).json({
-                message: 'success',
-                data: courses
-            })
-
+            return res.status(courses.status).send(courses)
         } catch (error) {
             res.status(500).json({
                 message: error
@@ -28,16 +18,8 @@ class CourseController {
     public async getAllCourseWithTeacherInfo(req: Request, res: Response){
         try {
             const courses = await courseService.getAllCoursesWithTeacherInfo();
-            if (courses.length === 0 || !courses) {
-                return res.status(404).json({
-                    message: 'No courses found',
-                })
-            }
 
-            return res.status(200).json({
-                message: 'success',
-                data: courses
-            })
+            return res.status(courses.status).send(courses);
         } catch (error) {
             return {
                 message: "Invalid: " + error,
@@ -46,6 +28,19 @@ class CourseController {
         }
     }
 
+    public async getAllCourseByTeacherId(req: Request, res: Response){
+        try {
+            const { teacherId } = req.params;
+            const courses = await courseService.getAllCoursesWithTeacherInfoByTeacherId(Number(teacherId));
+
+            return res.status(courses.status).send(courses);
+        } catch (error) {
+            return {
+                message: "Invalid: " + error,
+                status: 500
+            }
+        }
+    }
     public async getCourseById(req: Request, res: Response) {
         try {
             const { id } = req.params

@@ -27,26 +27,79 @@ class CourseService{
                 .from(course)
                 .innerJoin(user, eq(course.teacherId, user.id)); // Assuming foreign key relationship
     
-            return coursesWithTeachers;
+            return {
+                message: "Successfully get all courses with teacher info",
+                status: 200,
+                data: coursesWithTeachers
+            }
         } catch (error) {
-            console.error("Error fetching courses with teacher info:", error);
-            throw new Error("Failed to fetch courses with teacher information");
+            return {
+                message: error,
+                status: 500
+            }
         }
     };
+
+    public getAllCoursesWithTeacherInfoByTeacherId = async (teacherId: number) => {
+        try {
+            const coursesWithTeachers = await db.select({
+                courseId: course.id,
+                courseName: course.name,
+                language: course.language,
+                description: course.description,
+                teacherId: course.teacherId,
+                creationTime: course.creTime,
+                avgQuiz: course.avgQuiz,
+                price: course.price,
+                teacherLastName: user.lastName,
+                teacherFirstName: user.firstName,
+            })
+            .from(course)
+            .innerJoin(user, eq(course.teacherId, user.id))
+            .where(eq(course.teacherId, teacherId))
+
+            return {
+                message: "Successfully get all courses with teacher info",
+                status: 200,
+                data: coursesWithTeachers
+            }
+        } catch (error) {
+            return {
+                message: error,
+                status: 500
+            }
+        }
+    }
     
     public getAllCourses = async () => {
-        return await db
-        .select({
-            courseId: course.id,
-            courseName: course.name,
-            language: course.language,
-            description: course.description,
-            teacherId: course.teacherId,
-            creationTime: course.creTime,
-            avgQuiz: course.avgQuiz,
-            price: course.price,
-        })
-        .from(course)
+        try {
+            const allCourses=  await db
+            .select({
+                courseId: course.id,
+                courseName: course.name,
+                language: course.language,
+                description: course.description,
+                teacherId: course.teacherId,
+                creationTime: course.creTime,
+                avgQuiz: course.avgQuiz,
+                price: course.price,
+            })
+            .from(course)
+            
+            return {
+                message: "Successfully get all courses",
+                status: 200,
+                data: allCourses
+            }
+        } catch (error) {
+            return {
+                message: error,
+                status: 500
+            }
+            
+        }
+
+
     }
     
     public getCourseById = async (id: number) => {
