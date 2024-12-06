@@ -13,7 +13,8 @@ const Sidebar = (firstName: string, lastName: string) => {
     router.push('/teacher');
   }
   const handleCourse = () => {
-    router.push('/teacher/courses');
+    // router.push('/teacher/courses');
+    window.open('/teacher/courses', '_blank');
   }
   const handeLogout = () => {
   sessionStorage.removeItem('userLogin')

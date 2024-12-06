@@ -100,6 +100,13 @@ class sectionService{
     public async createSection(name: string, numOfLecture: number, timeToComplete: number, teacherId: number, courseId: number){
         try {
             
+            console.log({
+                name: name,
+                numOfLecture: numOfLecture,
+                timeToComplete: timeToComplete,
+                teacherId: teacherId,
+                courseId: courseId  
+            })
             const newSection = await db.insert(section)
                                         .values({
                                             name: name,

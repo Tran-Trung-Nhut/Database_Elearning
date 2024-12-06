@@ -12,7 +12,7 @@ interface Course {
   price: string;
   averageQuizScore: string;
   topics: string[];
-  createdAt: string;
+  creationTime: string;
 }
 
 const ManageCourses = () => {
@@ -40,9 +40,18 @@ const ManageCourses = () => {
     fetchCourses();
   }, [userLogin]);
 
-  const handleDeleteCourse = (id: number) => {
-    if (window.confirm('Are you sure you want to delete this course?')) {
-      setCourses(courses.filter((course) => course.courseId !== id));
+  const handleDeleteCourse = async (id: number, name: string) => {
+    if (window.confirm(`Are you sure you want to delete ${name} course?`)) {
+
+      // Delete course
+      const res = await request.del(`/course/delete/id/${id}`);
+      console.log(res);
+      if (res.message === 'success') {
+        setCourses(courses.filter((course) => course.courseId !== id));
+      }
+      else {
+        alert('Failed to delete course');
+      }
     }
   };
 
@@ -76,10 +85,10 @@ const ManageCourses = () => {
                 <td style={{ border: '1px solid #ddd', padding: '10px' }}>{course.courseName}</td>
                 <td style={{ border: '1px solid #ddd', padding: '10px' }}>{course.language}</td>
                 <td style={{ border: '1px solid #ddd', padding: '10px' }}>{course.price}</td>
-                <td style={{ border: '1px solid #ddd', padding: '10px' }}>{course.createdAt}</td>
+                <td style={{ border: '1px solid #ddd', padding: '10px' }}>{course.creationTime}</td>
                 <td style={{ border: '1px solid #ddd', padding: '10px', textAlign: 'center' }}>
                   <button
-                    onClick={() => handleDeleteCourse(course.courseId)}
+                    onClick={async () => await handleDeleteCourse(course.courseId, course.courseName)}
                     style={{
                       background: 'red',
                       color: 'white',

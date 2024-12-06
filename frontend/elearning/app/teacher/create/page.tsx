@@ -29,6 +29,11 @@ const CreateCourse = () => {
       return;
     }
     try{
+      if (user.token === undefined || user.token === "") {
+        alert('Vui lòng đăng nhập để tạo khóa học');
+        return;
+      }
+      console.log(user)
       const response = await axios.post('http://localhost:4000/course/create', {
         courseName,
         language,
@@ -62,8 +67,6 @@ const CreateCourse = () => {
       topics,
     };
     console.log('Course Data:', courseData);
-    // Here you can send courseData to the backend API or perform other actions.
-    alert('Course created successfully!');
   };
 
   useEffect(() => {

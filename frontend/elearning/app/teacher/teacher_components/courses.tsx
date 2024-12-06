@@ -45,7 +45,9 @@ const CoursesContent = (teacherId: string ) => {
                     <p className="text-sm text-gray-400">{course.creationTime}</p>
                   </div>
                   <div className="px-4 py-2 flex justify-between items-center">
-                    <Button className="border-2">Edit</Button>
+                    <Button className="border-2" onClick={() => {
+                      window.open(`/teacher/edit_course/${course.courseId}`, '_blank')
+                    }}>Edit</Button>
                     <span className="text-sm font-semibold text-gray-200">{course.price} Price</span>
                   </div>
                 </div>

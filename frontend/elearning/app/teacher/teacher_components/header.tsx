@@ -18,7 +18,12 @@ const Header = (teacherName: string) => {
         <h1 className="font-mono font-extrabold text-3xl m-4">Welcome, {teacherName}</h1>
         <p>Your education is your power, create more and more</p>
         <Button className="bg-hcmutLightBlue border-1 border-white m-4"
-          onClick={() => router.push('/teacher/create')}
+          onClick={
+            () => {
+              // router.push('/teacher/create')
+              window.open('/teacher/create', '_blank');
+            }
+          }
         >
           Tạo khóa học</Button>
       </div>

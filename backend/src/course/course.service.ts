@@ -1,7 +1,6 @@
 import { course, teacher, user } from "../db/schema"
 import { db } from "../db/db"
 import { and, eq } from "drizzle-orm"
-import  teacherService  from "../teacher/teacher.service"
 import courseTopicService from "../courseTopic/courseTopic.service"
 class CourseService{
     private FormatDate = (date: string) => {
@@ -168,7 +167,6 @@ class CourseService{
                     status: 400
                 }
             }
-            
             const newCourse = await db.insert(course).values({
                 name: courseName,
                 language: language,
