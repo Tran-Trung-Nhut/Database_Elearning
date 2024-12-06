@@ -21,8 +21,8 @@ export default function Home() {
 
   const fetchCourse = async () => {
     try{
-      const response = await request.get(`/join/studentId/${userLogin.id}`)
-      setCourse(response.data.data)
+      const response = await request.get(`/course/teacher`)
+      setCourse(response.data)
     }catch(e){
       console.log(e)
     }
@@ -66,7 +66,7 @@ export default function Home() {
                   <button
                     type="button"
                     className="bg-white text-blue-600 font-medium text-sm px-6 py-3 rounded-lg shadow-lg hover:bg-gray-100 transition duration-300"
-                    onClick={() => router.push('/mycourse')}
+                    onClick={() => router.push('/student/mycourse')}
                   >
                     Xem khóa học của tôi
                   </button>
@@ -116,14 +116,15 @@ export default function Home() {
             Các khóa học bán chạy
           </h2>
           <div className="flex flex-wrap justify-center gap-8 px-8">
-            {course.map((cour, index) => (
+            { course? course.map((cour, index) => (
               <CourseCard
+              key= {cour.courseId}
               courseName={cour.courseName}
               teacher={cour.teacherFirstName + ' ' + cour.teacherLastName}
               price={cour.price}
               id={cour.courseId}
               />
-            ))}
+            )) : null}
           </div>
         </section>
 
