@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 import { useRecoilState } from "recoil";
 import { userLoginState } from "@/state";
 import { useEffect, useState } from "react";
-import axios from "axios";
+import * as request from "@/app/axios/axios";
 import { CourseWithTeacherNameDto } from "./dtos/course.dto";
 
 export default function Home() {
@@ -21,9 +21,8 @@ export default function Home() {
 
   const fetchCourse = async () => {
     try{
-      const response = await axios.get('http://localhost:4000/course/teacher')
+      const response = await request.get(`/join/studentId/${userLogin.id}`)
       setCourse(response.data.data)
-      console.log(response)
     }catch(e){
       console.log(e)
     }

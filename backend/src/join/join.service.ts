@@ -1,6 +1,6 @@
 import { and, eq } from "drizzle-orm";
 import { db } from "../db/db";
-import { join } from "../db/schema";
+import { course, join, user } from "../db/schema";
 import { joinDto } from "../dtos/join.dto";
 
 class joinService {
@@ -98,11 +98,19 @@ class joinService {
                 dateComplete: join.dateComplete,
                 dateStart: join.dateStart,
                 progress: join.progress,
-                GPA: join.GPA
+                GPA: join.GPA,
+                courseName: course.name,
+                description: course.description,
+                price: course.price,
+                creationTime: course.creTime,
+                teacherId: course.teacherId,
+                teacherFirstName: user.firstName,
+                teacherLastName: user.lastName,
             })
             .from(join)
+            .leftJoin(course, eq(join.courseId, course.id))
             .where(eq(join.studentId, studentId))
-
+            .leftJoin(user, eq(course.teacherId, user.id))
             if (joinData.length === 0) {
                 return {
                     data: "Join not found",
