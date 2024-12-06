@@ -5,7 +5,7 @@ import Sidebar from "../../teacher_components/sidebar"
 import { Button } from '@/components/ui/button';
 import { userLoginState } from "@/state";
 import { useRecoilState } from "recoil";
-import { useSearchParams } from "next/navigation";
+import { redirect, useSearchParams } from "next/navigation";
 import * as request from '@/app/axios/axios'
 interface Section {
     id: string;
@@ -85,18 +85,16 @@ const SectionTable = ({ sections, onEdit }: { sections: Section[], onEdit: (inde
 };
 
 const editCoursePage = ({ params }: { params: Promise<{ courseId: string }> }) => {
-    const searchParams = useSearchParams();
     const [rtnParams, setRtnParams] = useState<{ courseId: string }>({ courseId: "" });
     const loadParams = async () => {
         const unwrappedParams = await params;
         return { courseId: unwrappedParams.courseId };
     }
     const [sections, setSections] = useState([]);
-
+    const [course, setCourse] = useState<any>({});
     const fetchSections = async () => {
         // Fetch sections from API
         if (!rtnParams.courseId) return;
-        
         try {
             let response = await request.get(`/section/course/${rtnParams.courseId}`);
             if (response.status === 200){
@@ -109,16 +107,30 @@ const editCoursePage = ({ params }: { params: Promise<{ courseId: string }> }) =
             console.log("Failed to fetch sections");
         }
     }
+    const fetchCourse = async () => {
+        if (!rtnParams.courseId) return;
+        try {
+            let response = await request.get(`/course/id/${rtnParams.courseId}`);
+            console.log(response)
+            if (response.message === "success"){
+                console.log(response.data)
+                setCourse(response.data);
+            }
+        } catch (error) {
+            console.log("Failed to fetch course");
+        }
+    }
     useEffect(() => {
         loadParams().then((res) => setRtnParams(res));
     },[])
     useEffect(() => {
         fetchSections();
+        fetchCourse();
     }, [rtnParams]);
 
     const handleEdit = (index: number, id: string) => {
         alert(`Edit section with ID: ${index}`);
-        console.log(id);
+        window.open(`/teacher/edit_section/${id}`, '_blank');
     };
 
     const handleAddSection = async () => {
@@ -160,7 +172,7 @@ const editCoursePage = ({ params }: { params: Promise<{ courseId: string }> }) =
             <div className="bg-white col-start-3 col-span-10 row-span-10 mb-4 rounded-xl">
                 {/* Header */}
                 <div className="bg-hcmutLightBlue rounded-t-xl text-center text-3xl text-white font-semibold uppercase items-center p-5">
-                    <h1>Course title</h1>
+                    <h1>{course.courseName} </h1>
                     <Button className="bg-hcmutDarkBlue mt-3" onClick={handleAddSection}>Thêm học phần</Button>
                 </div>
                 

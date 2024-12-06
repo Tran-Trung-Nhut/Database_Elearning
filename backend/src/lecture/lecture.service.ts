@@ -6,7 +6,7 @@ import { lectureDto } from "../dtos/lecture.dto";
 class lectureService {
     public async getAllLectures(){
         try {
-            const lectures = db.select({
+            const lectures = await db.select({
                 id: lecture.id,
                 name: lecture.name,
                 state: lecture.state,
@@ -31,7 +31,7 @@ class lectureService {
 
     public async getLectureByName(name: string){
         try {
-            const lectures = db.select({
+            const lectures = await db.select({
                 id: lecture.id,
                 name: lecture.name,
                 state: lecture.state,
@@ -57,7 +57,8 @@ class lectureService {
 
     public async getLectureBySectionId(sectionId: number){
         try {
-            const lectures = db.select({
+            console.log(sectionId)
+            const lectures = await db.select({
                 id: lecture.id,
                 name: lecture.name,
                 state: lecture.state,
