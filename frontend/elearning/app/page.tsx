@@ -123,6 +123,7 @@ export default function Home() {
               teacher={cour.teacherFirstName + ' ' + cour.teacherLastName}
               price={cour.price}
               id={cour.courseId}
+              description={cour.description}
               />
             )) : null}
           </div>

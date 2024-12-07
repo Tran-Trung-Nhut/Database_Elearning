@@ -1,5 +1,5 @@
 {
-  "id": "6e4d088f-1dfe-414e-be8d-c33e850ffddc",
+  "id": "a39e0270-bfd0-45b5-b75c-90131492e1eb",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -297,7 +297,7 @@
         },
         "score": {
           "name": "score",
-          "type": "integer",
+          "type": "double precision",
           "primaryKey": false,
           "notNull": false
         },
@@ -305,8 +305,7 @@
           "name": "attemptOrder",
           "type": "integer",
           "primaryKey": false,
-          "notNull": true,
-          "default": 1
+          "notNull": true
         }
       },
       "indexes": {},
@@ -343,7 +342,8 @@
           "name": "pk_dO",
           "columns": [
             "quizId",
-            "studentId"
+            "studentId",
+            "attemptOrder"
           ]
         }
       },
@@ -1304,19 +1304,19 @@
         },
         "firstName": {
           "name": "firstName",
-          "type": "varchar(10)",
+          "type": "varchar(64)",
           "primaryKey": false,
           "notNull": true
         },
         "lastName": {
           "name": "lastName",
-          "type": "varchar(30)",
+          "type": "varchar(64)",
           "primaryKey": false,
           "notNull": true
         },
         "username": {
           "name": "username",
-          "type": "varchar(30)",
+          "type": "varchar(64)",
           "primaryKey": false,
           "notNull": true
         },
@@ -1334,7 +1334,7 @@
         },
         "bankName": {
           "name": "bankName",
-          "type": "varchar(20)",
+          "type": "varchar(255)",
           "primaryKey": false,
           "notNull": true
         },

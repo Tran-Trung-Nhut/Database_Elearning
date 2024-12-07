@@ -5,22 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1733387589980,
-      "tag": "0000_shiny_lady_vermin",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1733392518567,
-      "tag": "0001_mature_black_tom",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1733394207452,
-      "tag": "0002_rare_slapstick",
+      "when": 1733589778002,
+      "tag": "0000_steady_tiger_shark",
       "breakpoints": true
     }
   ]

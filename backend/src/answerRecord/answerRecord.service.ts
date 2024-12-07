@@ -57,7 +57,7 @@ class answerRecordService {
         }
     }
 
-    public async getRecordByQuizId(quizId: number) {
+    public async getRecordByQuizIdAndStudentId(quizId: number, studentId: number) {
         try {
             const record = await db.select({
                 quizId: answerRecord.quizId,
@@ -65,15 +65,8 @@ class answerRecordService {
                 questionId: answerRecord.questionId,
                 studentAns: answerRecord.studentAns
             }).from(answerRecord).where(
-                eq(answerRecord.quizId, quizId),
+                and(eq(answerRecord.quizId, quizId), eq(answerRecord.studentId, studentId))
             );
-
-            if (record.length === 0) {
-                return {
-                    message: "Record not found by QuizId",
-                    status: 404
-                }
-            }
 
             return {
                 message: "Successfully found record by quizId",
@@ -119,7 +112,7 @@ class answerRecordService {
         }
     }
 
-    public async getRecordByQuizIdAndStudentId(quizId: number, studentId: number) {
+    public async getRecordByQuestionIdAndStudentId(questionId: number, studentId: number) {
         try {
             const record = await db.select({
                 quizId: answerRecord.quizId,
@@ -127,7 +120,7 @@ class answerRecordService {
                 questionId: answerRecord.questionId,
                 studentAns: answerRecord.studentAns
             }).from(answerRecord).where(and(
-                eq(answerRecord.quizId, quizId),
+                eq(answerRecord.questionId, questionId),
                 eq(answerRecord.studentId, studentId)
             )
             );
@@ -135,7 +128,7 @@ class answerRecordService {
             if (record.length === 0) {
                 return {
                     message: "Record not found by QuizId and StudentId",
-                    status: 404
+                    status: 200
                 }
             }
 

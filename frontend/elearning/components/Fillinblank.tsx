@@ -2,12 +2,16 @@
 import React, { useState } from "react";
 
 type FillInTheBlankProps = {
+  id: number,
+  answer: string,
   question: string;
   currentPage: number;
   totalPages: number;
 };
 
 const FillInTheBlank: React.FC<FillInTheBlankProps> = ({
+  id,
+  answer,
   question,
   currentPage,
   totalPages,

@@ -54,8 +54,11 @@ class joinController {
     }
 
     public async createJoin(req: Request, res: Response) {
+        
+        const { courseId, studentId } = req.body
+
         try {
-            const response = await joinService.createJoin(req.body);
+            const response = await joinService.createJoin(courseId, studentId);
 
             return res.status(response.status).send(response);
         } catch (error) {

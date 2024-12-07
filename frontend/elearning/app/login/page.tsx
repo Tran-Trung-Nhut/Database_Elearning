@@ -49,6 +49,8 @@ export default function Login() {
         lastName: decoded.lastName as string,
         token: response.data.token,
         email: decoded.email as string,
+        bankName: decoded.bankName as string,
+        bankAccount: decoded.bankAccount as string,
       };
       // console.log(data);
       setUserLogin(data);
