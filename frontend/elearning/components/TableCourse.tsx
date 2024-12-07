@@ -5,11 +5,13 @@ import { set } from "react-hook-form";
 import { CourseWithTeacherNameDto } from "@/app/dtos/course.dto";
 import { useRecoilState } from "recoil";
 import { userLoginState } from "@/state";
+import { useRouter } from "next/navigation";
 function TableCourse() {
     const [userLogin, setUserLogin] = useRecoilState(userLoginState)
     const [courses, setCourses] = useState<CourseWithTeacherNameDto[]>([])
+    const router = useRouter()
     const fetchCourse = async () => {
-        let data = await request.get(`/join/studentId/3`)
+        let data = await request.get(`/join/studentId/${userLogin.id}`)
         console.log(data.data);
         console.log(userLogin);
         if (data.status === 200) {
@@ -50,48 +52,60 @@ function TableCourse() {
             <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                 <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                     <tr>
-                        <th scope="col" className="px-6 py-3">
+                        <th scope="col" className="px-6 py-3 text-center">
                             Mã môn học
                         </th>
-                        <th scope="col" className="px-6 py-3">
+                        <th scope="col" className="px-6 py-3 text-center ">
                             Tên môn học
                         </th>
-                        <th scope="col" className="px-6 py-3">
+                        <th scope="col" className="px-6 py-3 text-center">
                             Giảng viên
                         </th>
-                        <th scope="col" className="px-6 py-3">
+                        <th scope="col" className="px-6 py-3 text-center ">
                             Giá tiền
                         </th>
-                        <th scope="col" className="px-6 py-3">
+                        <th scope="col" className="px-6 py-3 text-center">
                             Ngày đăng kí
                         </th>
-                        <th scope="col" className="px-6 py-3">
+                        <th scope="col" className="px-6 py-3 text-center">
                             Trạng thái
+                        </th>
+                        <th scope="col" className="px-6 py-3 text-center">
+                            Tùy chọn 
                         </th>
                     </tr>
                 </thead>
                 <tbody>
                     {
                         courses.map((course, index) => (
-                            <tr key={index} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                            <tr key={index} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 text-center">
                                 <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                     {course.courseId}
                                 </th>
-                                <td className="px-6 py-4">
+                                <td className="px-6 py-4 text-center">
                                     {course.courseName}
                                 </td>
-                                <td className="px-6 py-4">
+                                <td className="px-6 py-4 text-center">
                                     {course.teacherFirstName + " " + course.teacherLastName}
                                 </td>
-                                <td className="px-6 py-4">
+                                <td className="px-6 py-4 text-center">
                                     {course.price}
                                 </td>
-                                <td className="px-6 py-4">
+                                <td className="px-6 py-4 text-center">
                                     {course.creationTime.toString()}
                                 </td>
-                                <td className="px-6 py-4">
-                                    {course.description}
+                                <td className="px-6 py-4 text-center">
+                                    Chưa hoàn thành
                                 </td>
+                                <button
+                                    type="button"
+                                    className="text-blue-500 px-6 py-4 text-center"
+                                    onClick={() =>
+                                        router.push(`/studentdb?course=${encodeURIComponent(JSON.stringify(course))}`)
+                                    }
+                                    >
+                                    Xem khóa học
+                                </button>
                             </tr>
                         ))
                     }

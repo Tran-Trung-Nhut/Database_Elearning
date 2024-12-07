@@ -15,10 +15,12 @@ class dOController{
         }
     }
 
-    public async getDOByQuizId(req: Request, res: Response){
+    public async getDOByQuizIdAndStudentIdAndAttemptOrder(req: Request, res: Response){
         try {
             const quizId = req.params.quizId;
-            const dOData = await dOService.getDOByQuizId(Number(quizId));
+            const studentId = req.params.studentId
+            const attemptOrder = req.params.attemptOrder
+            const dOData = await dOService.getDOByQuizIdAndStudentIdAndAttemptOrder(Number(quizId), Number(studentId), Number(attemptOrder));
 
             return res.status(dOData.status).send(dOData);
         } catch (error) {

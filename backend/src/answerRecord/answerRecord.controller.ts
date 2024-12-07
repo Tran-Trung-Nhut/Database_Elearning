@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
 import answerRecordService from './answerRecord.service';
 class answerRecordController {
-    public async getRecordByQuizAndStudentID(req: Request, res: Response){
+    public async getRecordByquestionIdAndStudentId(req: Request, res: Response){
         try {
-            const record = await answerRecordService.getRecordByQuizIdAndStudentId(Number(req.params.quizId), Number(req.params.studentId))
+            const record = await answerRecordService.getRecordByQuestionIdAndStudentId(Number(req.params.questionId), Number(req.params.studentId))
             
             return res.status(record.status).send(record)
         } catch (error) {
@@ -13,9 +13,9 @@ class answerRecordController {
             }
         }
     }
-    public async getRecordByQuestionId(req: Request, res: Response){
+    public async getRecordByQuizIdAndStudentId(req: Request, res: Response){
         try {
-            const record = await answerRecordService.getRecordByQuestionId(Number(req.params.questionId))
+            const record = await answerRecordService.getRecordByQuizIdAndStudentId(Number(req.params.quizId), Number(req.params.studentId))
             return res.status(record.status).send(record)
         } catch (error) {
             return {

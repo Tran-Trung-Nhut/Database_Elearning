@@ -58,6 +58,8 @@ export default function Login() {
           lastName: decoded.lastName as string,
           token: response.data.token,
           email: decoded.email as string,
+          bankName: decoded.bankName as string,
+          bankAccount: decoded.bankAccount as string
         };
 
         setUserLogin(data);
@@ -99,6 +101,8 @@ export default function Login() {
           lastName: decoded.lastName as string,
           token: response.data.token,
           email: decoded.email as string,
+          bankName: decoded.bankName as string,
+          bankAccount: decoded.bankAccount as string
         };
 
         setUserLogin(data);
@@ -261,11 +265,12 @@ export default function Login() {
                   id="role"
                   name="role"
                   required
+                  value={role}
                   className="px-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
                   onChange={(e) => setRole(e.target.value)}
                 >
-                  <option value="teacher">Teacher</option>
-                  <option value="student">Student</option>
+                  <option value="Teacher">Teacher</option>
+                  <option value="Student">Student</option>
                 </select>
               </div>
             </div>

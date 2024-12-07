@@ -129,7 +129,7 @@ class joinService {
         }
     }
 
-    public async createJoin(joinDto: joinDto){
+    public async createJoin(courseId: number, studentId: number){
         try {
             // check if exists
             const checkJoin = await db.select({
@@ -137,7 +137,7 @@ class joinService {
                 studentId: join.studentId
             })
             .from(join)
-            .where(and(eq(join.courseId, joinDto.courseId), eq(join.studentId, joinDto.studentId)))
+            .where(and(eq(join.courseId, courseId), eq(join.studentId, studentId)))
 
             if (checkJoin.length > 0) {
                 return {
@@ -145,20 +145,18 @@ class joinService {
                     status: 400
                 }
             }
-            console.log(joinDto)
-            await db.insert(join).values({
-                courseId: joinDto.courseId,
-                studentId: joinDto.studentId,
-                dateComplete: joinDto.dateComplete,
-                dateStart: joinDto.dateStart,
-                progress: joinDto.progress,
-                GPA: joinDto.GPA
+
+            const data = await db.insert(join).values({
+                courseId: courseId,
+                studentId: studentId,
+                dateStart: new Date().toISOString(),
             })
 
             console.log("Join created")
             return {
                 message: "Join created",
-                status: 201
+                status: 201,
+                data
             }
         } catch (error) {
             return {

@@ -4,7 +4,9 @@ export interface UserLoginDto{
     lastName: string, 
     email: string, 
     id: string, 
-    role: string
+    role: string,
+    bankName: string,
+    bankAccount: string,
 }
 
 export const defaultUserLogin: UserLoginDto ={
@@ -13,5 +15,7 @@ export const defaultUserLogin: UserLoginDto ={
     lastName: "", 
     email: "", 
     id: "",
-    role: ""
+    role: "",
+    bankName: "",
+    bankAccount: "",
 }
