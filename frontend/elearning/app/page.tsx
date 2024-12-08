@@ -11,6 +11,7 @@ import { userLoginState } from "@/state";
 import { useEffect, useState } from "react";
 import * as request from "@/app/axios/axios";
 import { CourseWithTeacherNameDto } from "./dtos/course.dto";
+import { Router } from "next/router";
 
 export default function Home() {
 
@@ -66,7 +67,9 @@ export default function Home() {
                   <button
                     type="button"
                     className="bg-white text-blue-600 font-medium text-sm px-6 py-3 rounded-lg shadow-lg hover:bg-gray-100 transition duration-300"
-                    onClick={() => router.push('/student/mycourse')}
+                    onClick={() => {
+                      router.push('/student/mycourse')
+                    }}
                   >
                     Xem khóa học của tôi
                   </button>
@@ -137,4 +140,9 @@ export default function Home() {
       </div>
     </>
   );
+}
+
+function openMyCourse(){
+  const router = useRouter();
+  router.push('/student/mycourse')
 }

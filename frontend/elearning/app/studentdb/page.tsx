@@ -29,7 +29,8 @@ const Studentdb = () =>{
 
   useEffect(() => {
     fetchSection()
-  }, [])
+  }, [searchParams])
+
   return (
     <>
       <BKNavbar2 />
@@ -38,7 +39,7 @@ const Studentdb = () =>{
         <div className="w-full flex flex-col items-center text-black">
           <CourseDropdown title="Chung" description={course?.description} sectionId=""/>
           {sections.map((section, index)=> (
-            <CourseDropdown title={`Chương ${index + 1}: ${section.name}`} sectionId={section.id}/>
+            <CourseDropdown key={index+1} title={`Chương ${index + 1}: ${section.name}`} sectionId={section.id}/>
           ))}
         </div>
       </div>
