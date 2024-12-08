@@ -45,12 +45,6 @@ class quizService {
                 }
             ).from(quiz).where(eq(quiz.id, id));
             
-            if (quizById.length === 0) {
-                return {
-                    status: 404,
-                    message: "Quiz not found"
-                }
-            }
             return {
                 status: 200,
                 data: quizById
@@ -112,12 +106,6 @@ class quizService {
                 }
             ).from(quiz).where(eq(quiz.sectionId, sectionId));
             
-            if (quizBySection.length === 0) {
-                return {
-                    status: 404,
-                    message: "Quiz not found"
-                }
-            }
             return {
                 status: 200,
                 data: quizBySection

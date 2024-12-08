@@ -15,6 +15,8 @@ type Course = {
     { name: "Tên khóa học 6", instructor: "Giảng viên 6", date: "Date 6", completed: true },
     { name: "Tên khóa học 6", instructor: "Giảng viên 6", date: "Date 6", completed: true },
     { name: "Tên khóa học 6", instructor: "Giảng viên 6", date: "Date 6", completed: true },
+    { name: "Tên khóa học 6", instructor: "Giảng viên 6", date: "Date 6", completed: true },
+    { name: "Tên khóa học 6", instructor: "Giảng viên 6", date: "Date 6", completed: true },
   ];
 const Roadmap = () => {
   return (

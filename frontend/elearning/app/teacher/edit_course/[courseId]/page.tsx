@@ -92,19 +92,30 @@ const editCoursePage = ({ params }: { params: Promise<{ courseId: string }> }) =
     }
     const [sections, setSections] = useState([]);
     const [course, setCourse] = useState<any>({});
+    const [userLogin, setUserLogin] = useRecoilState(userLoginState)
+    
+    useEffect(() => {
+            const userFromSessionRaw = sessionStorage.getItem('userLogin')
+            if(!userFromSessionRaw) return
+            setUserLogin(JSON.parse(userFromSessionRaw))  
+        }, [])
     const fetchSections = async () => {
         // Fetch sections from API
         if (!rtnParams.courseId) return;
         try {
             let response = await request.get(`/section/course/${rtnParams.courseId}`);
+            console.log(response)
             if (response.status === 200){
                 console.log(response.data)
                 setSections(response.data);
             }
-            
+            else if (response.status === 404){
+                console.log("No sections found");
+                
+            }
         } catch (error) {
             
-            console.log("Failed to fetch sections");
+            console.log("Failed to fetch sections: ", error);
         }
     }
     const fetchCourse = async () => {
@@ -150,19 +161,12 @@ const editCoursePage = ({ params }: { params: Promise<{ courseId: string }> }) =
                 fetchSections();
             }
         } catch (error) {
-            console.log("Failed to add section");
+            console.log("Failed to add section: ", error);
         }
 
         console.log(newSection);
     };
 
-    const [userLogin, setUserLogin] = useRecoilState(userLoginState)
-    
-    useEffect(() => {
-            const userFromSessionRaw = sessionStorage.getItem('userLogin')
-            if(!userFromSessionRaw) return
-            setUserLogin(JSON.parse(userFromSessionRaw))  
-        }, [])
 
     return (
         <div className="grid grid-rows-12 grid-cols-12 gap-4 bg-black">

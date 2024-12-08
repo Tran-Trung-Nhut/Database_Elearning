@@ -79,12 +79,6 @@ class sectionService{
             .from(section)
             .where(eq(section.courseId, courseId))
 
-            if (sections.length === 0){
-                return {
-                    message: "No sections found",
-                    status: 404
-                }
-            }
             return {
                 message: "Sections fetched successfully",
                 data: sections,
@@ -107,6 +101,7 @@ class sectionService{
                 teacherId: teacherId,
                 courseId: courseId  
             })
+
             const newSection = await db.insert(section)
                                         .values({
                                             name: name,
@@ -121,6 +116,7 @@ class sectionService{
                 status: 200
             }
         } catch (error) {
+            console.log(error)
             return {
                 message: error,
                 status: 500
