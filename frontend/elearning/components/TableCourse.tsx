@@ -95,7 +95,7 @@ function TableCourse() {
                                     {course.creationTime.toString()}
                                 </td>
                                 <td className={`px-6 py-4 text-center ${course.progress === 100? "text-green-500": `text-yellow-500`}`}>
-                                    {course.progress === 100? "Đã hoàn thành": `Hoàn thành ${course.progress}`}
+                                    {course.progress === 100? "Đã hoàn thành": `Hoàn thành ${course.progress}%`}
                                 </td>
                                 <button
                                     type="button"

@@ -2,6 +2,7 @@ import { and, eq, sql } from "drizzle-orm";
 import { db } from "../db/db";
 import { course, dO, join, lecture, quiz, section, user } from "../db/schema";
 import { joinDto } from "../dtos/join.dto";
+import studentService from "../student/student.service";
 
 class joinService {
 
@@ -15,7 +16,6 @@ class joinService {
                 .where(eq(quiz.id, quizId));
     
             const sectionId = sectionResult[0]?.sectionId;
-            if (!sectionId) throw new Error('Invalid sectionId.');
     
             const courseResult = await db
                 .select({
@@ -25,7 +25,6 @@ class joinService {
                 .where(eq(section.id, sectionId));
     
             const courseId = courseResult[0]?.courseId;
-            if (!courseId) throw new Error('Invalid courseId.');
 
             const quizListResult = await db
                 .select({
@@ -35,7 +34,6 @@ class joinService {
                 .innerJoin(section, eq(quiz.sectionId, section.id)) 
                 .where(eq(section.courseId, courseId)); 
             const totalQuizCount = quizListResult.length;
-            if (totalQuizCount === 0) throw new Error('No quizzes found for the course.');
     
             const quizIds = quizListResult.map((q) => q.quizId);
     
@@ -59,7 +57,11 @@ class joinService {
             const totalScore = userQuizScores.reduce((sum, quiz) => sum + quiz.averageScore, 0);
             const GPA = quizzesCompleted > 0 ? totalScore / quizzesCompleted : 0;
             const progress = Math.round((quizzesCompleted / totalQuizCount) * 100);
-    
+            
+            if(progress === 100){
+                studentService.updateNumberOfCourseComplete(studentId)
+            }
+
             await db
                 .update(join)
                 .set({
@@ -69,9 +71,8 @@ class joinService {
                 })
                 .where(and(eq(join.courseId, courseId), eq(join.studentId, studentId)));
     
-            console.log(`Progress and GPA updated successfully for studentId: ${studentId}`);
         } catch (error) {
-            console.error('Error updating progress and GPA:', error);
+            
         }
     }
     
@@ -97,6 +98,34 @@ class joinService {
                 error: error,
                 status: 500
             }
+        }
+    }
+
+    public async getJoinCompleted(studentId: number){
+        try{
+            const completeCourses = await db
+            .select()
+            .from(join)
+            .where(and(eq(join.studentId, studentId), eq(join.progress, 100)))
+
+            return completeCourses.length
+        }catch(e){
+            console.log(e)
+            return 0
+        }
+    }
+
+    public async getJoinEnroll(studentId: number){
+        try{
+            const completeCourses = await db
+            .select()
+            .from(join)
+            .where(eq(join.studentId, studentId))
+
+            return completeCourses.length
+        }catch(e){
+            console.log(e)
+            return 0
         }
     }
 
@@ -224,7 +253,7 @@ class joinService {
                 dateStart: new Date().toISOString(),
             })
 
-            console.log("Join created")
+            studentService.updateNumberOfCourseEnroll(studentId)
             return {
                 message: "Join created",
                 status: 201,

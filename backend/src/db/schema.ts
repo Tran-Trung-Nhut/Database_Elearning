@@ -57,7 +57,7 @@ export const courseTopic = pgTable('courseTopic', {
 
 export const section = pgTable('section',{
     id: serial('id').primaryKey(),
-    name: varchar('name', { length: 255 }).notNull().unique(),
+    name: varchar('name', { length: 255 }).notNull(),
     numOfLecture: integer('numOfLecture').notNull().default(0),
     timeToComplete: integer('timeTocomplete').notNull().default(12),
     teacherId: serial('teacherId').notNull().references(() => teacher.userId, { onDelete:'cascade' }),
