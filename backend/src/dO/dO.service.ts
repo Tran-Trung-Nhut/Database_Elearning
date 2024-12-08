@@ -2,6 +2,7 @@ import { and, eq } from "drizzle-orm";
 import { db } from "../db/db";
 import { dO } from "../db/schema";
 import { dODto } from "../dtos/dO.dto";
+import joinService from "../join/join.service";
 
 class dOService {
     public async getDOByQuizId(quizId: number){
@@ -139,6 +140,8 @@ class dOService {
                 score: dODto.score,
                 attemptOrder: dODto.attemptOrder
             })
+
+            joinService.UpdateGPAAndProgress(dODto.quizId, dODto.studentId)
             return {
                 mesage: "DO created successfully",
                 status: 200
@@ -153,7 +156,6 @@ class dOService {
 
     public async updateDO(dODto: dODto){
         try {
-            // check if the DO exists
             const checkDO = await db.select({
                 quizId: dO.quizId,
                 studentId: dO.studentId
@@ -173,7 +175,6 @@ class dOService {
                 attemptOrder: dODto.attemptOrder
             })
             .where(and(eq(dO.quizId, dODto.quizId), eq(dO.studentId, dODto.studentId)))
-
 
             return {
                 message: "DO updated successfully",
