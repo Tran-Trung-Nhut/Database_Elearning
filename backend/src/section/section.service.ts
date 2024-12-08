@@ -78,6 +78,7 @@ class sectionService{
             })
             .from(section)
             .where(eq(section.courseId, courseId))
+            .orderBy(section.creTime)
 
             return {
                 message: "Sections fetched successfully",
