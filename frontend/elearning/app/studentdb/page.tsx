@@ -8,8 +8,16 @@ import { useSearchParams } from "next/navigation";
 import { SectionDto } from "../dtos/section.dto";
 import { useEffect, useState } from "react";
 import request from "../axios/axios";
+import { useRecoilState } from "recoil";
+import { userLoginState } from "@/state";
 
 const Studentdb = () =>{  
+  const [userLogin, setUserLogin] = useRecoilState(userLoginState);
+    useEffect(() => {
+        const userFromSessionRaw = sessionStorage.getItem('userLogin')
+        if(!userFromSessionRaw) return
+        setUserLogin(JSON.parse(userFromSessionRaw))  
+    }, [])
   const [sections, setSections] = useState<SectionDto[]>([])
   const searchParams = useSearchParams();
   const courseParam = searchParams.get("course");
@@ -31,6 +39,7 @@ const Studentdb = () =>{
     fetchSection()
   }, [searchParams])
 
+  if (!userLogin.id) return <>Loading...</>  
   return (
     <>
       <BKNavbar2 />
@@ -39,7 +48,7 @@ const Studentdb = () =>{
         <div className="w-full flex flex-col items-center text-black">
           <CourseDropdown title="Chung" description={course?.description} sectionId=""/>
           {sections.map((section, index)=> (
-            <CourseDropdown key={index+1} title={`Chương ${index + 1}: ${section.name}`} sectionId={section.id}/>
+            <CourseDropdown userId = {userLogin.id} key={index+1} title={`Chương ${index + 1}: ${section.name}`} sectionId={section.id}/>
           ))}
         </div>
       </div>
