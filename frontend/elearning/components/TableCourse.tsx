@@ -2,13 +2,13 @@
 import React, { useEffect, useState } from "react";
 import * as request from "../app/axios/axios"
 import { set } from "react-hook-form";
-import { CourseWithTeacherNameDto } from "@/app/dtos/course.dto";
 import { useRecoilState } from "recoil";
 import { userLoginState } from "@/state";
 import { useRouter } from "next/navigation";
+import { JoinFullDto } from "@/app/dtos/join.dto";
 function TableCourse() {
     const [userLogin, setUserLogin] = useRecoilState(userLoginState)
-    const [courses, setCourses] = useState<CourseWithTeacherNameDto[]>([])
+    const [courses, setCourses] = useState<JoinFullDto[]>([])
     const router = useRouter()
     const fetchCourse = async () => {
         let data = await request.get(`/join/studentId/${userLogin.id}`)
@@ -62,13 +62,13 @@ function TableCourse() {
                             Giảng viên
                         </th>
                         <th scope="col" className="px-6 py-3 text-center ">
-                            Giá tiền
+                            GPA
                         </th>
                         <th scope="col" className="px-6 py-3 text-center">
-                            Ngày đăng kí
+                            Ngày đăng ký
                         </th>
                         <th scope="col" className="px-6 py-3 text-center">
-                            Trạng thái
+                            Tiến độ
                         </th>
                         <th scope="col" className="px-6 py-3 text-center">
                             Tùy chọn 
@@ -89,13 +89,13 @@ function TableCourse() {
                                     {course.teacherFirstName + " " + course.teacherLastName}
                                 </td>
                                 <td className="px-6 py-4 text-center">
-                                    {course.price}
+                                    {course.progress === 100? `${course.GPA}`: `Chưa có kết quả`}
                                 </td>
                                 <td className="px-6 py-4 text-center">
                                     {course.creationTime.toString()}
                                 </td>
-                                <td className="px-6 py-4 text-center">
-                                    Chưa hoàn thành
+                                <td className={`px-6 py-4 text-center ${course.progress === 100? "text-green-500": `text-yellow-500`}`}>
+                                    {course.progress === 100? "Đã hoàn thành": `Hoàn thành ${course.progress}`}
                                 </td>
                                 <button
                                     type="button"

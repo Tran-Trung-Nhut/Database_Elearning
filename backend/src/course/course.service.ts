@@ -152,7 +152,8 @@ class CourseService{
         description: string,
         teacherId: number,
         price: number,
-        topics: string[]
+        topics: string[],
+        avgQuiz: number
     ) => {
         try {
             // check if course already exist
@@ -173,7 +174,7 @@ class CourseService{
                 description: description,
                 teacherId: teacherId,
                 creTime: new Date().toISOString(),
-                avgQuiz: 0,
+                avgQuiz: avgQuiz,
                 price: price,
             }).returning({
                 courseId: course.id

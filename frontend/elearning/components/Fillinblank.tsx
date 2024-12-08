@@ -1,78 +1,70 @@
 "use client";
 import React, { useState } from "react";
+import { QuizProps } from "./Quizz";
 
-type FillInTheBlankProps = {
-  id: number,
-  answer: string,
-  question: string;
-  currentPage: number;
-  totalPages: number;
-};
 
-const FillInTheBlank: React.FC<FillInTheBlankProps> = ({
+const FillInTheBlank: React.FC<QuizProps> = ({
   id,
-  answer,
   question,
-  currentPage,
-  totalPages,
+  onAnswerSelect,
+  selectedAnswer,
 }) => {
   const [userAnswer, setUserAnswer] = useState<string>("");
-  const [timeLeft, setTimeLeft] = useState<number>(60); // 60 seconds timer
+  const [state, setState] = useState<boolean>(false)
 
-  const handleAnswerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setUserAnswer(e.target.value);
-  };
+  const handleBlockedButton = async () => {
+    setState(!state)
+  }
+
+  const handleUnblockedButtion = async () => {
+    if(!userAnswer){
+      alert("Không thể khóa khi chưa nhập câu trả lời của bạn")
+      return
+    }
+    setState(!state)
+    onAnswerSelect(id, userAnswer)
+  }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-300 to-blue-500">
+    <div className="w-full flex items-center justify-center">
       <div className="bg-white w-full max-w-3xl p-6 rounded-lg shadow-lg">
-        {/* Header */}
         <div className="flex justify-between items-center mb-6">
           <div className="px-4 py-2 border rounded-lg border-red-500 text-red-500">
             Câu trả lời:{" "}
-            <span className="font-semibold">{userAnswer || "Chưa nhập"}</span>
+            <span className="font-semibold">{selectedAnswer || "Chưa nhập"}</span>
           </div>
-          <div className="px-4 py-2 border rounded-lg border-red-500 text-red-500">
-            Thời gian còn lại: {timeLeft}s
-          </div>
+          {/* <div className="px-4 py-2 border rounded-lg border-red-500 text-red-500">
+            Thời gian còn lại: {timeLeft}
+          </div> */}
+          
         </div>
-
-        {/* Question */}
+        <p className="text-sm text-gray-300"><i>Vui lòng nhấn "Khóa" khi thực hiện xong câu hỏi, nếu không kết quả sẽ không được lưu</i></p>
         <div className="bg-gray-100 p-4 rounded-lg text-gray-700 mb-6">
           <p className="text-lg font-medium">{question}</p>
         </div>
 
-        {/* Input Answer */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
             Nhập câu trả lời:
           </label>
-          <input
-            type="text"
-            value={userAnswer}
-            onChange={handleAnswerChange}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="Nhập câu trả lời của bạn..."
-          />
-        </div>
-
-        {/* Pagination */}
-        <div className="flex justify-between items-center mt-8">
-          <button
-            className="px-4 py-2 bg-blue-500 text-white rounded-lg shadow hover:bg-blue-600 focus:outline-none"
-            disabled={currentPage === 1}
-          >
-            Trang trước
-          </button>
-          <div className="text-gray-600 font-medium">
-            Trang {currentPage}/{totalPages}
+          <div className="flex justify-center items-center">
+            <input
+              type="text"
+              disabled={state}
+              onChange={(e) => setUserAnswer(e.target.value)}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder={state? "Không thể nhập câu trả lời khi đã khóa!" : "Nhập câu trả lời của bạn"}
+            />
+            <button
+              type="button"
+              className={`py-2 border-2 ${state ? "border-red-500 text-red-500" : "border-blue-500 text-blue-500"} hover:scale-110 active scale-90 w-32 rounded-xl`}
+              onClick={() => {
+                state ? handleBlockedButton() : handleUnblockedButtion()
+              }}>
+                {state ? "Mở khóa" : "Khóa"}
+            </button>
           </div>
-          <button
-            className="px-4 py-2 bg-blue-500 text-white rounded-lg shadow hover:bg-blue-600 focus:outline-none"
-            disabled={currentPage === totalPages}
-          >
-            Trang tiếp
-          </button>
+        
         </div>
       </div>
     </div>

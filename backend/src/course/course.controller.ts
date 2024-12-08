@@ -88,9 +88,9 @@ class CourseController {
 
     public async createNewCourse(req: Request, res: Response) {
         try {
-            const {courseName, language, description, teacherId, price, topics } = req.body
+            const {courseName, language, description, teacherId, price, topics, avgQuiz } = req.body
             console.log(req.body)
-            const newCourse : any = await courseService.createNewCourse(courseName, language, description, teacherId, price, topics)
+            const newCourse : any = await courseService.createNewCourse(courseName, language, description, teacherId, price, topics, avgQuiz)
 
             return res.status(newCourse.status).send(newCourse)
         } catch (error) {

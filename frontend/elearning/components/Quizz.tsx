@@ -3,7 +3,7 @@ import request from "@/app/axios/axios";
 import { OptionDto } from "@/app/dtos/option.dto";
 import { useRouter } from "next/navigation";
 
-type QuizProps = {
+export type QuizProps = {
   id: number;
   question: string;
   onAnswerSelect: (questionId: number, selectedAnswer: string) => void;

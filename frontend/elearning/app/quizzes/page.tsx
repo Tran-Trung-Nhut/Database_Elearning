@@ -7,6 +7,7 @@ import { useSearchParams } from "next/navigation";
 import { QuizDto } from "../dtos/quiz.dto";
 import { useRecoilValue } from "recoil";
 import { userLoginState } from "@/state";
+import FillInTheBlank from "@/components/Fillinblank";
 
 const Home = () => {
   const searchParams = useSearchParams();
@@ -91,7 +92,7 @@ const Home = () => {
       }
 
       const calculatedScore = (numberOfCorrect / questions.length) * 10;
-      setScore(calculatedScore); // Lưu điểm số vào state
+      setScore(calculatedScore); 
 
       const dOResponse = await request.get(`/dO/quiz/${quiz?.id}/student/${user.id}`);
       await request.post(`/dO/create`, {
@@ -101,7 +102,7 @@ const Home = () => {
         attemptOrder: dOResponse.data.data.length + 1,
       });
 
-      setIsPopupOpen(true); // Hiển thị pop-up
+      setIsPopupOpen(true);
     } catch (error) {
       alert("Server xảy ra lỗi! Vui lòng thử lại!");
       console.log(error);
@@ -117,12 +118,20 @@ const Home = () => {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-r from-blue-300 to-blue-500">
       {currentQuestion && (
-        <Quiz
+        currentQuestion.type === 'multiple choice' ? (
+          <Quiz
           id={currentQuestion.id}
           question={currentQuestion.content}
           onAnswerSelect={handleAnswerSelect}
           selectedAnswer={userAnswers[currentQuestion.id] || ""}
         />
+        ) : (
+          <FillInTheBlank
+          id={currentQuestion.id}
+          question={currentQuestion.content}
+          onAnswerSelect={handleAnswerSelect}
+          selectedAnswer={userAnswers[currentQuestion.id] || ""}/>
+        )
       )}
       <div className="flex items-center justify-between w-full max-w-3xl bg-white py-2 px-2">
         <button

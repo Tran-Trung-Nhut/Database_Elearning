@@ -1,9 +1,81 @@
-import { and, eq } from "drizzle-orm";
+import { and, eq, sql } from "drizzle-orm";
 import { db } from "../db/db";
-import { course, join, user } from "../db/schema";
+import { course, dO, join, lecture, quiz, section, user } from "../db/schema";
 import { joinDto } from "../dtos/join.dto";
 
 class joinService {
+
+    public async UpdateGPAAndProgress(quizId: number, studentId: number) {
+        try {
+            const sectionResult = await db
+                .select({
+                    sectionId: quiz.sectionId,
+                })
+                .from(quiz)
+                .where(eq(quiz.id, quizId));
+    
+            const sectionId = sectionResult[0]?.sectionId;
+            if (!sectionId) throw new Error('Invalid sectionId.');
+    
+            const courseResult = await db
+                .select({
+                    courseId: section.courseId,
+                })
+                .from(section)
+                .where(eq(section.id, sectionId));
+    
+            const courseId = courseResult[0]?.courseId;
+            if (!courseId) throw new Error('Invalid courseId.');
+
+            const quizListResult = await db
+                .select({
+                    quizId: quiz.id,
+                })
+                .from(quiz)
+                .innerJoin(section, eq(quiz.sectionId, section.id)) 
+                .where(eq(section.courseId, courseId)); 
+            const totalQuizCount = quizListResult.length;
+            if (totalQuizCount === 0) throw new Error('No quizzes found for the course.');
+    
+            const quizIds = quizListResult.map((q) => q.quizId);
+    
+            const userQuizScores = await db
+            .select({
+                quizId: dO.quizId,
+                averageScore: sql<number>`AVG(${dO.score})`.as('averageScore'),
+            })
+            .from(dO)
+            .where(
+                and(
+                    eq(dO.studentId, studentId),
+                    sql`${dO.quizId} = ANY(ARRAY[${sql.join(quizIds.map(Number), sql`, `)}]::int[])`
+                )
+            )
+            .groupBy(dO.quizId);
+
+
+    
+            const quizzesCompleted = userQuizScores.length;
+            const totalScore = userQuizScores.reduce((sum, quiz) => sum + quiz.averageScore, 0);
+            const GPA = quizzesCompleted > 0 ? totalScore / quizzesCompleted : 0;
+            const progress = Math.round((quizzesCompleted / totalQuizCount) * 100);
+    
+            await db
+                .update(join)
+                .set({
+                    progress,
+                    GPA,
+                    dateComplete: quizzesCompleted === totalQuizCount ? new Date().toISOString() : null,
+                })
+                .where(and(eq(join.courseId, courseId), eq(join.studentId, studentId)));
+    
+            console.log(`Progress and GPA updated successfully for studentId: ${studentId}`);
+        } catch (error) {
+            console.error('Error updating progress and GPA:', error);
+        }
+    }
+    
+    
     public async getAllJoin(){
         try {
             const joins = await db.select({
