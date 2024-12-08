@@ -3,26 +3,22 @@ import { db } from "../db/db"
 import { student, user } from "../db/schema"
 import userService from "../user/user.service"
 import authService from "../auth/auth.service"
+import { join } from "path"
+import joinService from "../join/join.service"
 
 
 class StudentService{
-    private generateUniqueStudentId =  async () => {
-        const prefix = 'SV';
-        let uniqueId: string | null = null;
+
+    private generateUniqueStudentId =  async (id: number) => {
+        let uniqueId: string = 'SV'
     
-        while (!uniqueId) {
-            const randomId = Math.floor(10000000 + Math.random() * 90000000).toString();
-            const candidateId = `${prefix}${randomId}`;
-    
-            const existingStudent = await db
-                .select()
-                .from(student)
-                .where(sql`${student.studentId} = ${candidateId}`)
-    
-            if (existingStudent.length === 0) {
-                uniqueId = candidateId;
-            }
+        const lenId : number = id.toString().length
+
+        for(let i = 0; i < 8 - lenId; i++){
+            uniqueId += '0'
         }
+
+        uniqueId += id.toString()
     
         return uniqueId;
     }
@@ -92,7 +88,7 @@ class StudentService{
             return null
         }
 
-        const studentId = await this.generateUniqueStudentId()
+        const studentId = await this.generateUniqueStudentId(newUser[0].id)
 
         const newStudent = await db
         .insert(student)
@@ -121,19 +117,43 @@ class StudentService{
         }
     }
 
+    public updateNumberOfCourseComplete = async (studentId: number) => {
+        try{
+            const CourseComplete = await joinService.getJoinCompleted(studentId)
+            
+            await db
+            .update(student)
+            .set({
+                numberCoursesCompleted: CourseComplete
+            })
+            .where(eq(student.userId, studentId))
+        }catch(e){
+            console.log(e)
+        }
+    }
+
+    public updateNumberOfCourseEnroll = async (studentId: number) => {
+        try{
+            const CourseEnroll = await joinService.getJoinEnroll(studentId)
+            
+            await db
+            .update(student)
+            .set({
+                numberCoursesEnrolled: CourseEnroll
+            })
+            .where(eq(student.userId, studentId))
+        }catch(e){
+            console.log(e)
+        }
+    }
+
     public updateStudent = async (
         id: number,
         firstName: string,
         lastName: string,
-        username: string,
-        password: string,
-        role: string,
         email: string,
         bankName: string,
         bankAccount: string,
-        numberCoursesEnrolled: number,
-        numberCoursesCompleted: number,
-        hashedPassword: string     
     ) => {
 
         const updateUser = await userService.updateUser(
@@ -141,32 +161,11 @@ class StudentService{
             firstName,
             lastName,
             email,
-            username,
-            password,
-            role,
             bankName,
             bankAccount,
-            hashedPassword)
+            )
 
         if(!updateUser || updateUser.length === 0) {
-            return null
-        }
-
-        const updatedStudent = await db
-        .update(student)
-        .set({
-            numberCoursesCompleted: numberCoursesCompleted,
-            numberCoursesEnrolled: numberCoursesEnrolled
-        })
-        .where(eq(student.userId, id))
-        .returning({
-            studentId: student.studentId,
-            enrollmentDate: student.enrollmentDate,
-            numberCoursesEnrolled: student.numberCoursesEnrolled,
-            numberCoursesCompleted: student.numberCoursesCompleted
-        })
-
-        if(!updateUser || updatedStudent.length === 0) {
             return null
         }
 
@@ -179,10 +178,6 @@ class StudentService{
             email: updateUser[0].email,
             bankName: updateUser[0].bankName,
             bankAccount: updateUser[0].bankAccount,
-            studentId: updatedStudent[0].studentId,
-            enrollmentDate: updatedStudent[0].enrollmentDate,
-            numberCoursesEnrolled: updatedStudent[0].numberCoursesEnrolled,
-            numberCoursesCompleted: updatedStudent[0].numberCoursesCompleted,
         }
     }
 

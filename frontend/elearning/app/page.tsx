@@ -115,19 +115,20 @@ export default function Home() {
           <h2 className="text-center text-4xl font-bold mb-12 text-gray-800">
             Các khóa học bán chạy
           </h2>
-          <div className="flex flex-wrap justify-center gap-8 px-8">
-            { course? course.map((cour, index) => (
+          <div className="flex overflow-x-auto px-8 space-x-8">
+            {course ? course.map((cour, index) => (
               <CourseCard
-              key= {cour.courseId}
-              courseName={cour.courseName}
-              teacher={cour.teacherFirstName + ' ' + cour.teacherLastName}
-              price={cour.price}
-              id={cour.courseId}
-              description={cour.description}
+                key={cour.courseId}
+                courseName={cour.courseName}
+                teacher={cour.teacherFirstName + ' ' + cour.teacherLastName}
+                price={cour.price}
+                id={cour.courseId}
+                description={cour.description}
               />
             )) : null}
           </div>
         </section>
+
 
         {/* Footer */}
         <section className="bg-white">

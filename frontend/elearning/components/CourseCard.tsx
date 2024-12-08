@@ -55,7 +55,7 @@ function CourseCard(props: any) {
   return (
     <>
       <div
-        className="max-w-sm rounded overflow-hidden shadow-lg border border-gray-200 bg-white"
+        className="w-[300px] flex-shrink-0 rounded shadow-lg border border-gray-200 bg-white"
         onClick={toggleModal}
       >
         <img
