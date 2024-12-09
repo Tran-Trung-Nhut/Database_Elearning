@@ -150,10 +150,6 @@ class TeacherService {
             email,
             username,
             password,
-            role,
-            bankName,
-            bankAccount,
-            hashedPassword
         )
 
         if(!updateUser || updateUser.length === 0){

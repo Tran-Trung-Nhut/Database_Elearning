@@ -20,8 +20,8 @@ const Header = (teacherName: string) => {
         <Button className="bg-hcmutLightBlue border-1 border-white m-4"
           onClick={
             () => {
-              // router.push('/teacher/create')
-              window.open('/teacher/create', '_blank');
+              router.push('/teacher/create')
+              // window.open('/teacher/create', '_blank');
             }
           }
         >

@@ -93,19 +93,9 @@
             firstName: string, 
             lastName: string,
             email: string, 
-            username: string, 
-            password: string, 
-            role: string, 
             bankName: string,
             bankAccount: string,
-            hashedPassword: string
         ) => {
-
-            let changedPassword = hashedPassword
-
-            if(!password && password !== ''){
-                changedPassword = await bcrypt.hash(password, saltRounds)
-            }
 
             const data = await db
             .update(user)
@@ -113,9 +103,6 @@
                 firstName,
                 lastName,
                 email,
-                username,
-                password: changedPassword,
-                role,
                 bankAccount,
                 bankName
                 })

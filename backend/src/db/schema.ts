@@ -57,7 +57,7 @@ export const courseTopic = pgTable('courseTopic', {
 
 export const section = pgTable('section',{
     id: serial('id').primaryKey(),
-    name: varchar('name', { length: 255 }).notNull().unique(),
+    name: varchar('name', { length: 255 }).notNull(),
     numOfLecture: integer('numOfLecture').notNull().default(0),
     timeToComplete: integer('timeTocomplete').notNull().default(12),
     teacherId: serial('teacherId').notNull().references(() => teacher.userId, { onDelete:'cascade' }),
@@ -151,11 +151,11 @@ export const join = pgTable('join', {
 export const dO = pgTable('dO', {
     quizId: serial('quizId').notNull().references(() => quiz.id, { onDelete:'cascade' }),
     studentId: serial('studentId').notNull().references(() => student.userId, { onDelete:'cascade' }),
-    score: integer('score'),
-    attemptOrder: integer('attemptOrder').notNull().default(1)
+    score: doublePrecision('score'),
+    attemptOrder: integer('attemptOrder').notNull()
 }, (table) => {
     return{
-        pk: primaryKey({ columns: [table.quizId, table.studentId], name: "pk_dO"})
+        pk: primaryKey({ columns: [table.quizId, table.studentId, table.attemptOrder], name: "pk_dO"})
     }
 })
 

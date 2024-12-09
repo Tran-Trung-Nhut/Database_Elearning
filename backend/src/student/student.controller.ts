@@ -96,12 +96,8 @@ class StudentController{
                 lastName,
                 username,
                 password,
-                role,
-                email,
-                bankName,
-                bankAccount,
-                numberCoursesEnrolled,
-                numberCoursesCompleted} = req.body
+                role
+                } = req.body
 
             const existUser = await userService.getUserByIdWithPassword(id)
 
@@ -118,12 +114,6 @@ class StudentController{
                 username,
                 password,
                 role,
-                email,
-                bankName,
-                bankAccount,
-                numberCoursesEnrolled,
-                numberCoursesCompleted,
-                existUser[0].password
             )
 
             if(!updateStudent){

@@ -1,9 +1,82 @@
-import { and, eq } from "drizzle-orm";
+import { and, eq, sql } from "drizzle-orm";
 import { db } from "../db/db";
-import { course, join, user } from "../db/schema";
+import { course, dO, join, lecture, quiz, section, user } from "../db/schema";
 import { joinDto } from "../dtos/join.dto";
+import studentService from "../student/student.service";
 
 class joinService {
+
+    public async UpdateGPAAndProgress(quizId: number, studentId: number) {
+        try {
+            const sectionResult = await db
+                .select({
+                    sectionId: quiz.sectionId,
+                })
+                .from(quiz)
+                .where(eq(quiz.id, quizId));
+    
+            const sectionId = sectionResult[0]?.sectionId;
+    
+            const courseResult = await db
+                .select({
+                    courseId: section.courseId,
+                })
+                .from(section)
+                .where(eq(section.id, sectionId));
+    
+            const courseId = courseResult[0]?.courseId;
+
+            const quizListResult = await db
+                .select({
+                    quizId: quiz.id,
+                })
+                .from(quiz)
+                .innerJoin(section, eq(quiz.sectionId, section.id)) 
+                .where(eq(section.courseId, courseId)); 
+            const totalQuizCount = quizListResult.length;
+    
+            const quizIds = quizListResult.map((q) => q.quizId);
+    
+            const userQuizScores = await db
+            .select({
+                quizId: dO.quizId,
+                averageScore: sql<number>`AVG(${dO.score})`.as('averageScore'),
+            })
+            .from(dO)
+            .where(
+                and(
+                    eq(dO.studentId, studentId),
+                    sql`${dO.quizId} = ANY(ARRAY[${sql.join(quizIds.map(Number), sql`, `)}]::int[])`
+                )
+            )
+            .groupBy(dO.quizId);
+
+
+    
+            const quizzesCompleted = userQuizScores.length;
+            const totalScore = userQuizScores.reduce((sum, quiz) => sum + quiz.averageScore, 0);
+            const GPA = quizzesCompleted > 0 ? totalScore / quizzesCompleted : 0;
+            const progress = Math.round((quizzesCompleted / totalQuizCount) * 100);
+            
+            if(progress === 100){
+                studentService.updateNumberOfCourseComplete(studentId)
+            }
+
+            await db
+                .update(join)
+                .set({
+                    progress,
+                    GPA,
+                    dateComplete: quizzesCompleted === totalQuizCount ? new Date().toISOString() : null,
+                })
+                .where(and(eq(join.courseId, courseId), eq(join.studentId, studentId)));
+    
+        } catch (error) {
+            
+        }
+    }
+    
+    
     public async getAllJoin(){
         try {
             const joins = await db.select({
@@ -25,6 +98,34 @@ class joinService {
                 error: error,
                 status: 500
             }
+        }
+    }
+
+    public async getJoinCompleted(studentId: number){
+        try{
+            const completeCourses = await db
+            .select()
+            .from(join)
+            .where(and(eq(join.studentId, studentId), eq(join.progress, 100)))
+
+            return completeCourses.length
+        }catch(e){
+            console.log(e)
+            return 0
+        }
+    }
+
+    public async getJoinEnroll(studentId: number){
+        try{
+            const completeCourses = await db
+            .select()
+            .from(join)
+            .where(eq(join.studentId, studentId))
+
+            return completeCourses.length
+        }catch(e){
+            console.log(e)
+            return 0
         }
     }
 
@@ -129,7 +230,7 @@ class joinService {
         }
     }
 
-    public async createJoin(joinDto: joinDto){
+    public async createJoin(courseId: number, studentId: number){
         try {
             // check if exists
             const checkJoin = await db.select({
@@ -137,7 +238,7 @@ class joinService {
                 studentId: join.studentId
             })
             .from(join)
-            .where(and(eq(join.courseId, joinDto.courseId), eq(join.studentId, joinDto.studentId)))
+            .where(and(eq(join.courseId, courseId), eq(join.studentId, studentId)))
 
             if (checkJoin.length > 0) {
                 return {
@@ -145,20 +246,18 @@ class joinService {
                     status: 400
                 }
             }
-            console.log(joinDto)
-            await db.insert(join).values({
-                courseId: joinDto.courseId,
-                studentId: joinDto.studentId,
-                dateComplete: joinDto.dateComplete,
-                dateStart: joinDto.dateStart,
-                progress: joinDto.progress,
-                GPA: joinDto.GPA
+
+            const data = await db.insert(join).values({
+                courseId: courseId,
+                studentId: studentId,
+                dateStart: new Date().toISOString(),
             })
 
-            console.log("Join created")
+            studentService.updateNumberOfCourseEnroll(studentId)
             return {
                 message: "Join created",
-                status: 201
+                status: 201,
+                data
             }
         } catch (error) {
             return {

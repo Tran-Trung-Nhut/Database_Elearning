@@ -2,6 +2,7 @@ import { and, eq } from "drizzle-orm";
 import { db } from "../db/db";
 import { dO } from "../db/schema";
 import { dODto } from "../dtos/dO.dto";
+import joinService from "../join/join.service";
 
 class dOService {
     public async getDOByQuizId(quizId: number){
@@ -62,6 +63,29 @@ class dOService {
         }
     }
 
+    public async getDOByQuizIdAndStudentIdAndAttemptOrder(quizId: number, studentId: number, attemptOrder: number){
+        try {
+            const dOData = await db.select({
+                quizId: dO.quizId,
+                studentId: dO.studentId,
+                score: dO.score,
+                attemptOrder: dO.attemptOrder
+            })
+            .from(dO)
+            .where(and(eq(dO.studentId, studentId), eq(dO.quizId, quizId), eq(dO.attemptOrder, attemptOrder)))
+
+            return {
+                data: dOData,
+                status: 200
+            }
+        } catch (error) {
+            return {
+                error: error,
+                status: 500
+            }
+        }
+    }
+
     public async getAllDO(){
         try {
             const dOData = await db.select({
@@ -95,12 +119,6 @@ class dOService {
             .from(dO)
             .where(and(eq(dO.quizId, quizId), eq(dO.studentId, studentId)))
 
-            if (dOData.length === 0) {
-                return {
-                    message: "DO not found",
-                    status: 404
-                }
-            }
             return {
                 data: dOData,
                 status: 200
@@ -115,20 +133,6 @@ class dOService {
 
     public async createDO(dODto: dODto){
         try {
-            // check if the DO already exists
-            const checkDO = await db.select({
-                quizId: dO.quizId,
-                studentId: dO.studentId
-            })
-            .from(dO)
-            .where(and(eq(dO.quizId, dODto.quizId), eq(dO.studentId, dODto.studentId)))
-
-            if (checkDO.length > 0) {
-                return {
-                    data: "DO already exists",
-                    status: 409
-                }
-            }
 
             await db.insert(dO).values({
                 quizId: dODto.quizId,
@@ -136,6 +140,8 @@ class dOService {
                 score: dODto.score,
                 attemptOrder: dODto.attemptOrder
             })
+
+            joinService.UpdateGPAAndProgress(dODto.quizId, dODto.studentId)
             return {
                 mesage: "DO created successfully",
                 status: 200
@@ -150,7 +156,6 @@ class dOService {
 
     public async updateDO(dODto: dODto){
         try {
-            // check if the DO exists
             const checkDO = await db.select({
                 quizId: dO.quizId,
                 studentId: dO.studentId
@@ -170,7 +175,6 @@ class dOService {
                 attemptOrder: dODto.attemptOrder
             })
             .where(and(eq(dO.quizId, dODto.quizId), eq(dO.studentId, dODto.studentId)))
-
 
             return {
                 message: "DO updated successfully",

@@ -1,6 +1,6 @@
 {
-  "id": "d63e4cbf-2990-4d35-9f00-75ff425c2fe3",
-  "prevId": "6e4d088f-1dfe-414e-be8d-c33e850ffddc",
+  "id": "0f223458-04ed-4117-a772-ae862e1996f2",
+  "prevId": "a39e0270-bfd0-45b5-b75c-90131492e1eb",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -297,7 +297,7 @@
         },
         "score": {
           "name": "score",
-          "type": "integer",
+          "type": "double precision",
           "primaryKey": false,
           "notNull": false
         },
@@ -305,8 +305,7 @@
           "name": "attemptOrder",
           "type": "integer",
           "primaryKey": false,
-          "notNull": true,
-          "default": 1
+          "notNull": true
         }
       },
       "indexes": {},
@@ -343,7 +342,8 @@
           "name": "pk_dO",
           "columns": [
             "quizId",
-            "studentId"
+            "studentId",
+            "attemptOrder"
           ]
         }
       },
@@ -1124,15 +1124,7 @@
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "section_name_unique": {
-          "name": "section_name_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "name"
-          ]
-        }
-      }
+      "uniqueConstraints": {}
     },
     "public.student": {
       "name": "student",
@@ -1210,7 +1202,7 @@
         },
         "teacherId": {
           "name": "teacherId",
-          "type": "varchar(255)",
+          "type": "varchar(10)",
           "primaryKey": false,
           "notNull": true
         }
@@ -1304,19 +1296,19 @@
         },
         "firstName": {
           "name": "firstName",
-          "type": "varchar(10)",
+          "type": "varchar(64)",
           "primaryKey": false,
           "notNull": true
         },
         "lastName": {
           "name": "lastName",
-          "type": "varchar(30)",
+          "type": "varchar(64)",
           "primaryKey": false,
           "notNull": true
         },
         "username": {
           "name": "username",
-          "type": "varchar(30)",
+          "type": "varchar(64)",
           "primaryKey": false,
           "notNull": true
         },

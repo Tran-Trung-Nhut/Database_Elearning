@@ -45,6 +45,7 @@ const CreateCourse = () => {
       });
       console.log(response.data);
       alert('Tạo khóa học thành công!');
+      window.history.back()
     }catch (e: unknown) {
       if (axios.isAxiosError(e) && e.response) {
         console.log(e.response.data);
