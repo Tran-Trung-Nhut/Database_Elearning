@@ -1,28 +1,10 @@
 "use client"
 import request from "@/app/axios/axios";
 import { CourseWithTeacherNameDto } from "@/app/dtos/course.dto";
-import { JoinFullDto } from "@/app/dtos/join.dto";
 import { RoadmapShowForStudentDto } from "@/app/dtos/roadmap.dto";
 import { userLoginState } from "@/state";
 import React, { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
-
-type Course = {
-  name: string;
-  instructor: string;
-  date: string;
-  completed: boolean; // Trạng thái hoàn thành
-  registered: boolean; // Đã đăng ký hay chưa
-};
-
-const courses: Course[] = [
-  { name: "Tên khóa học 1", instructor: "Giảng viên 1", date: "Date 1", completed: false, registered: true },
-  { name: "Tên khóa học 2", instructor: "Giảng viên 2", date: "Date 2", completed: true, registered: true },
-  { name: "Tên khóa học 3", instructor: "Giảng viên 3", date: "Date 3", completed: false, registered: true },
-  { name: "Tên khóa học 4", instructor: "Giảng viên 4", date: "Date 4", completed: true, registered: true },
-  { name: "Tên khóa học 5", instructor: "Giảng viên 5", date: "Date 5", completed: false, registered: false },
-  { name: "Tên khóa học 6", instructor: "Giảng viên 6", date: "Date 6", completed: true, registered: true },
-];
 
 
 const Roadmap = ({ roadmap }: { roadmap: RoadmapShowForStudentDto | null }) => {
@@ -50,8 +32,7 @@ const Roadmap = ({ roadmap }: { roadmap: RoadmapShowForStudentDto | null }) => {
             }
 
             setJoins(tmp)
-
-
+            console.log(tmp)
         } catch (error) {
             console.log(error)
         }
@@ -91,7 +72,8 @@ const Roadmap = ({ roadmap }: { roadmap: RoadmapShowForStudentDto | null }) => {
       </div>
       <div className="flex flex-col grid-cols-9 p-2 mx-auto md:grid mt-2">
         {courses.map((course, index) => {
-          const circleColor = joins[course.courseId] === null
+          console.log(course.courseId)
+          const circleColor = joins[course.courseId] === undefined  
             ? "bg-red-500" 
             : joins[course.courseId] === 100
             ? "bg-green-500" 
