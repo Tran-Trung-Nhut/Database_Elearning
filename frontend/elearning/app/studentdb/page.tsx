@@ -52,7 +52,7 @@ const Studentdb = () =>{
           ))}
         </div>
       </div>
-      <Footer />
+      <Footer/>
     </>
   );
 }
