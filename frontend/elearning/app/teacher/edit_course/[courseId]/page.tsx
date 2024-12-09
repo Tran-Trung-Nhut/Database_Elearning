@@ -17,7 +17,19 @@ interface Section {
     timeToComplete: number;
 }
 
-const SectionTable = ({ sections, onEdit, onDetailQuiz, onDetailLecture }: { sections: Section[], onEdit: (index: number, id: string) => void, onDetailQuiz: (index: number, id: string) => void, onDetailLecture: (index: number, id: string) => void }) => {
+const SectionTable = ({
+    sections,
+    onEdit,
+    onDetailQuiz,
+    onDetailLecture,
+    onDelete,
+}: {
+    sections: Section[];
+    onEdit: (index: number, id: string) => void;
+    onDetailQuiz: (index: number, id: string) => void;
+    onDetailLecture: (index: number, id: string) => void;
+    onDelete: (id: string) => void; // Add the delete handler type
+}) => {
     return (
         <div className="p-4">
             {/* Table */}
@@ -32,9 +44,6 @@ const SectionTable = ({ sections, onEdit, onDetailQuiz, onDetailLecture }: { sec
                         </th>
                         <th className="px-6 py-3 text-left uppercase text-sm font-medium">
                             Number of Lectures
-                        </th>
-                        <th className="px-6 py-3 text-left uppercase text-sm font-medium">
-                            Number of Quiz
                         </th>
                         <th className="px-6 py-3 text-left uppercase text-sm font-medium">
                             Created At
@@ -60,7 +69,6 @@ const SectionTable = ({ sections, onEdit, onDetailQuiz, onDetailLecture }: { sec
                             <td className="px-6 py-4 text-sm text-gray-700 text-center">
                                 {section.numOfLecture}
                             </td>
-                            <td className="px-6 py-4 text-sm text-gray-700 text-center">{section.quiz ? section.quiz : 0}</td>
                             <td className="px-6 py-4 text-sm text-gray-700 text-center">
                                 {section.creTime}
                             </td>
@@ -69,17 +77,33 @@ const SectionTable = ({ sections, onEdit, onDetailQuiz, onDetailLecture }: { sec
                             </td>
                             
                             <td className="flex gap-5 items-center my-auto mt-1">
-                                {/* Nút hành động */}
-                                <button onClick={() => onEdit(index+1, section.id)} className="bg-hcmutLightBlue text-white px-6 py-2 rounded hover:bg-blue-600">
+                                {/* Action Buttons */}
+                                <button
+                                    onClick={() => onEdit(index + 1, section.id)}
+                                    className="bg-hcmutLightBlue text-white px-6 py-2 rounded hover:bg-blue-600"
+                                >
                                     Edit
                                 </button>
-                                <button onClick={() => onDetailQuiz(index+1, section.id)} className="bg-hcmutLightBlue text-white px-6 py-2 rounded hover:bg-blue-600">
+                                <button
+                                    onClick={() => onDetailQuiz(index + 1, section.id)}
+                                    className="bg-hcmutLightBlue text-white px-6 py-2 rounded hover:bg-blue-600"
+                                >
                                     Quiz
                                 </button>
-                                <button onClick={() => onDetailLecture(index+1, section.id)} className="bg-hcmutLightBlue text-white px-6 py-2 rounded hover:bg-blue-600">
+                                <button
+                                    onClick={() => onDetailLecture(index + 1, section.id)}
+                                    className="bg-hcmutLightBlue text-white px-6 py-2 rounded hover:bg-blue-600"
+                                >
                                     Lecture
                                 </button>
+                                <button
+                                    onClick={() => onDelete(section.id)} // Pass the section ID to the delete handler
+                                    className="bg-red-500 text-white px-6 py-2 rounded hover:bg-red-600"
+                                >
+                                    Delete
+                                </button>
                             </td>
+
                         </tr>
                     ))}
                 </tbody>
@@ -196,6 +220,31 @@ const editCoursePage = ({ params }: { params: Promise<{ courseId: string }> }) =
     const handleEditDetailLecture = (index: number, id: string) => {
         router.push(`/teacher/edit_section/lecture/${id}`)
     }
+    const handleDeleteSection = async (id: string) => {
+        if (!id) {
+            alert("Invalid section ID!");
+            return;
+        }
+    
+        if (confirm("Are you sure you want to delete this section?")) {
+            setLoading(true); // Start loading indicator
+            try {
+                const response = await request.del(`/section/delete/${id}`);
+                if (response.status === 200) {
+                    alert("Section deleted successfully!");
+                    fetchSections(); // Refresh the section list
+                } else {
+                    alert("Failed to delete section. Please try again.");
+                }
+            } catch (error) {
+                console.error("Error deleting section:", error);
+                alert("An error occurred while deleting the section.");
+            } finally {
+                setLoading(false); // End loading indicator
+            }
+        }
+    };
+    
     const handleAddSection = async () => {
         if (confirm("Are you sure you want to add a new section?") === false) return;
         const newSection = {
@@ -302,7 +351,14 @@ const editCoursePage = ({ params }: { params: Promise<{ courseId: string }> }) =
                 </div>
                 
                 <div className="">
-                    <SectionTable sections={sections} onEdit={handleEdit} onDetailQuiz={handleEditDetailQuiz} onDetailLecture={handleEditDetailLecture}/>
+                <SectionTable
+                    sections={sections}
+                    onEdit={handleEdit}
+                    onDetailQuiz={handleEditDetailQuiz}
+                    onDetailLecture={handleEditDetailLecture}
+                    onDelete={handleDeleteSection} // Add the delete handler
+                />
+
                 </div>
             </div>
         </div>

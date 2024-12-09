@@ -77,12 +77,6 @@ class questionService {
             .from(question)
             .where(eq(question.quizId, quizId))
 
-            if (find.length === 0) {
-                return {
-                    status: 404,
-                    message: "Question not found"
-                }
-            }
             return {
                 status: 200,
                 message: "Question fetched successfully",

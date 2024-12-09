@@ -165,7 +165,7 @@ const QuizSection = ({ params }: { params: Promise<{ sectionId: string }> }) => 
           <tbody>
             {quiz.map((q, index) => (
               <tr
-                key={index}
+                key={q.id}
                 className={index % 2 === 0 ? "bg-gray-50" : "bg-white"}
               >
                 <td className="border border-gray-300 px-4 py-2">{q.name}</td>
