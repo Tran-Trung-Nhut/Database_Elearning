@@ -6,14 +6,15 @@ import { userLoginState } from "@/state";
 import * as request from '@/app/axios/axios';
 import Header from "../../../teacher_components/header";
 import Sidebar from "../../../teacher_components/sidebar";
-
+import CreateLecture from "./createLecture";
+import {uploadFile} from "@/lib/upload-image";
 const LectureSection = ({ params }: { params: Promise<{ sectionId: string }> }) => {
   const [rtnParams, setRtnParams] = useState<{ sectionId: string }>({ sectionId: "" });
   const [userLogin, setUserLogin] = useRecoilState(userLoginState);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedLecture, setSelectedLecture] = useState<any | null>(null);
-
+  const [loading, setLoading] = useState(false); // Add loading state
   useEffect(() => {
     const loadParams = async () => {
       const unwrappedParams = await params;
@@ -34,9 +35,10 @@ const LectureSection = ({ params }: { params: Promise<{ sectionId: string }> }) 
     const fetchLectures = async () => {
       try {
         let response = await request.get(`lecture/section/${rtnParams.sectionId}`);
+        console.log(response)
         // Kiểm tra nếu response là mảng
-        if (Array.isArray(response)) {
-          setLectures(response);
+        if (Array.isArray(response.data)) {
+          setLectures(response.data);
         } else {
           console.log("Dữ liệu không phải là mảng:", response);
           setLectures([]); // Đặt lại thành mảng rỗng nếu dữ liệu không đúng
@@ -51,28 +53,69 @@ const LectureSection = ({ params }: { params: Promise<{ sectionId: string }> }) 
   }, [rtnParams]);
 
 
-  const handleFormSubmit = (e: React.FormEvent) => {
+  const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget as HTMLFormElement);
+    const file = formData.get("lectureMaterial") as File | null;
+  
+    let materialUrl = null;
+    if (file) {
+      try {
+        // Assume uploadFile is a function that uploads the file and returns the URL
+        materialUrl = await uploadFile(file);
+      } catch (error) {
+        console.error('File upload failed:', error);
+        return;
+      }
+    }
+    else {
+      console.error('No file selected');
+      return;
+    }
+    
     const newLecture = {
-      id: lectures.length + 1,
+      sectionId: Number(rtnParams.sectionId),
       name: formData.get("lectureName") as string,
       state: formData.get("lectureState") as string,
-      material: formData.get("lectureMaterial") as File | null, // Ensure correct type handling
       reference: formData.get("lectureReference") as string,
+      material: await materialUrl, // Send only the URL to the server
     };
-  
-    console.log("New Lecture Added:", newLecture);
-    if (newLecture.material) {
-      console.log("File: ", newLecture.material);
-      console.log("File Name:", newLecture.material.name);
+    
+    console.log(newLecture)
+    try {
+      const result = await CreateLecture(newLecture);
+      console.log(result);
+      if (result) {
+        setLectures((prev) => [...prev, newLecture]);
+        setIsModalOpen(false);
+        // window.location.reload();
+      } else {
+        alert("Failed to add new lecture");
+      }
+    } catch (error) {
+      console.error('Upload failed:', error);
     }
-  
-    // Update state and close modal
-    setLectures((prev) => [...prev, newLecture]);
-    setIsModalOpen(false);
   };
   
+  
+  
+  const handleDeleteClick = async (lectureId: number) => {
+    if (!window.confirm("Are you sure you want to delete this lecture?")) {
+      return;
+    }
+  
+    try {
+      const response = await request.del(`lecture/delete/${lectureId}`);
+      if (response.status === 200) {
+        setLectures((prev) => prev.filter((lecture) => lecture.id !== lectureId));
+        console.log("Lecture deleted successfully");
+      } else {
+        console.error("Failed to delete lecture:", response);
+      }
+    } catch (error) {
+      console.error("Error deleting lecture:", error);
+    }
+  };
   
   
   
@@ -85,26 +128,35 @@ const LectureSection = ({ params }: { params: Promise<{ sectionId: string }> }) 
     }
   };
 
-  const handleEditFormSubmit = (e: React.FormEvent) => {
+  const handleEditFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedLecture) return;
-
+  
+    setLoading(true); // Start loading
+  
     const formData = new FormData(e.currentTarget as HTMLFormElement);
     const updatedLecture = {
       id: selectedLecture.id,
       name: formData.get("lectureName") as string,
       state: formData.get("lectureState") as string,
-      material: formData.get("lectureMaterial") as File | null,
       reference: formData.get("lectureReference") as string,
     };
-
-    // Update lecture in the state
-    setLectures((prev) =>
-      prev.map((l) => (l.id === updatedLecture.id ? updatedLecture : l))
-    );
-
-    console.log("Updated Lecture:", updatedLecture);
-    setIsEditModalOpen(false);
+  
+    try {
+      let response = await request.patch(`lecture/update`, updatedLecture);
+      if (response.status === 200) {
+        setLectures((prev) =>
+          prev.map((l) => (l.id === updatedLecture.id ? { ...l, ...updatedLecture } : l))
+        );
+        setIsEditModalOpen(false);
+      } else {
+        console.error("Failed to update lecture:", response);
+      }
+    } catch (error) {
+      console.error("Error updating lecture:", error);
+    } finally {
+      setLoading(false); // End loading
+    }
   };
 
   return (
@@ -124,7 +176,6 @@ const LectureSection = ({ params }: { params: Promise<{ sectionId: string }> }) 
           <table className="table-auto w-full border-collapse border border-gray-200 text-sm text-left">
             <thead>
               <tr className="bg-pink-100">
-                <th className="border border-gray-300 px-4 py-2">Lecture ID</th>
                 <th className="border border-gray-300 px-4 py-2">Name</th>
                 <th className="border border-gray-300 px-4 py-2">State</th>
                 <th className="border border-gray-300 px-4 py-2">Material</th>
@@ -132,28 +183,29 @@ const LectureSection = ({ params }: { params: Promise<{ sectionId: string }> }) 
                 <th className="border border-gray-300 px-4 py-2">Action</th>
               </tr>
             </thead>
-            <tbody>
-            {Array.isArray(lectures) && lectures.length > 0 ? (
-              lectures.map((l, index) => (
-                <tr key={index} className={index % 2 === 0 ? "bg-gray-50" : "bg-white"}>
-                  <td className="border border-gray-300 px-4 py-2">{l.id}</td>
-                  <td className="border border-gray-300 px-4 py-2">{l.name}</td>
-                  <td className="border border-gray-300 px-4 py-2">{l.state || "Pending"}</td>
-                  <td className="border border-gray-300 px-4 py-2">{l.material ? l.material.name : "N/A"}</td>
-                  <td className="border border-gray-300 px-4 py-2">{l.reference || "N/A"}</td>
-                  <td className="border border-gray-300 px-4 py-2">
-                    <Button onClick={() => handleEditClick(l.id)} className="bg-yellow-500 text-white">
-                      Edit
-                    </Button>
-                  </td>
+              <tbody>
+              {Array.isArray(lectures) && lectures.length > 0 ? (
+                lectures.map((l, index) => (
+                  <tr key={index} className={index % 2 === 0 ? "bg-gray-50" : "bg-white"}>
+                    <td className="border border-gray-300 px-4 py-2">{l.name}</td>
+                    <td className="border border-gray-300 px-4 py-2">{l.state || "opened"}</td>
+                    <td className="border border-gray-300 px-4 py-2">{l.material ? l.material : "N/A"}</td>
+                    <td className="border border-gray-300 px-4 py-2">{l.reference || "N/A"}</td>
+                    <td className="border border-gray-300 px-4 py-2 flex space-x-2">
+                      <Button onClick={() => handleEditClick(l.id)} className="bg-yellow-500 text-white">
+                        Edit
+                      </Button>
+                      <Button onClick={() => handleDeleteClick(l.id)} className="bg-red-600 text-white">
+                        Delete
+                      </Button>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={6} className="text-center">No lectures available</td>
                 </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan={6} className="text-center">No lectures available</td>
-              </tr>
-            )}
-
+              )}
             </tbody>
           </table>
         </div>
@@ -170,6 +222,7 @@ const LectureSection = ({ params }: { params: Promise<{ sectionId: string }> }) 
                     type="text"
                     name="lectureName"
                     className="w-full border px-2 py-1 rounded"
+                    defaultValue={selectedLecture.name}
                     required
                   />
                 </div>
@@ -179,16 +232,8 @@ const LectureSection = ({ params }: { params: Promise<{ sectionId: string }> }) 
                     type="text"
                     name="lectureState"
                     className="w-full border px-2 py-1 rounded"
+                    defaultValue={selectedLecture.state}
                     required
-                  />
-                </div>
-                <div className="mb-4">
-                  <label className="block mb-2">Material</label>
-                  <input
-                    type="file"
-                    name="lectureMaterial"
-                    className="w-full border px-2 py-1 rounded"
-                    required = {selectedLecture.material ? false : true}
                   />
                 </div>
                 <div className="mb-4">
@@ -197,12 +242,13 @@ const LectureSection = ({ params }: { params: Promise<{ sectionId: string }> }) 
                     type="text"
                     name="lectureReference"
                     className="w-full border px-2 py-1 rounded"
-                    required = {false}
+                    defaultValue={selectedLecture.reference}
+                    required
                   />
                 </div>
                 <div className="flex justify-between">
-                  <Button type="submit" className="bg-pink-600">
-                    Save Changes
+                  <Button type="submit" className="bg-pink-600" disabled={loading}>
+                    {loading ? "Saving..." : "Save Changes"}
                   </Button>
                   <Button
                     type="button"
@@ -213,10 +259,10 @@ const LectureSection = ({ params }: { params: Promise<{ sectionId: string }> }) 
                   </Button>
                 </div>
               </form>
-
             </div>
           </div>
         )}
+
       </div>
 
       {/* Modal for adding new lecture */}

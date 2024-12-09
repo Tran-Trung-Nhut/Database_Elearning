@@ -120,7 +120,6 @@ const QuizSection = ({ params }: { params: Promise<{ sectionId: string }> }) => 
         <table className="table-auto w-full border-collapse border border-gray-200 text-sm text-left">
           <thead>
             <tr className="bg-pink-100">
-              <th className="border border-gray-300 px-4 py-2">Quiz ID</th>
               <th className="border border-gray-300 px-4 py-2">Name</th>
               <th className="border border-gray-300 px-4 py-2">State</th>
               <th className="border border-gray-300 px-4 py-2">Attempt</th>
@@ -134,7 +133,6 @@ const QuizSection = ({ params }: { params: Promise<{ sectionId: string }> }) => 
                 key={index}
                 className={index % 2 === 0 ? "bg-gray-50" : "bg-white"}
               >
-                <td className="border border-gray-300 px-4 py-2">{q.id}</td>
                 <td className="border border-gray-300 px-4 py-2">{q.name}</td>
                 <td className="border border-gray-300 px-4 py-2">{q.state || "Pending"}</td>
                 <td className="border border-gray-300 px-4 py-2">{q.attempt || "N/A"}</td>
