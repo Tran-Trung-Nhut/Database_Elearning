@@ -35,7 +35,8 @@ class roadMapController{
         // Create a new roadmap
         try {
             const roadMap = req.body;
-            const newRoadMap = await roadMapService.createRoadMap(roadMap);
+            const includeCourse = req.body.includeCourse;
+            const newRoadMap = await roadMapService.createRoadMap(roadMap, includeCourse);
 
             return res.status(newRoadMap.status).send(newRoadMap);
         } catch (error) {

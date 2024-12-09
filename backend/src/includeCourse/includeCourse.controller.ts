@@ -55,9 +55,9 @@ class includeCourseController {
 
     public async createIncludeCourse(req: Request, res: Response) {
         try {
-            await includeCourseService.createIncludeCourse(req.body);
+            const resonse = await includeCourseService.createIncludeCourse(req.body);
 
-            return res.status(201).send();
+            return res.status(resonse.status).send(resonse);
         } catch (error) {
             return {
                 message: error,

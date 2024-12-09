@@ -31,7 +31,17 @@ const editQuizPage = ({ params }: { params: Promise<{ quizId: string }> }) => {
         answer: "",
         id: 0
     });
-
+    const [quiz, setQuiz] = useState<any>({})
+    const fetchhQuiz = async () => {
+        if ((!rtnParams.quizId)) return;
+        try {
+            const response = await request.get(`/quiz/id/${rtnParams.quizId}`)
+            console.log("Quiz Response:", response);
+            setQuiz(response[0])
+        } catch (error) {
+            console.error('Error fetching quiz:', error);
+        }
+    }
     const handleEditQuestion = async (questionId: number, newContent: string) => {
         const questionToEdit = sampleQuestions.find((question) => question.id === questionId);
         if (!questionToEdit) {
@@ -178,9 +188,13 @@ const editQuizPage = ({ params }: { params: Promise<{ quizId: string }> }) => {
     }, [])
     
     useEffect(() => {
+        fetchhQuiz();
         fetchQuestions();
     }, [rtnParams.quizId]);
     
+    if (!quiz) {
+        return <div>Quiz not found</div>;
+    }
     
     return (
         <div className="grid grid-rows-12 grid-cols-12 gap-4 bg-black ">
@@ -188,7 +202,7 @@ const editQuizPage = ({ params }: { params: Promise<{ quizId: string }> }) => {
             {Sidebar(userLogin.firstName, userLogin.lastName)}
             {/* Header */}
             <div className="bg-pink-600 col-start-3 col-span-10 row-span-1 rounded-xl text-3xl text-white font-semibold uppercase items-center p-5 flex flex-col justify-center">
-                <h1 className="self-center">quiz title</h1>
+                <h1 className="self-center">quiz title: {quiz.name}</h1>
                 <button
                     className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600"
                     onClick={() => setModalOpen(true)}

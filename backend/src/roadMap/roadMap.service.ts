@@ -1,7 +1,8 @@
 import { eq } from "drizzle-orm";
 import { db } from "../db/db";
-import { roadMap } from "../db/schema";
+import { includeCourse, roadMap } from "../db/schema";
 import { roadMapDto } from "../dtos/roadMap.dto";
+import { includeCourseDto } from "../dtos/includeCourse.dto";
 
 class roadMapService {
     public async getAllRoadMaps(){ 
@@ -59,9 +60,14 @@ class roadMapService {
         }
     }
 
-    public async createRoadMap(roadMapData: roadMapDto){
+    public async createRoadMap(roadMapData: roadMapDto, includeCourseDto: includeCourseDto[]){
         // Create roadmap
         try {
+
+            // print out the roadMapData and includeCourseDto
+            console.log(roadMapData);
+            console.log(includeCourseDto);
+
             const newRoadMap = await db.insert(roadMap).
             values({
                 instruction: roadMapData.instruction,
@@ -69,6 +75,29 @@ class roadMapService {
                 name: roadMapData.name,
                 teacherId: roadMapData.teacherId
             })
+            .returning({
+                id: roadMap.id
+            });
+
+
+            // Add courses to roadmap
+            let order = 1;
+
+            includeCourseDto.forEach(async (course) => {
+                await db.insert(
+                    includeCourse
+                )
+                .values({
+                    rmId: newRoadMap[0].id,
+                    courseId: course.courseId,
+                    order: order++
+                })
+                .returning({
+                    rmId: includeCourse.rmId,
+                    courseId: includeCourse.courseId,
+                    order: includeCourse.order
+                });
+            });
 
             return {
                 status: 200,

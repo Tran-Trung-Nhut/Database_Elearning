@@ -7,7 +7,6 @@ import * as request from '@/app/axios/axios';
 import Header from "../../../teacher_components/header";
 import Sidebar from "../../../teacher_components/sidebar";
 import { useRouter } from "next/navigation";
-import { Loader } from "lucide-react";
 const QuizSection = ({ params }: { params: Promise<{ sectionId: string }> }) => {
   const [rtnParams, setRtnParams] = useState<{ sectionId: string }>({ sectionId: "" });
   const [section, setSection] = useState<any>({});
@@ -145,7 +144,7 @@ const QuizSection = ({ params }: { params: Promise<{ sectionId: string }> }) => 
     {Sidebar(userLogin.firstName, userLogin.lastName)}
     <div className="bg-white col-start-3 col-span-10 row-span-10 rounded-xl shadow-xl mb-4 min-h-screen">
       <h1 className="bg-pink-600 rounded-t-xl text-center p-2 text-2xl text-white font-semibold uppercase">
-        Quiz
+        Quiz: {section.name}
       </h1>
         <div className="row-start-1 self-center flex justify-center my-4">
           <Button onClick={() => setIsModalOpen(true)} className="bg-pink-600">

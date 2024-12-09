@@ -86,6 +86,9 @@ function TableRoadmap() {
                                 <td className="px-6 py-4 w-[300px] text-center">
                                     {roadmap.description}
                                 </td>
+
+                                <td>
+
                                 <button
                                     type="button"
                                     className="text-blue-500 px-6 py-4 text-center"
@@ -95,6 +98,7 @@ function TableRoadmap() {
                                     >
                                     Xem lộ trình
                                 </button>
+                                </td>
                             </tr>
                         ))
                     }
