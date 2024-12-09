@@ -108,10 +108,10 @@ const LectureSection = ({ params }: { params: Promise<{ sectionId: string }> }) 
   };
 
   return (
-    <div className="grid grid-rows-12 grid-cols-12 gap-4 bg-black">
+    <div className="grid grid-rows-12 grid-cols-12 gap-4 bg-white">
       {Header(userLogin.lastName + ' ' + userLogin.firstName)}
       {Sidebar(userLogin.firstName, userLogin.lastName)}
-      <div className="bg-white col-start-3 col-span-10 row-span-11 mb-4 rounded-xl overflow-hidden">
+      <div className="bg-white col-start-3 col-span-10 row-span-11 mb-4 rounded-xl overflow-hidden shadow-xl">
         <h1 className="bg-pink-600 rounded-t-xl text-center p-2 text-2xl text-white font-semibold uppercase">
           Lectures
         </h1>
