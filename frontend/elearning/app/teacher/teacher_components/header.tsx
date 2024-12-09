@@ -9,7 +9,7 @@ const Header = (teacherName: string) => {
   const router = useRouter();
 
   return (
-    <div className="bg-hcmutDarkBlue text-white col-span-12 row-span-2 grid grid-cols-3 items-center">
+    <div className="bg-hcmutDarkBlue text-white col-span-12 row-span-2 grid grid-cols-3 items-center h-40">
       <div className="flex flex-col items-center">
         {/* <FiBookOpen className="text-5xl" /> */}
         <h1 className="font-mono font-extrabold text-4xl m-4">EZLearn</h1>

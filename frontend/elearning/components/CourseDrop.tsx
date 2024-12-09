@@ -105,10 +105,12 @@ function CourseDropdown(props: any) {
                   <p className="font-semibold text-lg text-gray-800">{lecture.name}</p>
                   <div>
                     <p className="text-gray-700 font-medium">- Video bài giảng:</p>
-                    <video controls className="rounded-lg shadow-xl mx-auto block w-[50%] ">
-                      <source src={lecture.material} type="video/mp4" />
+                    <video controls className="rounded-lg shadow-xl mx-auto block w-[50%]">
+                      <source src={lecture.material} type="video/mkv" />
+                      <source src={lecture.material.replace('.mkv', '.mp4')} type="video/mp4" />
                       Trình duyệt của bạn không hỗ trợ video.
                     </video>
+
                   </div>
                   <p className="text-gray-700 font-medium">
                     - Tài liệu học tập:{" "}

@@ -135,12 +135,17 @@ const RegistrationChart = () => {
         },
         {}
     );
-
+    const getRandomDarkBlueToPurpleShade = () => {
+        const red = Math.floor(Math.random() * 56) + 100; // Red value (100 to 155)
+        const green = Math.floor(Math.random() * 50); // Green value (0 to 49)
+        const blue = Math.floor(Math.random() * 100) + 155; // Blue value (155 to 255)
+        return `rgb(${red}, ${green}, ${blue})`;
+    };
     // Dataset for each course
     const datasets = Object.keys(groupedByCourse).map((courseId) => ({
         label: `${courses.find((c) => c.courseId === Number(courseId))?.courseName}`,
         data: groupedByCourse[Number(courseId)].studentCounts,
-        borderColor: `#${Math.floor(Math.random() * 16777215).toString(16)}`,
+        borderColor: getRandomDarkBlueToPurpleShade(),
         borderWidth: 2,
         tension: 0.4,
         borderDash: [] as number[], // Add borderDash property
@@ -156,7 +161,7 @@ const RegistrationChart = () => {
 
     // Add a dataset for total student registrations
     datasets.push({
-        label: "Tổng lượt đăng kí",
+        label: "Tổng lượt đăng kí ngày",
         data: totalStudentsByDay,
         borderColor: "#FF5733", // Distinct color for total students
         borderWidth: 3,
@@ -189,13 +194,13 @@ const RegistrationChart = () => {
             x: {
                 title: {
                     display: true,
-                    text: "Date",
+                    text: "Ngày",
                 },
             },
             y: {
                 title: {
                     display: true,
-                    text: "Number of Students",
+                    text: "Số lượng học sinh",
                 },
                 beginAtZero: true,
             },

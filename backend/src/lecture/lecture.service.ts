@@ -92,6 +92,7 @@ class lectureService {
                 status: 200
             }
         } catch (error) {
+            console.log(error);
             return {
                 message: error,
                 status: 500
