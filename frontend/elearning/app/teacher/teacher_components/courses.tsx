@@ -3,7 +3,15 @@ import { Button } from '@/components/ui/button';
 import { useEffect, useState } from 'react';
 import * as request from '../../axios/axios'
 const CoursesContent = (teacherId: string ) => {
-  const [courses, setCourses] = useState<any[]>([]);
+  interface Course {
+    courseId: string;
+    courseName: string;
+    description: string;
+    creationTime: string;
+    price: string;
+  }
+
+  const [courses, setCourses] = useState<Course[]>([]);
   
   const fetchCourses = async () => {
     if (!teacherId) return;
@@ -23,6 +31,7 @@ const CoursesContent = (teacherId: string ) => {
   }
 
   console.log(courses);
+
   return (
     <div className="bg-white row-span-4 col-start-3 col-end-13 grid grid-cols-12 p-4 rounded-xl items-start">
       <div className="bg-white p-4 col-start-1 col-end-13 rounded-xl">
@@ -30,7 +39,7 @@ const CoursesContent = (teacherId: string ) => {
         <div className="grid grid-cols-12 gap-4">
           {/* COURSE CARDS */}
           {
-            courses.map((course: any) => {
+            courses.map((course: Course) => {
               return (
                 <div
                   key={course.courseId}
@@ -44,11 +53,11 @@ const CoursesContent = (teacherId: string ) => {
                     <p className="text-sm text-gray-400">{course.description}</p>
                     <p className="text-sm text-gray-400">{course.creationTime}</p>
                   </div>
-                  <div className="px-4 py-2 flex justify-between items-center">
+                  <div className="px-4 py-2 flex justify-between items-center mb-2">
                     <Button className="border-2" onClick={() => {
                       window.open(`/teacher/edit_course/${course.courseId}`, '_blank')
                     }}>Edit</Button>
-                    <span className="text-sm font-semibold text-gray-200">{course.price} Price</span>
+                    <span className="text-sm font-semibold text-gray-200">{course.price} VND</span>
                   </div>
                 </div>
               )
