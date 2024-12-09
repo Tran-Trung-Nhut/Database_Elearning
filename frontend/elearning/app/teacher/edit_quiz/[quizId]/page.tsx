@@ -105,7 +105,7 @@ const editQuizPage = ({ params }: { params: Promise<{ quizId: string }> }) => {
 
     console.log(rtnParams)
     return (
-        <div className="grid grid-rows-12 grid-cols-12 gap-4 bg-black">
+        <div className="grid grid-rows-12 grid-cols-12 gap-4 bg-black ">
             {Header(userLogin.lastName + ' ' + userLogin.firstName)}
             {Sidebar(userLogin.firstName, userLogin.lastName)}
             {/* Header */}

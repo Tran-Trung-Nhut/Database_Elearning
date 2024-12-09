@@ -29,7 +29,7 @@ const Sidebar = (firstName: string, lastName: string) => {
   router.push('/')
   }
   return (
-    <div className="bg-white rounded-xl col-start-1 col-end-3 row-span-10 flex flex-col mb-4 shadow-xl">
+    <div className="bg-white rounded-xl col-start-1 col-end-3 row-span-10 flex flex-col mb-4 shadow-xl min-h-screen">
       {/* Profile Section */}
       <div className="bg-gray-200 text-center py-6 rounded-t-xl">
         <Image src={aba} alt="Profile Picture" className="w-20 h-20 mx-auto rounded-full" />

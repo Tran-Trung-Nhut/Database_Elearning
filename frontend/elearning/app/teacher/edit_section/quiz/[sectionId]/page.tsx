@@ -102,17 +102,16 @@ const QuizSection = ({ params }: { params: Promise<{ sectionId: string }> }) => 
   };
 
   return (
-    <div className="grid grid-rows-12 grid-cols-12 gap-4 bg-white">
+    <div className="grid grid-cols-12 gap-4 bg-white grid-rows-[auto,1fr]">
 
     
     {Header(userLogin.lastName + ' ' + userLogin.firstName)}
     {Sidebar(userLogin.firstName, userLogin.lastName)}
-    <div className="bg-white col-start-3 col-span-10 row-span-11 rounded-xl overflow-hidden shadow-xl mb-4">
+    <div className="bg-white col-start-3 col-span-10 row-span-10 rounded-xl shadow-xl mb-4 min-h-screen">
       <h1 className="bg-pink-600 rounded-t-xl text-center p-2 text-2xl text-white font-semibold uppercase">
         Quiz
       </h1>
-      <div className="grid grid-rows-8 p-4">
-        <div className="row-start-1 self-center flex justify-center mb-4">
+        <div className="row-start-1 self-center flex justify-center my-4">
           <Button onClick={() => setIsModalOpen(true)} className="bg-pink-600">
             Add Quiz
           </Button>
@@ -149,7 +148,7 @@ const QuizSection = ({ params }: { params: Promise<{ sectionId: string }> }) => 
             ))}
           </tbody>
         </table>
-      </div>
+      
 
       {/* Modal for editing quiz */}
       {isEditModalOpen && selectedQuiz && (
