@@ -15,6 +15,13 @@
       "when": 1733673269610,
       "tag": "0001_happy_wolf_cub",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1733728844049,
+      "tag": "0002_demonic_mockingbird",
+      "breakpoints": true
     }
   ]
 }

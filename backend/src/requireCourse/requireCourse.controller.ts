@@ -27,6 +27,7 @@ class requireCourseController {
         }
     }
 
+
     public async insertRequireCourse(req: Request, res: Response) {
         try {
             const response = await requireCourseService.insertRequireCourse(req.body.courseId, req.body.rCourseId);
