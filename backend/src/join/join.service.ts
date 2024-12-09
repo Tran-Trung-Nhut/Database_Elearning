@@ -129,6 +129,44 @@ class joinService {
         }
     }
 
+    public async getJoinByTeacherId(teacherId: number){
+        try {
+            const joinData = await db.select({
+                courseId: join.courseId,
+                studentId: join.studentId,
+                dateComplete: join.dateComplete,
+                dateStart: join.dateStart,
+                progress: join.progress,
+                GPA: join.GPA,
+                courseName: course.name,
+                description: course.description,
+                price: course.price,
+                creationTime: course.creTime,
+                teacherId: course.teacherId,
+                teacherFirstName: user.firstName,
+                teacherLastName: user.lastName,
+            })
+            .from(join)
+            .leftJoin(course, eq(join.courseId, course.id))
+            .where(eq(course.teacherId, teacherId))
+            .leftJoin(user, eq(course.teacherId, user.id))
+            if (joinData.length === 0) {
+                return {
+                    data: "Join not found",
+                    status: 404
+                }
+            }
+            return {
+                data: joinData,
+                status: 200
+            }
+        } catch (error) {
+            return {
+                error: error,
+                status: 500
+            }
+        }
+    }
     public async getJoinById(courseId: number, studentId: number){
         try {
             const joinData = await db.select({

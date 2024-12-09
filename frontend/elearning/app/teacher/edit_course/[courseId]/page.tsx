@@ -17,7 +17,7 @@ interface Section {
     timeToComplete: number;
 }
 
-const SectionTable = ({ sections, onEdit, onDetail }: { sections: Section[], onEdit: (index: number, id: string) => void, onDetail: (index: number, id: string) => void }) => {
+const SectionTable = ({ sections, onEdit, onDetailQuiz, onDetailLecture }: { sections: Section[], onEdit: (index: number, id: string) => void, onDetailQuiz: (index: number, id: string) => void, onDetailLecture: (index: number, id: string) => void }) => {
     return (
         <div className="p-4">
             {/* Table */}
@@ -73,8 +73,11 @@ const SectionTable = ({ sections, onEdit, onDetail }: { sections: Section[], onE
                                 <button onClick={() => onEdit(index+1, section.id)} className="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600">
                                     Edit
                                 </button>
-                                <button onClick={() => onDetail(index+1, section.id)} className="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600">
-                                    Detail
+                                <button onClick={() => onDetailQuiz(index+1, section.id)} className="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600">
+                                    Quiz
+                                </button>
+                                <button onClick={() => onDetailLecture(index+1, section.id)} className="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600">
+                                    Lecture
                                 </button>
                             </td>
                         </tr>
@@ -187,8 +190,11 @@ const editCoursePage = ({ params }: { params: Promise<{ courseId: string }> }) =
         }
     };
     
-    const handleEditDetail = (index: number, id: string) => {
-        router.push(`/teacher/edit_section/${id}`)
+    const handleEditDetailQuiz = (index: number, id: string) => {
+        router.push(`/teacher/edit_section/quiz/${id}`)
+    }
+    const handleEditDetailLecture = (index: number, id: string) => {
+        router.push(`/teacher/edit_section/lecture/${id}`)
     }
     const handleAddSection = async () => {
         if (confirm("Are you sure you want to add a new section?") === false) return;
@@ -217,7 +223,7 @@ const editCoursePage = ({ params }: { params: Promise<{ courseId: string }> }) =
         return <LoadingOverlay></LoadingOverlay>
     }
     return (
-        <div className="grid grid-rows-12 grid-cols-12 gap-4 bg-black">
+        <div className="grid grid-rows-12 grid-cols-12 gap-4 bg-black   ">
             {Header(userLogin.lastName + ' ' + userLogin.firstName)}
             {Sidebar(userLogin.firstName, userLogin.lastName)}
             {/* content */}
@@ -296,7 +302,7 @@ const editCoursePage = ({ params }: { params: Promise<{ courseId: string }> }) =
                 </div>
                 
                 <div className="">
-                    <SectionTable sections={sections} onEdit={handleEdit} onDetail={handleEditDetail}/>
+                    <SectionTable sections={sections} onEdit={handleEdit} onDetailQuiz={handleEditDetailQuiz} onDetailLecture={handleEditDetailLecture}/>
                 </div>
             </div>
         </div>
