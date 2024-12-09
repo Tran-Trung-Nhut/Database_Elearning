@@ -1,6 +1,5 @@
 'use client';
 import Image from "next/image";
-import logo from "../public/Logo.png";
 import React, { useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
@@ -124,11 +123,12 @@ export default function Login() {
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <Image
             className="mx-auto h-20 w-auto rounded-xl"
-            src={logo}
+            src="https://lms.hcmut.edu.vn/pluginfile.php/3/theme_academi/logo/1725955904/logoBK.png"
+            width={100} height={100}
             alt="Your Company"
           />
           <h2 className="rounded-lg mt-10 text-center text-2xl/9 font-bold tracking-tight text-white bg-hcmutDarkBlue">
-            Sign Up
+            Đăng ký tài khoản
           </h2>
         </div>
 
@@ -140,7 +140,7 @@ export default function Login() {
                 htmlFor="email"
                 className="block text-sm/6 font-medium text-gray-900"
               >
-                Email address
+                Địa chỉ email
               </label>
               <div className="mt-2">
                 <input
@@ -155,13 +155,12 @@ export default function Login() {
               </div>
             </div>
 
-            {/* User Name */}
             <div>
               <label
                 htmlFor="user-name"
                 className="block text-sm/6 font-medium text-gray-900"
               >
-                User name
+                Tài khoản
               </label>
               <div className="mt-2">
                 <input
@@ -182,7 +181,7 @@ export default function Login() {
                 htmlFor="first-name"
                 className="block text-sm/6 font-medium text-gray-900"
               >
-                First Name
+                Họ
               </label>
               <div className="mt-2">
                 <input
@@ -200,7 +199,7 @@ export default function Login() {
                 htmlFor="class-name"
                 className="block text-sm/6 font-medium text-gray-900"
               >
-                Last Name
+                Tên
               </label>
               <div className="mt-2">
                 <input
@@ -220,7 +219,7 @@ export default function Login() {
                 htmlFor="bank-name"
                 className="block text-sm/6 font-medium text-gray-900"
               >
-                Bank Name
+                Tên ngân hàng
               </label>
               <div className="mt-2">
                 <input
@@ -238,7 +237,7 @@ export default function Login() {
                 htmlFor="bank-account"
                 className="block text-sm/6 font-medium text-gray-900"
               >
-                Bank Account Number
+                Số tài khoản
               </label>
               <div className="mt-2">
                 <input
@@ -258,7 +257,7 @@ export default function Login() {
                 htmlFor="role"
                 className="block text-sm/6 font-medium text-gray-900"
               >
-                Role
+                Đăng ký với vai trò
               </label>
               <div className="mt-2">
                 <select
@@ -281,7 +280,7 @@ export default function Login() {
                 htmlFor="password"
                 className="block text-sm/6 font-medium text-gray-900"
               >
-                Password
+                Mật khẩu
               </label>
               <div className="mt-2 relative">
                 <input
@@ -339,25 +338,24 @@ export default function Login() {
               </div>
             </div>
 
-            {/* Submit Button */}
             <div>
               <button
                 type="button"
                 className="flex w-full justify-center rounded-md bg-hcmutDarkBlue px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-hcmutLightBlue focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                 onClick={() => role === "Student" ? sendSignUpRequestAsStudent() : sendSignUpRequestAsTeacher()}
               >
-                Sign up
+                Đăng ký
               </button>
             </div>
           </form>
           <p className="mt-10 text-center text-sm/6 text-gray-500">
-            Already a member?{" "}
+            Đã là thành viên?{" "}
             <a
               href="#"
               className="font-semibold text-hcmutDarkBlue hover:text-hcmutLightBlue"
               onClick={navigateToLogin}
             >
-              Sign in to your account
+              Đăng nhập vào tài khoản của bạn
             </a>
           </p>
         </div>
