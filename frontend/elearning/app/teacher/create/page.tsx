@@ -197,8 +197,8 @@ const CreateCourse = () => {
           <input
             type="text"
             id="courseName"
-            value={courseName}
-            // onChange={(e) => setCourseName(e.target.value)}
+            value={certiName}
+            onChange={(e) => setCertiName(e.target.value)}
             required
             style={{ width: '100%', padding: '8px', marginTop: '5px' }}
             className='border-solid border-2 rounded-lg'
