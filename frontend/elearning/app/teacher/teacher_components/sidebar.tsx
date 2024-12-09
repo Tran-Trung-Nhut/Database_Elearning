@@ -3,19 +3,26 @@
 import Image from 'next/image';
 import aba from "../../public/aba.jpg";
 import { useRouter } from 'next/navigation';
-import { userLoginState } from '@/state';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { defaultUserLogin } from '@/app/dtos/user.dto';
+// import { userLoginState } from '@/state';
+// import { useRecoilValue, useSetRecoilState } from 'recoil';
+// import { defaultUserLogin } from '@/app/dtos/user.dto';
 
 const Sidebar = (firstName: string, lastName: string) => {
   const router = useRouter();
   const handleBack = () => {
     router.push('/teacher');
   }
+  const handleRoadmap = () => {
+    router.push('/teacher/roadmap');
+  }
+  const handleRevenue = () => {
+    router.push('/teacher/revenue');
+  }
   const handleCourse = () => {
     // router.push('/teacher/courses');
     window.open('/teacher/courses', '_blank');
   }
+  
   const handeLogout = () => {
   sessionStorage.removeItem('userLogin')
 
@@ -42,7 +49,11 @@ const Sidebar = (firstName: string, lastName: string) => {
         </div>
         <div className="flex items-center px-6 py-3 hover:bg-gray-300 cursor-pointer">
           <div className="w-8 h-8 flex items-center justify-center bg-green-600 text-white rounded-full">💲</div>
-          <span className="ml-4 text-gray-700 font-medium">My revenue</span>
+          <span className="ml-4 text-gray-700 font-medium" onClick={handleRevenue}>My revenue</span>
+        </div>
+        <div className="flex items-center px-6 py-3 hover:bg-gray-300 cursor-pointer">
+          <div className="w-8 h-8 flex items-center justify-center bg-yellow-600 text-white rounded-full">🛣️</div>
+          <span className="ml-4 text-gray-700 font-medium" onClick={handleRoadmap}>My Roadmap</span>
         </div>
         <div className="flex items-center px-6 py-3 hover:bg-gray-300 cursor-pointer">
           <div className="w-8 h-8 flex items-center justify-center bg-red-600 text-white rounded-full">⛔</div>

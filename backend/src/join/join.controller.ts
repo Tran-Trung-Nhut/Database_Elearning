@@ -40,6 +40,18 @@ class joinController {
         }
     }
 
+    public async getJoinByTeacherId(req: Request, res: Response) {
+        try {
+            const response = await joinService.getJoinByTeacherId(Number(req.params.teacherId));
+
+            return res.status(response.status).send(response);
+        } catch (error) {
+            return {
+                message: error,
+                status: 500
+            }
+        }
+    }
     public async getJoinByStudentId(req: Request, res: Response) {
         try {
             const response = await joinService.getJoinByStudentId(Number(req.params.studentId));

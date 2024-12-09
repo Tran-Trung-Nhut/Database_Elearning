@@ -1,7 +1,7 @@
 import { time } from "console";
 import { db } from "../db/db";
 import { course, section, teacher } from "../db/schema";
-import { eq } from "drizzle-orm";
+import { eq, asc } from "drizzle-orm";
 import quizService from "../quiz/quiz.service";
 
 class sectionService{
@@ -78,9 +78,9 @@ class sectionService{
             })
             .from(section)
             .where(eq(section.courseId, courseId))
-
+            .orderBy(asc(section.id))
             return {
-                message: "Sections fetched successfully",
+                message: "Sections fetched successfully1",
                 data: sections,
                 status: 200
             }

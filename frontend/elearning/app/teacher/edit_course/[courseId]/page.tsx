@@ -5,19 +5,19 @@ import Sidebar from "../../teacher_components/sidebar"
 import { Button } from '@/components/ui/button';
 import { userLoginState } from "@/state";
 import { useRecoilState } from "recoil";
-import { redirect, useSearchParams } from "next/navigation";
+import { redirect, useRouter, useSearchParams } from "next/navigation";
 import * as request from '@/app/axios/axios'
+import { on } from "events";
 interface Section {
     id: string;
     name: string;
     numOfLecture: number;
     quiz: number;
     creTime: string;
-    timeToComplete: string;
+    timeToComplete: number;
 }
 
-
-const SectionTable = ({ sections, onEdit }: { sections: Section[], onEdit: (index: number, id: string) => void }) => {
+const SectionTable = ({ sections, onEdit, onDetailQuiz, onDetailLecture }: { sections: Section[], onEdit: (index: number, id: string) => void, onDetailQuiz: (index: number, id: string) => void, onDetailLecture: (index: number, id: string) => void }) => {
     return (
         <div className="p-4">
             {/* Table */}
@@ -51,30 +51,34 @@ const SectionTable = ({ sections, onEdit }: { sections: Section[], onEdit: (inde
                     {sections.map((section, index) => (
                         <tr
                             key={section.id}
-                            className={index % 2 === 0 ? "bg-gray-100" : "bg-gray-200"}
+                            className={` ${index % 2 === 0 ? "bg-gray-100" : "bg-gray-200"}`}
                         >
                             <td className="px-6 py-4 text-sm font-medium text-gray-900">
                                 {index+1}
                             </td>
-                            <td className="px-6 py-4 text-sm text-gray-700">{section.name}</td>
-                            <td className="px-6 py-4 text-sm text-gray-700">
+                            <td className="px-6 py-4 text-sm text-gray-700">{section.name.length > 0 ? section.name : "ĐANG TẢI"}</td>
+                            <td className="px-6 py-4 text-sm text-gray-700 text-center">
                                 {section.numOfLecture}
                             </td>
-                            <td className="px-6 py-4 text-sm text-gray-700">{section.quiz ? section.quiz : 0}</td>
-                            <td className="px-6 py-4 text-sm text-gray-700">
+                            <td className="px-6 py-4 text-sm text-gray-700 text-center">{section.quiz ? section.quiz : 0}</td>
+                            <td className="px-6 py-4 text-sm text-gray-700 text-center">
                                 {section.creTime}
                             </td>
-                            <td className="px-6 py-4 text-sm text-gray-700">
+                            <td className="px-6 py-4 text-sm text-gray-700 text-center">
                                 {section.timeToComplete} minutues
                             </td>
                             
-                            <td className="px-6 py-4 text-sm">
-                                <Button
-                                    className="bg-hcmutLightBlue text-white px-4 py-2 rounded-md"
-                                    onClick={() => onEdit(index+1, section.id)}
-                                >
+                            <td className="flex gap-5 items-center my-auto">
+                                {/* Nút hành động */}
+                                <button onClick={() => onEdit(index+1, section.id)} className="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600">
                                     Edit
-                                </Button>
+                                </button>
+                                <button onClick={() => onDetailQuiz(index+1, section.id)} className="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600">
+                                    Quiz
+                                </button>
+                                <button onClick={() => onDetailLecture(index+1, section.id)} className="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600">
+                                    Lecture
+                                </button>
                             </td>
                         </tr>
                     ))}
@@ -84,7 +88,41 @@ const SectionTable = ({ sections, onEdit }: { sections: Section[], onEdit: (inde
     );
 };
 
+
+// loading UI
+const LoadingOverlay = () => (
+    <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center z-50">
+        <div className="flex items-center space-x-2">
+            <svg
+                className="animate-spin h-8 w-8 text-white"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+            >
+                <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                ></circle>
+                <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                ></path>
+            </svg>
+            <span className="text-white text-lg">Loading...</span>
+        </div>
+    </div>
+);
+
 const editCoursePage = ({ params }: { params: Promise<{ courseId: string }> }) => {
+    const [loading, setLoading] = useState(false);
+    const [editingSection, setEditingSection] = useState<Section | null>(null);
+    const [isEditing, setIsEditing] = useState(false);
+    const router = useRouter();
     const [rtnParams, setRtnParams] = useState<{ courseId: string }>({ courseId: "" });
     const loadParams = async () => {
         const unwrappedParams = await params;
@@ -104,8 +142,10 @@ const editCoursePage = ({ params }: { params: Promise<{ courseId: string }> }) =
         if (!rtnParams.courseId) return;
         try {
             let response = await request.get(`/section/course/${rtnParams.courseId}`);
+            setLoading(true)
             console.log(response)
             if (response.status === 200){
+                setLoading(false)
                 console.log(response.data)
                 setSections(response.data);
             }
@@ -123,7 +163,9 @@ const editCoursePage = ({ params }: { params: Promise<{ courseId: string }> }) =
         try {
             let response = await request.get(`/course/id/${rtnParams.courseId}`);
             console.log(response)
+            setLoading(true)
             if (response.message === "success"){
+                setLoading(false)
                 console.log(response.data)
                 setCourse(response.data);
             }
@@ -140,10 +182,20 @@ const editCoursePage = ({ params }: { params: Promise<{ courseId: string }> }) =
     }, [rtnParams]);
 
     const handleEdit = (index: number, id: string) => {
-        alert(`Edit section with ID: ${index}`);
-        window.open(`/teacher/edit_section/${id}`, '_blank');
+        const section = sections.find((s : any) => s.id === id);
+        if (section) {
+            console.log("Editing section: ", section);
+            setEditingSection(section);
+            setIsEditing(true);
+        }
     };
-
+    
+    const handleEditDetailQuiz = (index: number, id: string) => {
+        router.push(`/teacher/edit_section/quiz/${id}`)
+    }
+    const handleEditDetailLecture = (index: number, id: string) => {
+        router.push(`/teacher/edit_section/lecture/${id}`)
+    }
     const handleAddSection = async () => {
         if (confirm("Are you sure you want to add a new section?") === false) return;
         const newSection = {
@@ -167,12 +219,81 @@ const editCoursePage = ({ params }: { params: Promise<{ courseId: string }> }) =
         console.log(newSection);
     };
 
-
+    if (loading) {
+        return <LoadingOverlay></LoadingOverlay>
+    }
     return (
-        <div className="grid grid-rows-12 grid-cols-12 gap-4 bg-black">
+        <div className="grid grid-rows-12 grid-cols-12 gap-4 bg-black   ">
             {Header(userLogin.lastName + ' ' + userLogin.firstName)}
             {Sidebar(userLogin.firstName, userLogin.lastName)}
             {/* content */}
+            {isEditing && editingSection && (
+                <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center">
+                    <div className="bg-white rounded-lg shadow-lg p-6 w-96">
+                        <h2 className="text-xl font-semibold mb-4">Edit Section</h2>
+                        <form
+                            onSubmit={async (e) => {
+                                e.preventDefault();
+                                setLoading(true); // Bắt đầu loading
+                                try {
+                                    const res = await request.patch(`/section/update`, editingSection);
+                                    if (res.status === 200) {
+                                        setIsEditing(false);
+                                        fetchSections(); // Reload sections
+                                    }
+                                } catch (error) {
+                                    console.error("Failed to update section: ", error);
+                                } finally {
+                                    setLoading(false); // Kết thúc loading
+                                }
+                            }}
+                            
+                        >
+                            <div className="mb-4">
+                                <label className="block text-sm font-medium text-gray-700">Name</label>
+                                <input
+                                    type="text"
+                                    value={editingSection.name}
+                                    onChange={(e) => setEditingSection({ ...editingSection, name: e.target.value })}
+                                    className="w-full px-3 py-2 border rounded-md"
+                                />
+                            </div>
+                            <div className="mb-4">
+                                <label className="block text-sm font-medium text-gray-700">Number of Lectures</label>
+                                <input
+                                    type="number"
+                                    value={editingSection.numOfLecture}
+                                    onChange={(e) =>
+                                        setEditingSection({ ...editingSection, numOfLecture: parseInt(e.target.value) })
+                                    }
+                                    className="w-full px-3 py-2 border rounded-md"
+                                />
+                            </div>
+                            <div className="mb-4">
+                                <label className="block text-sm font-medium text-gray-700">Time to Complete (minutes)</label>
+                                <input
+                                    type="number"
+                                    value={editingSection.timeToComplete}
+                                    onChange={(e) =>
+                                        setEditingSection({ ...editingSection, timeToComplete: parseInt(e.target.value) })
+                                    }
+                                    className="w-full px-3 py-2 border rounded-md"
+                                />
+                            </div>
+                            <div className="flex justify-end space-x-4">
+                                <Button type="button" onClick={() => setIsEditing(false)} className="bg-gray-300 text-black">
+                                    Cancel
+                                </Button>
+                                <Button type="submit" className="bg-hcmutLightBlue text-white">
+                                    Save
+                                </Button>
+                            </div>
+                            {loading && <LoadingOverlay />}
+                        </form>
+                    </div>
+                </div>
+            )}
+
             <div className="bg-white col-start-3 col-span-10 row-span-10 mb-4 rounded-xl">
                 {/* Header */}
                 <div className="bg-hcmutLightBlue rounded-t-xl text-center text-3xl text-white font-semibold uppercase items-center p-5">
@@ -181,7 +302,7 @@ const editCoursePage = ({ params }: { params: Promise<{ courseId: string }> }) =
                 </div>
                 
                 <div className="">
-                    <SectionTable sections={sections} onEdit={handleEdit}/>
+                    <SectionTable sections={sections} onEdit={handleEdit} onDetailQuiz={handleEditDetailQuiz} onDetailLecture={handleEditDetailLecture}/>
                 </div>
             </div>
         </div>

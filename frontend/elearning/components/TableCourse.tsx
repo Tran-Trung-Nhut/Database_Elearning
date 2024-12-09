@@ -1,38 +1,31 @@
 "use client"
 import React, { useEffect, useState } from "react";
 import * as request from "../app/axios/axios"
-import { set } from "react-hook-form";
-import { useRecoilState } from "recoil";
-import { userLoginState } from "@/state";
 import { useRouter } from "next/navigation";
 import { JoinFullDto } from "@/app/dtos/join.dto";
-function TableCourse() {
-    const [userLogin, setUserLogin] = useRecoilState(userLoginState)
-    const [courses, setCourses] = useState<JoinFullDto[]>([])
-    const router = useRouter()
+function TableCourse(userLoginId: string) {
+    const [courses, setCourses] = useState<JoinFullDto[]>([]);
+    const router = useRouter();
+
     const fetchCourse = async () => {
-        let data = await request.get(`/join/studentId/${userLogin.id}`)
-        console.log(data.data);
-        console.log(userLogin);
-        if (data.status === 200) {
-            setCourses(data.data)
-            console.log(courses);
+        try {
+            const data = await request.get(`/join/studentId/${userLoginId}`);
+            console.log(data.data);
+            if (data.status === 200) {
+                setCourses(data.data);
+            } else {
+                console.log(data.message);
+            }
+        } catch (error) {
+            console.log('Error fetching courses:', error);
         }
-        else {
-            console.log(data.message);
-        }
-    }
+    };
 
     useEffect(() => {
-        const userFromSessionRaw = sessionStorage.getItem('userLogin')
-        if(!userFromSessionRaw) return
-        setUserLogin(JSON.parse(userFromSessionRaw))  
-    }, [])
-
-    useEffect(() => {
-        fetchCourse()
-
-    }, [userLogin])
+        if (userLoginId) {
+            fetchCourse();
+        }
+    }, [userLoginId]);
 
     return (
         <div className="relative overflow-x-auto">
@@ -89,24 +82,27 @@ function TableCourse() {
                                     {course.teacherFirstName + " " + course.teacherLastName}
                                 </td>
                                 <td className="px-6 py-4 text-center">
-                                    {course.progress === 100? `${course.GPA}`: `Chưa có kết quả`}
+                                    {course.progress === 100 ? `${course.GPA}` : `Chưa có kết quả`}
                                 </td>
                                 <td className="px-6 py-4 text-center">
                                     {course.creationTime.toString()}
                                 </td>
-                                <td className={`px-6 py-4 text-center ${course.progress === 100? "text-green-500": `text-yellow-500`}`}>
-                                    {course.progress === 100? "Đã hoàn thành": `Hoàn thành ${course.progress}%`}
+                                <td className={`px-6 py-4 text-center ${course.progress === 100 ? "text-green-500" : "text-yellow-500"}`}>
+                                    {course.progress === 100 ? "Đã hoàn thành" : `Hoàn thành ${course.progress}%`}
                                 </td>
-                                <button
-                                    type="button"
-                                    className="text-blue-500 px-6 py-4 text-center"
-                                    onClick={() =>
-                                        router.push(`/studentdb?course=${encodeURIComponent(JSON.stringify(course))}`)
-                                    }
+                                <td className="px-6 py-4 text-center">
+                                    <button
+                                        type="button"
+                                        className="text-blue-500"
+                                        onClick={() =>
+                                            router.push(`/studentdb?course=${encodeURIComponent(JSON.stringify(course))}`)
+                                        }
                                     >
-                                    Xem khóa học
-                                </button>
+                                        Xem khóa học
+                                    </button>
+                                </td>
                             </tr>
+
                         ))
                     }
                 </tbody>

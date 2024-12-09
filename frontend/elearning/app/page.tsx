@@ -11,6 +11,12 @@ import { userLoginState } from "@/state";
 import { useEffect, useState } from "react";
 import * as request from "@/app/axios/axios";
 import { CourseWithTeacherNameDto } from "./dtos/course.dto";
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { EffectCoverflow, Pagination } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/effect-coverflow';
+import 'swiper/css/pagination';
+import "@/components/ui/styles.css"
 
 export default function Home() {
 
@@ -66,7 +72,9 @@ export default function Home() {
                   <button
                     type="button"
                     className="bg-white text-blue-600 font-medium text-sm px-6 py-3 rounded-lg shadow-lg hover:bg-gray-100 transition duration-300"
-                    onClick={() => router.push('/student/mycourse')}
+                    onClick={() => {
+                      router.push('/student/mycourse')
+                    }}
                   >
                     Xem khóa học của tôi
                   </button>
@@ -115,25 +123,40 @@ export default function Home() {
           <h2 className="text-center text-4xl font-bold mb-12 text-gray-800">
             Các khóa học bán chạy
           </h2>
-          <div className="flex overflow-x-auto px-8 space-x-8">
-            {course ? course.map((cour, index) => (
-              <CourseCard
-                key={cour.courseId}
-                courseName={cour.courseName}
-                teacher={cour.teacherFirstName + ' ' + cour.teacherLastName}
-                price={cour.price}
-                id={cour.courseId}
-                description={cour.description}
-              />
-            )) : null}
+          <div className="px-8">
+            <Swiper
+              effect={'coverflow'}
+              grabCursor={true}
+              centeredSlides={true}
+              slidesPerView={'auto'}
+              coverflowEffect={{
+                rotate: 50,
+                stretch: 0,
+                depth: 100,
+                modifier: 1,
+                slideShadows: true,
+              }}
+              pagination={{ clickable: true }}
+              modules={[EffectCoverflow, Pagination]}
+              className="mySwiper"
+            >
+              {course && course.length > 0 ? course.map((cour) => (
+                <SwiperSlide key={cour.courseId}>
+                  <CourseCard
+                    courseName={cour.courseName}
+                    teacher={cour.teacherFirstName + ' ' + cour.teacherLastName}
+                    price={cour.price}
+                    id={cour.courseId}
+                    description={cour.description}
+                  />
+                </SwiperSlide>
+              )) : (
+                <p className="text-center text-gray-600">Không có khóa học nào để hiển thị.</p>
+              )}
+            </Swiper>
           </div>
         </section>
 
-
-        {/* Footer */}
-        <section className="bg-white">
-          <Footer />
-        </section>
       </div>
     </>
   );

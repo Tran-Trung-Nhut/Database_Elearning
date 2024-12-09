@@ -8,7 +8,6 @@ import { useRecoilValue } from "recoil";
 import LastAttempt from "./answerRecoil";
 
 function CourseDropdown(props: any) {
-  const user = useRecoilValue(userLoginState)
   const [isOpen, setIsOpen] = useState(false);
   const [isWatchLastAttemp, setIsWatchLastAttemp] = useState(false);
   const [selectQuizId, setSelectQuizId] = useState<number>(0);
@@ -32,12 +31,16 @@ function CourseDropdown(props: any) {
 
   const fetchQuizes = async () => {
     try {
+      // print out the url
+      console.log('/quiz/section/' + props.sectionId)
       const response = await request.get(`/quiz/section/${props.sectionId}`);
       setQuizes(response.data);
 
       const tmpAttemp : {[key: string] : number} = {}
       for(const quiz of response.data){
-        const dOResponse = await request.get(`/dO/quiz/${quiz?.id}/student/${user.id}`)
+        // print out the url
+        console.log(`/dO/quiz/${quiz?.id}/student/${props.userId}`)
+        const dOResponse = await request.get(`/dO/quiz/${quiz?.id}/student/${props.userId}`)
         tmpAttemp[String(quiz.id)] = dOResponse.data.data.length
 
         if(dOResponse.data.data.length !== 0){
@@ -66,12 +69,12 @@ function CourseDropdown(props: any) {
   };
 
   useEffect(() => {
+    if (props.userId === "") return;
     if (props.sectionId !== "") {
       fetchLectures();
       fetchQuizes();
     }
-    
-  }, [props.sectionId]);
+  }, [props.sectionId, props.userId]);
 
   return (
     <div className="w-full my-5">
