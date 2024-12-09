@@ -17,7 +17,7 @@ class roadCertificationController {
 
     public async getRoadCertificationById(req: Request, res: Response){
         try {
-            const result = await roadCertificationService.getRoadCertificationById(req.params.id);
+            const result = await roadCertificationService.getRoadCertificationById(Number(req.params.id));
 
             return res.status(result.status).json(result.message);
         } catch (error) {
@@ -56,7 +56,7 @@ class roadCertificationController {
     
     public async deleteRoadCertification(req: Request, res: Response){
         try {
-            const result = await roadCertificationService.deleteRoadCertification(req.params.id);
+            const result = await roadCertificationService.deleteRoadCertification(Number(req.params.id));
 
             return res.status(result.status).json(result.message);
         } catch (error) {

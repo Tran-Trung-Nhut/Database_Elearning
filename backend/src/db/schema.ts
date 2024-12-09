@@ -171,7 +171,7 @@ export const answerRecord = pgTable("answerRecord", {
 
 export const lecture = pgTable('lecture', {
     id: serial('id').primaryKey(),
-    name: varchar('name', { length: 255}).notNull().unique(),
+    name: varchar('name', { length: 255}).notNull(),
     state: varchar('state', { length: 255}).notNull().default('uncomplete'),
     material: varchar('material', { length: 255}),
     reference: varchar('reference', { length: 255 }),

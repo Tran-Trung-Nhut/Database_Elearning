@@ -1,6 +1,6 @@
-import { and, eq } from "drizzle-orm";
+import { and, eq, inArray } from "drizzle-orm";
 import { db } from "../db/db";
-import { includeCourse } from "../db/schema";
+import { course, includeCourse, join, roadMap, user } from "../db/schema";
 import { includeCourseDto } from "../dtos/includeCourse.dto";
 
 class includeCourseService {
@@ -46,6 +46,88 @@ class includeCourseService {
             }
         }
     }
+
+    public async getIncludeCourseByrmId(rmId: number){
+        try {
+
+            const courseInIncludeCourse = await db
+            .select({
+                courseId: course.id,
+                avgQuiz: course.avgQuiz,
+                courseName: course.name,
+                creationTime: course.creTime,
+                description: course.description,
+                languege: course.language,
+                price: course.price,
+                teacherId: course.teacherId,
+                teacherLastName: user.lastName,
+                teacherFirstName: user.firstName
+            })
+            .from(includeCourse)
+            .innerJoin(course, eq(course.id, includeCourse.courseId))
+            .innerJoin(user, eq(course.teacherId, user.id))
+            .where(eq(includeCourse.rmId, rmId))
+
+            return {
+                data: courseInIncludeCourse,
+                status: 200
+            }
+        } catch (error) {
+            return {
+                message: error,
+                status: 500
+            }
+        }
+    }
+
+    public async getRoadmapOfStudentByStudentId(studentId: number) {
+        try {
+            const courseJoin = await db
+                .select({
+                    courseId: join.courseId
+                })
+                .from(join)
+                .where(eq(join.studentId, studentId));
+    
+            if (courseJoin.length === 0) {
+                throw new Error("Không tìm thấy danh sách khóa sinh viên tham gia!");
+            }
+    
+            const courseIds = courseJoin.map((id) => id.courseId);
+    
+            const roadmaps = await db
+                .select({
+                    id: roadMap.id,
+                    name: roadMap.name,
+                    description: roadMap.description,
+                    instruction: roadMap.instruction,
+                    teacherId: roadMap.teacherId,
+                    teacherFirstName: user.firstName,
+                    teacherLastName: user.lastName
+                })
+                .from(roadMap)
+                .innerJoin(includeCourse, eq(includeCourse.rmId, roadMap.id))
+                .innerJoin(user, eq(user.id, roadMap.teacherId))
+                .where(inArray(includeCourse.courseId, courseIds));
+    
+            const uniqueRoadmaps = Array.from(
+                new Map(roadmaps.map((rm) => [rm.id, rm])).values()
+            );
+    
+            return {
+                message: "Get roadmaps by student ID successfully",
+                status: 200,
+                data: uniqueRoadmaps
+            };
+        } catch (error) {
+            return {
+                message: error instanceof Error ? error.message : "Unknown error",
+                status: 500
+            };
+        }
+    }
+    
+    
 
     public async createIncludeCourse(includeCourseDto: includeCourseDto){
         try {

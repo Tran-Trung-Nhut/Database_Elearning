@@ -1,17 +1,19 @@
-import Roadmap from "@/components/Roadmap";
-import Head from "next/head";
+import BKNavbar2 from "@/components/BKNavbar2";
+import Footer from "@/components/Footer";
+import TableRoadmap from "@/components/TableRoadmap";
 
-
-export default function Home() {
-  return (
-    <div>
-      {/* <Head>
-        <title>Lộ trình học</title>
-        <meta name="description" content="Roadmap học tập ngành nghề" />
-      </Head> */}
-      <main>
-        <Roadmap />
-      </main>
-    </div>
-  );
-}
+const RoadMap = () =>{
+    return(
+        <>
+            <BKNavbar2 />
+            <div className="px-8 py-8 flex flex-col items-center justify-center">
+                <h2 className="font-bold text-4xl mb-4">Lộ trình hiện tại</h2>
+                <div className="w-full">
+                    <TableRoadmap/>
+                </div>
+            </div>
+            <Footer/>
+        </>
+    );
+};
+export default RoadMap;

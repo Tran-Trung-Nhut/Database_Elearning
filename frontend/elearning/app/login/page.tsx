@@ -1,6 +1,6 @@
 'use client';
 import Image from "next/image";
-import logo from "../public/Logo.png";
+
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
@@ -84,22 +84,23 @@ export default function Login() {
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <Image
             className="mx-auto h-20 w-auto rounded-xl"
-            src={logo}
+            src="https://lms.hcmut.edu.vn/pluginfile.php/3/theme_academi/logo/1725955904/logoBK.png"
             alt="Your Company"
+            width={100} height={100}
           />
           <h2 className="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900">
-            Sign in to your account
+            Đăng nhập vào tài khoản của bạn
           </h2>
         </div>
 
-        <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+        <div className="mt-5 sm:mx-auto sm:w-full sm:max-w-sm">
           <form className="space-y-6" onSubmit={handleLogin}> {/* Handle form submission here */}
             <div>
               <label
                 htmlFor="email"
                 className="block text-sm/6 font-medium text-gray-900"
               >
-                User Name
+                Tài khoản
               </label>
               <div className="mt-2">
                 <input
@@ -120,7 +121,7 @@ export default function Login() {
                   htmlFor="password"
                   className="block text-sm/6 font-medium text-gray-900"
                 >
-                  Password
+                  Mật khẩu
                 </label>
               </div>
               <div className="mt-2 relative">
@@ -184,18 +185,18 @@ export default function Login() {
                 type="submit" // This will now correctly trigger form submission
                 className="flex w-full justify-center rounded-md bg-hcmutDarkBlue px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-hcmutLightBlue focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               >
-                Sign in
+                Đăng nhập
               </button>
             </div>
           </form>
           <p className="mt-10 text-center text-sm/6 text-gray-500">
-            Not a member?{" "}
+            Không phải thành viên?{" "}
             <a
               href="#"
               className="font-semibold text-hcmutDarkBlue hover:text-hcmutLightBlue"
               onClick={navigateToSignUp}
             >
-              Create your account
+              Đăng ký tài khoản
             </a>
           </p>
         </div>
