@@ -56,7 +56,7 @@ const SectionTable = ({ sections, onEdit, onDetail }: { sections: Section[], onE
                             <td className="px-6 py-4 text-sm font-medium text-gray-900">
                                 {index+1}
                             </td>
-                            <td className="px-6 py-4 text-sm text-gray-700">{section.name}</td>
+                            <td className="px-6 py-4 text-sm text-gray-700">{section.name.length > 0 ? section.name : "ĐANG TẢI"}</td>
                             <td className="px-6 py-4 text-sm text-gray-700 text-center">
                                 {section.numOfLecture}
                             </td>
@@ -68,7 +68,7 @@ const SectionTable = ({ sections, onEdit, onDetail }: { sections: Section[], onE
                                 {section.timeToComplete} minutues
                             </td>
                             
-                            <td className="flex items-center my-auto">
+                            <td className="flex gap-5 items-center my-auto">
                                 {/* Nút hành động */}
                                 <button onClick={() => onEdit(index+1, section.id)} className="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600">
                                     Edit

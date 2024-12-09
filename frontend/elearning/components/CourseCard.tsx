@@ -4,29 +4,23 @@ import { userLoginState } from '@/state';
 import axios from 'axios';
 import React, { useState } from 'react';
 import { useRecoilValue } from 'recoil';
-import * as request from "@/app/axios/axios"
-
+import * as request from "@/app/axios/axios";
+import ReactDOM from 'react-dom';
 function CourseCard(props: any) {
   const [modal, setModal] = useState(false);
   const [paymentModal, setPaymentModal] = useState(false);
   const [section, setSection] = useState<SectionDto[]>([]);
-  const user = useRecoilValue(userLoginState)
+  const user = useRecoilValue(userLoginState);
 
   const toggleModal = async () => {
     try {
       const response = await request.get(`/section/course/${props.id}`);
-
       setSection(response.data);
-
-      setModal(!modal);
-
-
+      setModal(true);
     } catch (error) {
       console.log(error);
       alert('Không thể mở khóa hoặc khóa học không có nội dung để hiển thị!');
     }
-
-
   };
 
   const handleBuyNow = () => {
@@ -34,29 +28,30 @@ function CourseCard(props: any) {
     setPaymentModal(true);
   };
 
-  const handdlePaid = async (courseId: string) => {
-    try{
-      const response = await request.post('/join/create',{
+  const handlePaid = async (courseId: string) => {
+    try {
+      const response = await request.post('/join/create', {
         courseId,
         studentId: user.id
-      })
-
-      setPaymentModal(false)
-      alert("Thanh toán thành công!")
-    }catch(e: any){
-      if(e.response.data.data === "Join already exists"){
-        alert("Bạn đã tham gia khóa học này!")
-        setPaymentModal(false)
-      } 
-      else alert("Không thể thanh toán vào lúc này! Vui lòng thử lại!")
+      });
+      setPaymentModal(false);
+      alert("Thanh toán thành công!");
+    } catch (e: any) {
+      if (e.response.data.data === "Join already exists") {
+        alert("Bạn đã tham gia khóa học này!");
+        setPaymentModal(false);
+      } else {
+        alert("Không thể thanh toán vào lúc này! Vui lòng thử lại!");
+      }
     }
-  }
+  };
 
   return (
     <>
+      {/* Entire Card is Clickable */}
       <div
-        className="w-[300px] flex-shrink-0 rounded shadow-lg border border-gray-200 bg-white"
-        onClick={toggleModal}
+        className="w-[300px] flex-shrink-0 rounded shadow-lg border border-gray-200 bg-white cursor-pointer"
+        onClick={toggleModal} // Apply onClick to the entire card
       >
         <img
           className="w-full h-48 object-cover"
@@ -68,7 +63,7 @@ function CourseCard(props: any) {
         />
         <div className="p-4">
           <h2 className="font-bold text-lg mb-2">{props.courseName}</h2>
-          <p className='text-gray-500 text-sm'>{props.description}</p>
+          <p className="text-gray-500 text-sm">{props.description}</p>
           <p className="text-gray-600 text-sm">{props.teacher}</p>
           <p className="font-semibold text-xl text-gray-800">
             {props.price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}
@@ -76,14 +71,17 @@ function CourseCard(props: any) {
         </div>
       </div>
 
-      {modal && (
+      {/* Modal for Course Details */}
+      {modal &&
+      ReactDOM.createPortal(
         <>
-          <div className="fixed inset-0 z-50 bg-black bg-opacity-50" onClick={() => setModal(false)}></div>
+          <div className="fixed inset-0 z-40 bg-black bg-opacity-50" onClick={() => setModal(false)}></div>
           <div
             id="default-modal"
             tabIndex={-1}
-            aria-hidden="true"
             className="fixed inset-0 z-50 flex items-center justify-center w-full h-screen"
+            role="dialog"
+            aria-modal="true"
           >
             <div className="relative w-full max-w-96 bg-white rounded-lg shadow-lg dark:bg-gray-800">
               <div className="flex justify-between items-center p-5 border-b border-gray-200 dark:border-gray-600">
@@ -123,9 +121,12 @@ function CourseCard(props: any) {
               </div>
             </div>
           </div>
-        </>
+        </>,
+        document.body // Render the modal to the <body>
       )}
 
+
+      {/* Payment Modal */}
       {paymentModal && (
         <>
           <div className="fixed inset-0 z-50 bg-black bg-opacity-50" onClick={() => setPaymentModal(false)}></div>
@@ -158,7 +159,7 @@ function CourseCard(props: any) {
                 <button
                   type="button"
                   className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:scale-110"
-                  onClick={() => handdlePaid(props.id)}
+                  onClick={() => handlePaid(props.id)}
                 >
                   Xác nhận
                 </button>
