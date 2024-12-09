@@ -33,6 +33,12 @@ const BKNavbar2 = () => {
           >
             Khóa học của tôi
           </button>
+          <button
+            className="text-gray-800 text-sm font-medium hover:text-blue-600 hover:scale-110 active:scale-90 transition-colors"
+            onClick={() => router.push('/student/roadmap')}
+          >
+            Lộ trình khóa học
+          </button>
         </div>
       </div>
 

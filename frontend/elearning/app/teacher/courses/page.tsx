@@ -4,6 +4,8 @@ import { userLoginState } from '@/state';
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import * as request from '@/app/axios/axios';
+import { useRouter } from 'next/navigation';
+import { Button } from '@/components/ui/button';
 interface Course {
   courseId: number;
   courseName: string;
@@ -56,6 +58,7 @@ const ManageCourses = () => {
   };
 
   if (!userLogin) return <>Loading...</>;
+  const router = useRouter()
   return (
     <div className="manage-courses-container" style={{ padding: '20px', maxWidth: '800px', margin: '0 auto' }}>
       <h2 className="rounded-lg mt-10 text-center text-2xl/9 font-bold tracking-tight text-white bg-hcmutDarkBlue">
@@ -106,6 +109,11 @@ const ManageCourses = () => {
           </tbody>
         </table>
       ) : null}
+      <Button className='mt-4 bg-hcmutDarkBlue' onClick={
+        () => {
+          router.push('/teacher')
+        }
+      }>Quay lại</Button>
     </div>
   );
 };

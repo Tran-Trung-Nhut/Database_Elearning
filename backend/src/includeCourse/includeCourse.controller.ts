@@ -27,6 +27,32 @@ class includeCourseController {
         }
     }
 
+    public async getIncludeCourseByrmId(req: Request, res: Response) {
+        try {
+            const All = await includeCourseService.getIncludeCourseByrmId(Number(req.params.rmId));
+
+            return res.status(All.status).send(All);
+        } catch (error) {
+            return {
+                message: error,
+                status: 500
+            }
+        }
+    }
+
+    public async getGetRoadmapOfStudentByStudentId(req: Request, res: Response) {
+        try {
+            const response = await includeCourseService.getRoadmapOfStudentByStudentId(Number(req.params.studentId));
+
+            return res.status(response.status).send(response);
+        } catch (error) {
+            return {
+                message: error,
+                status: 500
+            }
+        }
+    }
+
     public async createIncludeCourse(req: Request, res: Response) {
         try {
             await includeCourseService.createIncludeCourse(req.body);

@@ -1,6 +1,6 @@
-import { and, eq } from "drizzle-orm";
+import { and, eq, inArray } from "drizzle-orm";
 import { db } from "../db/db";
-import { requireCourse } from "../db/schema";
+import { course, includeCourse, join, requireCourse, roadMap, user } from "../db/schema";
 
 class requireCourseService {
     public async getAllRequireCourses() {
@@ -23,6 +23,9 @@ class requireCourseService {
             }
         }
     }
+
+    
+    
 
     public async getRequireCourseById(courseId: number) {
         try {

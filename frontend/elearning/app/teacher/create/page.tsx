@@ -189,7 +189,7 @@ const CreateCourse = () => {
           </div>
 
         </div>
-        <h1 className=" mb-2 text-center text-2xl/9 font-bold tracking-tight text-white bg-yellow-600 rounded-xl">
+        <h1 className=" mb-2 text-center text-2xl/9 font-bold tracking-tight text-white bg-orange-600 rounded-lg">
           Course Certificate
         </h1> 
         <div style={{ marginBottom: '10px' }}>
