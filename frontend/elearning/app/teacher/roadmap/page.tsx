@@ -52,27 +52,42 @@ const RoadMapPage = () => {
     fetchCourses();
   }, [userLogin]);
 
-    useEffect(() => {
-        const userFromSessionRaw = sessionStorage.getItem('userLogin')
-        if(!userFromSessionRaw) return
-        setUserLogin(JSON.parse(userFromSessionRaw))  
-    }, [])
-    
+  useEffect(() => {
+      const userFromSessionRaw = sessionStorage.getItem('userLogin')
+      if(!userFromSessionRaw) return
+      setUserLogin(JSON.parse(userFromSessionRaw))  
+  }, [])
+
+  const [roadmapName, setRoadmapName] = useState('');
+  const [roadmapDescription, setRoadmapDescription] = useState('');
+  const [learningTip, setLearningTip] = useState('');
+  const [roadmapCertificateName, setRoadmapCertificateName] = useState('');
+  const [roadmapCertificateExpiration, setRoadmapCertificateExpiration] = useState(0);
+  const handleSubmit = () =>{
+    console.log(roadmapName, roadmapDescription, learningTip, roadmapCertificateName, roadmapCertificateExpiration, selectedCourses);
+  }
   return (
     <div className="bg-grayBG">
       <div className="grid grid-cols-12 grid-rows-12 min-h-screen gap-4">
         {Header(userLogin.lastName + ' ' + userLogin.firstName)}
         {Sidebar(userLogin.firstName, userLogin.lastName)}
-        <div className="bg-white col-span-10 row-span-10 mb-4 rounded-xl">
+        <div className="bg-white col-span-10 row-span-10 mb-4 rounded-xl shadow-xl">
             <h1 className="bg-yellow-600 h-20 rounded-t-xl text-center text-3xl text-white font-semibold uppercase p-2 flex items-center justify-center">CREATE ROADMAP</h1>
             <div className="flex flex-col items-center p-4">
                 <label htmlFor="" className="text-xl font-semibold">Roadmap Name</label>
-                <input type="text" name="" id="" className="border-2 rounded-lg border-black p-1"/>
+                <input type="text" name="" id="" className="border-2 rounded-lg border-black p-1" onChange={
+                    (e) => setRoadmapName(e.target.value)
+                }/>
                 <label htmlFor="" className="text-xl font-semibold">Roadmap description</label>
-                <textarea id="description" name="description" className="border-2 rounded-lg border-black p-1" rows={4} cols={50}>
+                <textarea id="description" name="description" className="border-2 rounded-lg border-black p-1" rows={4} cols={50} onChange={
+                    (e) => setRoadmapDescription(e.target.value) 
+                }>
                 </textarea>
                 <label htmlFor="" className="text-xl font-semibold">Learing tip</label>
-                <textarea id="description" name="description" className="border-2 rounded-lg border-black p-1" rows={4} cols={50}>
+                <textarea id="description" name="description" className="border-2 rounded-lg border-black p-1" rows={4} cols={50}
+                onChange={
+                    (e) => setLearningTip(e.target.value) 
+                }>
                 </textarea>
                 {/* COURSE CONTAINER */}
                 <div className="flex justify-evenly w-full mt-10">
@@ -90,12 +105,12 @@ const RoadMapPage = () => {
                                     type="checkbox"
                                     name="course"
                                     id={`course-${course.courseId}`}
-                                    className="h-5 w-5 text-blue-500 focus:ring focus:ring-blue-300"
+                                    className="h-5 w-5 text-blue-500 focus:ring focus:ring-blue-300 rounded-sm"
                                     onChange={(e) => handleCheckboxChange(course, e.target.checked)}
                                 />
                                 <label
                                     htmlFor={`course-${course.courseId}`}
-                                    className="text-gray-700 text-sm font-medium cursor-pointer"
+                                    className="text-gray-700 text-xl font-medium cursor-pointer"
                                 >
                                     {course.courseName}
                                 </label>
@@ -109,7 +124,7 @@ const RoadMapPage = () => {
                       <label htmlFor="" className="text-xl font-semibold mb-4 block">
                       Selected Courses
                     </label>
-                      <ul className="list-disc pl-5 space-y-1 text-gray-700 text-sm">
+                      <ul className="list-disc pl-5 space-y-1 text-gray-700 border-2 border-black p-2 text-xl rounded-xl">
                           {selectedCourses.map((course, index) => (
                               <li key={course.courseId}>
                                   <span className="font-semibold">{index + 1}.</span> {course.courseName}
@@ -118,8 +133,15 @@ const RoadMapPage = () => {
                       </ul>
                   </div>
                 </div>
-
-                <button className="bg-yellow-600 text-white px-4 py-2 rounded-lg mt-4">
+                <label htmlFor="" className="text-xl font-semibold mt-4">Roadmap Certificate Name</label>
+                <input type="text" name="" id="" className="border-2 rounded-lg border-black p-1" onChange={
+                    (e) => setRoadmapCertificateName(e.target.value)
+                }/>
+                <label htmlFor="" className="text-xl font-semibold mt-4">Roadmap Certificate Expiration Time (Month)</label>
+                <input type="number" name="" id="" className="border-2 rounded-lg border-black p-1" onChange={
+                    (e) => setRoadmapCertificateExpiration(Number(e.target.value)) 
+                }/>
+                <button className="bg-yellow-600 text-white px-4 py-2 rounded-lg mt-4" onClick={handleSubmit}>
                     Create Roadmap
                 </button>
 

@@ -29,7 +29,7 @@ const Sidebar = (firstName: string, lastName: string) => {
   router.push('/')
   }
   return (
-    <div className="bg-white rounded-xl col-start-1 col-end-3 row-span-10 flex flex-col mb-4">
+    <div className="bg-white rounded-xl col-start-1 col-end-3 row-span-10 flex flex-col mb-4 shadow-xl">
       {/* Profile Section */}
       <div className="bg-gray-200 text-center py-6 rounded-t-xl">
         <Image src={aba} alt="Profile Picture" className="w-20 h-20 mx-auto rounded-full" />
@@ -45,7 +45,7 @@ const Sidebar = (firstName: string, lastName: string) => {
         </div>
         <div className="flex items-center px-6 py-3 hover:bg-gray-300 cursor-pointer">
           <div className="w-8 h-8 flex items-center justify-center bg-blue-600 text-white rounded-full">🌐</div>
-          <span className="ml-4 text-gray-700 font-medium" onClick={handleCourse}>My course</span>
+          <span className="ml-4 text-gray-700 font-medium" onClick={handleCourse}>Manage courses</span>
         </div>
         <div className="flex items-center px-6 py-3 hover:bg-gray-300 cursor-pointer">
           <div className="w-8 h-8 flex items-center justify-center bg-green-600 text-white rounded-full">💲</div>

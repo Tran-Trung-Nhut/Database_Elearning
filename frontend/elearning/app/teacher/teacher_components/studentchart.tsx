@@ -156,7 +156,7 @@ const RegistrationChart = () => {
 
     // Add a dataset for total student registrations
     datasets.push({
-        label: "Total Students Registered",
+        label: "Tổng lượt đăng kí",
         data: totalStudentsByDay,
         borderColor: "#FF5733", // Distinct color for total students
         borderWidth: 3,
@@ -204,7 +204,7 @@ const RegistrationChart = () => {
 
     return (
         <div className="bg-white rounded-lg p-6 h-max">
-            <h2 className="text-2xl font-bold mb-20 text-center">Teacher Student Registrations</h2>
+            <h2 className="text-2xl font-bold mb-20 text-center">Số lượng học sinh đăng kí</h2>
             <Line data={dataConfig} options={options} />
         </div>
     );
