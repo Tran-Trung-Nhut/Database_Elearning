@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
 import { db } from "../db/db";
-import { question } from "../db/schema";
+import { option, question } from "../db/schema";
 
 class questionService {
     public async getAllQuestions() {
@@ -87,6 +87,37 @@ class questionService {
                 status: 200,
                 message: "Question fetched successfully",
                 data: find
+            }
+        } catch (error) {
+            return{
+                status: 500,
+                message: error
+            }
+        }
+    }
+
+    public async getQuestionAndOptionsByQuizId(quizId: number) {
+        try {
+            const questionList = await db.select({
+                id: question.id,
+                quizId: question.quizId,
+                type: question.type,
+                answer: question.answer,
+                content: question.content,
+                creTime: question.creTime,
+                teacherId: question.teacherId,
+                option: option.option
+            })
+            .from(question)
+            .where(eq(question.quizId, quizId))
+            .leftJoin(option, eq(option.questionId, question. id))
+            .orderBy(question.id)
+
+
+            return {
+                status: 200,
+                message: "Question fetched successfully",
+                data: questionList
             }
         } catch (error) {
             return{

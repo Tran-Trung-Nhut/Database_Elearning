@@ -2,14 +2,13 @@
 import { ChangeEvent, useEffect, useState } from "react";
 import Header from "../../teacher_components/header"
 import Sidebar from "../../teacher_components/sidebar"
-import { Button } from '@/components/ui/button';
 import { userLoginState } from "@/state";
 import { useRecoilState } from "recoil";
-
+import * as request from '@/app/axios/axios'
 interface Question {
-    text: string;
-    type: "multiple" | "fill";
-    answers: string[];
+    content: string;
+    type: "multiple choice" | "fill in blank";
+    options: string[];
     correctAnswerIndex: number;
 }
 const editQuizPage = ({ params }: { params: Promise<{ quizId: string }> }) => {
@@ -19,70 +18,33 @@ const editQuizPage = ({ params }: { params: Promise<{ quizId: string }> }) => {
         return { quizId: unwrappedParams.quizId };
     }
     const [userLogin, setUserLogin] = useRecoilState(userLoginState)
-    useEffect(() => {
-            loadParams().then((res) => setRtnParams(res));
-            const userFromSessionRaw = sessionStorage.getItem('userLogin')
-            if(!userFromSessionRaw) return
-            setUserLogin(JSON.parse(userFromSessionRaw))  
-        }, [])
-    const [questions, setQuestions] = useState<Question[]>([]);
+    // const [questions, setQuestions] = useState<Question[]>([]);
     const [isModalOpen, setModalOpen] = useState(false);
-    const sampleQuestions: Question[] = [
-        {
-            text: "What is the capital of France?",
-            type: "multiple",
-            answers: ["Berlin", "Madrid", "Paris", "Rome"],
-            correctAnswerIndex: 2, // Paris
-        },
-        {
-            text: "Which programming language is known as the backbone of web development?",
-            type: "multiple",
-            answers: ["Python", "JavaScript", "C++", "Ruby"],
-            correctAnswerIndex: 1, // JavaScript
-        },
-        {
-            text: "The process of water turning into vapor is called __________.",
-            type: "fill",
-            answers: ["evaporation"],
-            correctAnswerIndex: 0, // Correct answer for fill
-        },
-        {
-            text: "What is 2 + 2?",
-            type: "multiple",
-            answers: ["3", "4", "5", "6"],
-            correctAnswerIndex: 1, // 4
-        },
-        {
-            text: "Complete the phrase: The early bird catches the __________.",
-            type: "fill",
-            answers: ["worm"],
-            correctAnswerIndex: 0, // Correct answer for fill
-        },
-    ];
-    useEffect(() => {
-        setQuestions(sampleQuestions);
-    }, []);
     const [newQuestion, setNewQuestion] = useState<Question>({
-        text: "",
-        type: "multiple",
-        answers: ["", "", "", ""],
+        content: "",
+        type: "multiple choice",
+        options: ["", "", "", ""],
         correctAnswerIndex: 0,
     });
-
     const handleAddQuestion = () => {
-        setQuestions([...questions, newQuestion]);
+        setSampleQuestions([...sampleQuestions, newQuestion]);
         setNewQuestion({
-            text: "",
-            type: "multiple",
-            answers: ["", "", "", ""],
+            content: "",
+            type: "multiple choice",
+            options: ["", "", "", ""],
             correctAnswerIndex: 0,
         });
         setModalOpen(false);
     };
 
-    const renderAnswers = (question: { text: string; type: string; answers: string[]; correctAnswerIndex: number }) => {
-        if (question.type === "multiple") {
-            return question.answers.map((answer, index) => (
+    const renderAnswers = (question: { content: string; type: string; options: string[]; correctAnswerIndex: number }) => {
+        if (question.type === "multiple choice") {
+            console.log(question)
+            console.log(question.type)
+            console.log(question.content)
+            console.log(question.options)
+            if (!question.options) return
+            return question.options.map((answer, index) => (
                 <div
                     key={index}
                     className={`p-2 rounded-lg ${
@@ -94,16 +56,59 @@ const editQuizPage = ({ params }: { params: Promise<{ quizId: string }> }) => {
                     {answer}
                 </div>
             ));
-        } else if (question.type === "fill") {
+        } else if (question.type === "fill in blank") {
             return (
                 <div className="p-2 rounded-lg bg-green-200">
-                    Correct Answer: {question.answers[0]}
+                    Correct Answer: {question.correctAnswerIndex}
                 </div>
             );
         }
     };
+    const [sampleQuestions, setSampleQuestions] = useState<Question[]>([])
 
-    console.log(rtnParams)
+    const fetchQuestions = async () => {
+        if (!rtnParams.quizId) return
+        try {
+            let response = await request.get(`/question/quiz/${rtnParams.quizId}`)
+            console.log(response)
+
+            if (response){
+                response.forEach((question: any) => {
+                    // find options if type === multiple
+                    if (question.type === 'multiple choice'){
+                        request.get(`/option/id/${question.id}`).then((res) => {
+                            question.options = res.data.data.map((option: any) => option.option)
+                        })
+
+                    }
+                })
+                setSampleQuestions(response)
+            }
+
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    
+    useEffect(() => {
+        loadParams().then((res) => setRtnParams(res));
+        const userFromSessionRaw = sessionStorage.getItem('userLogin')
+        if(!userFromSessionRaw) return
+        setUserLogin(JSON.parse(userFromSessionRaw))  
+    }, [])
+    
+    useEffect(() => {
+        fetchQuestions();
+    }, [rtnParams.quizId]);
+    
+    
+    console.log(sampleQuestions)
+    sampleQuestions.map((question) => {
+        if (question.type === 'multiple choice'){
+            console.log(question)
+            console.log(question.options)
+        }
+    })
     return (
         <div className="grid grid-rows-12 grid-cols-12 gap-4 bg-black">
             {Header(userLogin.lastName + ' ' + userLogin.firstName)}
@@ -122,13 +127,13 @@ const editQuizPage = ({ params }: { params: Promise<{ quizId: string }> }) => {
 
             {/* Questions Container */}
             <div className="space-y-6 bg-white col-start-3 col-span-10 row-span-9 mb-4 rounded-xl">
-                {questions.map((question, index) => (
+                {sampleQuestions.map((question, index) => (
                     <div
                         key={index}
                         className="bg-white shadow-md p-6 rounded-lg space-y-4"
                     >
                         <h2 className="text-lg font-semibold">{`Q${index + 1}: ${
-                            question.text
+                            question.content
                         }`}</h2>
                         <div className="space-y-2">{renderAnswers(question)}</div>
                     </div>
@@ -145,9 +150,9 @@ const editQuizPage = ({ params }: { params: Promise<{ quizId: string }> }) => {
                             <input
                                 type="text"
                                 className="w-full border rounded-lg p-2 mt-1"
-                                value={newQuestion.text}
+                                value={newQuestion.content}
                                 onChange={(e) =>
-                                    setNewQuestion({ ...newQuestion, text: e.target.value })
+                                    setNewQuestion({ ...newQuestion, content: e.target.value })
                                 }
                             />
                         </label>
@@ -157,17 +162,17 @@ const editQuizPage = ({ params }: { params: Promise<{ quizId: string }> }) => {
                                 className="w-full border rounded-lg p-2 mt-1"
                                 value={newQuestion.type}
                                 onChange={(e) =>
-                                    setNewQuestion({ ...newQuestion, type: e.target.value as "multiple" | "fill" })
+                                    setNewQuestion({ ...newQuestion, type: e.target.value as "multiple choice" | "fill in blank" })
                                 }
                             >
-                                <option value="multiple">Multiple Choice</option>
-                                <option value="fill">Fill in the Blank</option>
+                                <option value="multiple choice">Multiple Choice</option>
+                                <option value="fill in blank">Fill in the Blank</option>
                             </select>
                         </label>
 
-                        {newQuestion.type === "multiple" && (
+                        {newQuestion.type === "multiple choice" && (
                             <>
-                                {newQuestion.answers.map((answer, index) => (
+                                {newQuestion.options.map((answer, index) => (
                                     <label key={index} className="block mb-2">
                                         Answer {index + 1}:
                                         <input
@@ -175,11 +180,11 @@ const editQuizPage = ({ params }: { params: Promise<{ quizId: string }> }) => {
                                             className="w-full border rounded-lg p-2 mt-1"
                                             value={answer}
                                             onChange={(e) => {
-                                                const updatedAnswers = [...newQuestion.answers];
+                                                const updatedAnswers = [...newQuestion.options];
                                                 updatedAnswers[index] = e.target.value;
                                                 setNewQuestion({
                                                     ...newQuestion,
-                                                    answers: updatedAnswers,
+                                                    options: updatedAnswers,
                                                 });
                                             }}
                                         />
@@ -197,7 +202,7 @@ const editQuizPage = ({ params }: { params: Promise<{ quizId: string }> }) => {
                                             })
                                         }
                                     >
-                                        {newQuestion.answers.map((_, index) => (
+                                        {newQuestion.options.map((_, index) => (
                                             <option key={index} value={index}>
                                                 Answer {index + 1}
                                             </option>
@@ -207,17 +212,17 @@ const editQuizPage = ({ params }: { params: Promise<{ quizId: string }> }) => {
                             </>
                         )}
 
-                        {newQuestion.type === "fill" && (
+                        {newQuestion.type === "fill in blank" && (
                             <label className="block mb-2">
                                 Correct Answer:
                                 <input
                                     type="text"
                                     className="w-full border rounded-lg p-2 mt-1"
-                                    value={newQuestion.answers[0]}
+                                    value={newQuestion.options[0]}
                                     onChange={(e) =>
                                         setNewQuestion({
                                             ...newQuestion,
-                                            answers: [e.target.value],
+                                            options: [e.target.value],
                                         })
                                     }
                                 />
@@ -245,3 +250,4 @@ const editQuizPage = ({ params }: { params: Promise<{ quizId: string }> }) => {
     )
 }
 export default editQuizPage
+

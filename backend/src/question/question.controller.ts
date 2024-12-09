@@ -43,6 +43,19 @@ class questionController{
         }
     }
 
+    public async getQuestionAndAnswerByQuizId(req: Request, res: Response) {
+        try {
+            const questionByQuizId = await questionService.getQuestionAndOptionsByQuizId(Number(req.params.quizId));
+
+            return res.status(questionByQuizId.status).send(questionByQuizId.data || questionByQuizId.message);
+        } catch (error) {
+            return {
+                status: 500,
+                message: error
+            }
+            
+        }
+    }
     public async createQuestion(req: Request, res: Response) {
         try {
             const quizId = req.body.quizId;
