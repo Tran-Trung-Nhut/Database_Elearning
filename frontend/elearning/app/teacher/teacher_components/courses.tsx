@@ -38,14 +38,15 @@ const CoursesContent = (teacherId: string ) => {
         <h1 className="text-2xl font-bold mb-6">Courses</h1>
         <div className="grid grid-cols-12 gap-4">
           {/* COURSE CARDS */}
+          
           {
             courses.map((course: Course) => {
               return (
                 <div
                   key={course.courseId}
-                  className="bg-black text-white col-span-4 h-56 rounded-xl flex flex-col justify-between overflow-hidden shadow-lg"
+                  className="bg-grayBG col-span-4 h-56 rounded-xl flex flex-col justify-between overflow-hidden shadow-xl"
                 >
-                  <div className="bg-hcmutLightBlue text-center py-2">
+                  <div className="bg-hcmutLightBlue text-center text-white py-2">
                     <span className="text-2xl font-semibold uppercase">{course.courseName} </span>
                   </div>
                   <div className="p-4 flex-grow">
@@ -53,11 +54,11 @@ const CoursesContent = (teacherId: string ) => {
                     <p className="text-sm text-gray-400">{course.description}</p>
                     <p className="text-sm text-gray-400">{course.creationTime}</p>
                   </div>
-                  <div className="px-4 py-2 flex justify-between items-center mb-2">
-                    <Button className="border-2" onClick={() => {
+                  <div className="px-4 py-2 flex justify-between items-center">
+                    <Button className="border-2 bg-hcmutDarkBlue" onClick={() => {
                       window.open(`/teacher/edit_course/${course.courseId}`, '_blank')
                     }}>Edit</Button>
-                    <span className="text-sm font-semibold text-gray-200">{course.price} VND</span>
+                    <span className="text-sm font-semibold ">{course.price} VND</span>
                   </div>
                 </div>
               )

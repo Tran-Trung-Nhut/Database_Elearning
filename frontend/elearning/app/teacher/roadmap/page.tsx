@@ -59,7 +59,7 @@ const RoadMapPage = () => {
     }, [])
     
   return (
-    <div className="bg-black">
+    <div className="bg-grayBG">
       <div className="grid grid-cols-12 grid-rows-12 min-h-screen gap-4">
         {Header(userLogin.lastName + ' ' + userLogin.firstName)}
         {Sidebar(userLogin.firstName, userLogin.lastName)}

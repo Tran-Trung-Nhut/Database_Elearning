@@ -3,7 +3,9 @@
 import Header from './teacher_components/header';
 import Sidebar from './teacher_components/sidebar';
 import CoursesContent from './teacher_components/courses';
-import ChartContent from './teacher_components/chart';
+import RevenueChart from './teacher_components/chart';
+import RegistrationChart from './teacher_components/studentchart';
+import { Swiper, SwiperSlide } from 'swiper/react';
 import { useRecoilState } from 'recoil';
 import { userLoginState } from '@/state';
 import { useEffect } from 'react';
@@ -75,7 +77,15 @@ const DashBoard = () => {
         {Header(userLogin.lastName + ' ' + userLogin.firstName)}
         {Sidebar(userLogin.firstName, userLogin.lastName)}
         {CoursesContent(userLogin.id)}
-        {/* <ChartContent data={data} options={options} category="line" /> */}
+        <div className='bg-white row-span-6 col-start-3 col-span-5 mb-4 rounded-xl'>
+          <RevenueChart/>
+        </div>
+        <div className='bg-white row-span-6 col-span-5 mb-4 rounded-xl  flex justify-center items-center'>
+            <div className="w-full h-full max-w-full max-h-full mt-50">
+              <RegistrationChart />
+            </div>
+        </div>
+        
       </div>
     </div>
   );
