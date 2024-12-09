@@ -63,8 +63,8 @@ class questionController{
             const answer = req.body.answer;
             const content = req.body.content;
             const teacherId = req.body.teacherId;
-            
-            const question = await questionService.createQuestion(quizId, type, answer, content, teacherId);
+            const options = req.body.options;
+            const question = await questionService.createQuestion(quizId, type, answer, content, teacherId, options);
             return res.status(question.status).send(question.message);
             
         } catch (error) {

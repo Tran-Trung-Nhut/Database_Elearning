@@ -60,8 +60,8 @@ class optionController {
         try {
             const questionId = req.body.questionId;
             const option = req.body.option;
-
-            optionService.updateOption(questionId, option);
+            const newOption = req.body.newOption;
+            optionService.updateOption(questionId, option, newOption);
 
             return res.status(200).json({
                 message: "Successfully updated option",

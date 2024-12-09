@@ -6,11 +6,14 @@ import { userLoginState } from "@/state";
 import { useRecoilState } from "recoil";
 import * as request from '@/app/axios/axios'
 interface Question {
+    id: number; // Add this line
     content: string;
     type: "multiple choice" | "fill in blank";
     options: string[];
     correctAnswerIndex: number;
+    answer: string;
 }
+
 const editQuizPage = ({ params }: { params: Promise<{ quizId: string }> }) => {
     const [rtnParams, setRtnParams] = useState<{ quizId: string }>({ quizId: "" });
     const loadParams = async () => {
@@ -25,30 +28,101 @@ const editQuizPage = ({ params }: { params: Promise<{ quizId: string }> }) => {
         type: "multiple choice",
         options: ["", "", "", ""],
         correctAnswerIndex: 0,
+        answer: "",
+        id: 0
     });
-    const handleAddQuestion = () => {
-        setSampleQuestions([...sampleQuestions, newQuestion]);
-        setNewQuestion({
-            content: "",
-            type: "multiple choice",
-            options: ["", "", "", ""],
-            correctAnswerIndex: 0,
-        });
-        setModalOpen(false);
+
+    const handleEditQuestion = async (questionId: number, newContent: string) => {
+        const questionToEdit = sampleQuestions.find((question) => question.id === questionId);
+        if (!questionToEdit) {
+            alert("Question not found!");
+            return;
+        }
+    
+        try {
+            // Send updated content to the API
+            await request.patch("http://localhost:4000/question/update", {
+                id: questionToEdit.id,
+                quizId: rtnParams.quizId,
+                content: newContent,
+                teacherId: userLogin.id, // Assuming `userLogin.id` contains the teacher's ID
+            });
+    
+            // Update the content locally
+            setSampleQuestions(
+                sampleQuestions.map((question) =>
+                    question.id === questionId ? { ...question, content: newContent } : question
+                )
+            );
+    
+            alert("Question updated successfully!");
+        } catch (error) {
+            console.error("Error updating question:", error);
+            alert("Failed to update the question. Please try again.");
+        }
+    };
+    
+    const handleDeleteQuestion = async (questionId: number) => {
+        try {
+            // Call the API to delete the question
+            await request.del(`http://localhost:4000/question/delete/id/${questionId}`);
+            console.log(`Question with ID ${questionId} deleted successfully.`);
+    
+            // Remove the deleted question from the state
+            setSampleQuestions(sampleQuestions.filter((question) => question.id !== questionId));
+        } catch (error) {
+            console.error("Error deleting question:", error);
+            alert("Failed to delete the question. Please try again.");
+        }
     };
 
-    const renderAnswers = (question: { content: string; type: string; options: string[]; correctAnswerIndex: number }) => {
+    const handleAddQuestion = async () => {
+        const requestBody = {
+            quizId: rtnParams.quizId, // Assuming this is set properly
+            type: newQuestion.type,
+            answer: newQuestion.type === "fill in blank" ? newQuestion.options[0] : newQuestion.options[newQuestion.correctAnswerIndex],
+            content: newQuestion.content,
+            teacherId: userLogin.id, // Assuming `userLogin` holds the teacher's ID
+            options: newQuestion.type === "multiple choice" ? newQuestion.options : undefined,
+        };
+    
+        try {
+            // API call to create the question
+            const response = await request.post('http://localhost:4000/question/create', requestBody);
+            console.log("Question created:", response);
+            if (!response){
+                return
+            }
+            // Add the newly created question to the list
+            setSampleQuestions([...sampleQuestions, newQuestion]);
+    
+            // Reset the new question form
+            setNewQuestion({
+                content: "",
+                type: "multiple choice",
+                options: ["", "", "", ""],
+                correctAnswerIndex: 0,
+                answer: "",
+                id: 0
+            });
+    
+            // Close the modal
+            setModalOpen(false);
+        } catch (error) {
+            console.error("Error creating question:", error);
+            alert("Failed to add the question. Please try again.");
+        }
+    };
+    
+
+    const renderAnswers = (question: { content: string; type: string; options: string[]; correctAnswerIndex: number, answer: string }) => {
         if (question.type === "multiple choice") {
-            console.log(question)
-            console.log(question.type)
-            console.log(question.content)
-            console.log(question.options)
             if (!question.options) return
             return question.options.map((answer, index) => (
                 <div
                     key={index}
                     className={`p-2 rounded-lg ${
-                        index === question.correctAnswerIndex
+                        answer === question.answer
                             ? "bg-green-200"
                             : "bg-red-200"
                     }`}
@@ -59,7 +133,7 @@ const editQuizPage = ({ params }: { params: Promise<{ quizId: string }> }) => {
         } else if (question.type === "fill in blank") {
             return (
                 <div className="p-2 rounded-lg bg-green-200">
-                    Correct Answer: {question.correctAnswerIndex}
+                    Correct Answer: {question.answer}
                 </div>
             );
         }
@@ -67,28 +141,34 @@ const editQuizPage = ({ params }: { params: Promise<{ quizId: string }> }) => {
     const [sampleQuestions, setSampleQuestions] = useState<Question[]>([])
 
     const fetchQuestions = async () => {
-        if (!rtnParams.quizId) return
-        try {
-            let response = await request.get(`/question/quiz/${rtnParams.quizId}`)
-            console.log(response)
+    if (!rtnParams.quizId) return;
+    try {
+        // Fetch all questions for the quiz
+        const response = await request.get(`/question/quiz/${rtnParams.quizId}`);
+        console.log("Questions Response:", response);
 
-            if (response){
-                response.forEach((question: any) => {
-                    // find options if type === multiple
-                    if (question.type === 'multiple choice'){
-                        request.get(`/option/id/${question.id}`).then((res) => {
-                            question.options = res.data.data.map((option: any) => option.option)
-                        })
-
+        if (response) {
+            // Fetch options for all multiple-choice questions
+            const questionsWithOptions = await Promise.all(
+                response.map(async (question: any) => {
+                    if (question.type === "multiple choice") {
+                        const optionsResponse = await request.get(`/option/id/${question.id}`);
+                        question.options = optionsResponse.data.data.map((option: any) => option.option);
+                    } else {
+                        question.options = []; // Ensure options field exists
                     }
+                    return question;
                 })
-                setSampleQuestions(response)
-            }
+            );
 
-        } catch (error) {
-            console.log(error);
+            // Update state with questions and their options
+            setSampleQuestions(questionsWithOptions);
         }
+    } catch (error) {
+        console.error("Error fetching questions:", error);
     }
+};
+
     
     useEffect(() => {
         loadParams().then((res) => setRtnParams(res));
@@ -102,13 +182,6 @@ const editQuizPage = ({ params }: { params: Promise<{ quizId: string }> }) => {
     }, [rtnParams.quizId]);
     
     
-    console.log(sampleQuestions)
-    sampleQuestions.map((question) => {
-        if (question.type === 'multiple choice'){
-            console.log(question)
-            console.log(question.options)
-        }
-    })
     return (
         <div className="grid grid-rows-12 grid-cols-12 gap-4 bg-black">
             {Header(userLogin.lastName + ' ' + userLogin.firstName)}
@@ -132,11 +205,38 @@ const editQuizPage = ({ params }: { params: Promise<{ quizId: string }> }) => {
                         key={index}
                         className="bg-white shadow-md p-6 rounded-lg space-y-4"
                     >
-                        <h2 className="text-lg font-semibold">{`Q${index + 1}: ${
-                            question.content
-                        }`}</h2>
+                        <div className="flex justify-between items-center">
+                            
+                            <h2 className="text-lg font-semibold">{`Q${index + 1}: ${question.content}`}</h2>
+                            <button
+                                className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"
+                                onClick={() => handleDeleteQuestion(question.id)}
+                            >
+                                Delete
+                            </button>
+
+                            <input
+                                type="text"
+                                className="w-3/4 border rounded-lg p-2"
+                                value={question.content}
+                                onChange={(e) =>
+                                    setSampleQuestions(
+                                        sampleQuestions.map((q) =>
+                                            q.id === question.id ? { ...q, content: e.target.value } : q
+                                        )
+                                    )
+                                }
+                            />
+                            <button
+                                className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
+                                onClick={() => handleEditQuestion(question.id, question.content)}
+                            >
+                                Save
+                            </button>
+                        </div>
                         <div className="space-y-2">{renderAnswers(question)}</div>
                     </div>
+                
                 ))}
             </div>
 
@@ -182,35 +282,54 @@ const editQuizPage = ({ params }: { params: Promise<{ quizId: string }> }) => {
                                             onChange={(e) => {
                                                 const updatedAnswers = [...newQuestion.options];
                                                 updatedAnswers[index] = e.target.value;
+
                                                 setNewQuestion({
                                                     ...newQuestion,
                                                     options: updatedAnswers,
+                                                    answer: index === newQuestion.correctAnswerIndex ? e.target.value : newQuestion.answer, // Update `answer` if it matches the correct answer
                                                 });
+
+                                                // Reset correctAnswerIndex if the selected answer is deleted or modified
+                                                if (newQuestion.correctAnswerIndex === index && !e.target.value) {
+                                                    setNewQuestion({
+                                                        ...newQuestion,
+                                                        correctAnswerIndex: 0, // Reset to default
+                                                        answer: updatedAnswers[0] || "", // Update answer to new default
+                                                    });
+                                                }
                                             }}
                                         />
                                     </label>
                                 ))}
+
+
+                                {/* Dropdown for selecting the correct answer */}
+                                {/* Dropdown for selecting the correct answer */}
                                 <label className="block mb-2">
                                     Correct Answer:
                                     <select
                                         className="w-full border rounded-lg p-2 mt-1"
                                         value={newQuestion.correctAnswerIndex}
-                                        onChange={(e) =>
+                                        onChange={(e) => {
+                                            const selectedAnswerIndex = parseInt(e.target.value, 10);
                                             setNewQuestion({
                                                 ...newQuestion,
-                                                correctAnswerIndex: parseInt(e.target.value, 10),
-                                            })
-                                        }
+                                                correctAnswerIndex: selectedAnswerIndex,
+                                                answer: newQuestion.options[selectedAnswerIndex] || "", // Assign the selected option's text to `answer`
+                                            });
+                                        }}
                                     >
-                                        {newQuestion.options.map((_, index) => (
+                                        {newQuestion.options.map((option, index) => (
                                             <option key={index} value={index}>
-                                                Answer {index + 1}
+                                                {option || `Answer ${index + 1}`} {/* Fallback for empty answers */}
                                             </option>
                                         ))}
                                     </select>
                                 </label>
+
                             </>
                         )}
+
 
                         {newQuestion.type === "fill in blank" && (
                             <label className="block mb-2">
@@ -219,15 +338,18 @@ const editQuizPage = ({ params }: { params: Promise<{ quizId: string }> }) => {
                                     type="text"
                                     className="w-full border rounded-lg p-2 mt-1"
                                     value={newQuestion.options[0]}
-                                    onChange={(e) =>
+                                    onChange={(e) => {
+                                        const updatedAnswer = e.target.value;
                                         setNewQuestion({
                                             ...newQuestion,
-                                            options: [e.target.value],
-                                        })
-                                    }
+                                            options: [updatedAnswer], // Update options[0]
+                                            answer: updatedAnswer,   // Keep answer in sync with options[0]
+                                        });
+                                    }}
                                 />
                             </label>
                         )}
+
 
                         <div className="flex justify-end space-x-4 mt-4">
                             <button

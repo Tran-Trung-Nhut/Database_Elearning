@@ -126,7 +126,7 @@ class questionService {
             }
         }
     }
-    public async createQuestion(quizId: number, type: string, answer: string, content: string, teacherId: number) {
+    public async createQuestion(quizId: number, type: string, answer: string, content: string, teacherId: number, options: string[]) {
         try {
             const create = await db.insert(question)
                                     .values({
@@ -136,9 +136,24 @@ class questionService {
                                         content: content,
                                         teacherId: teacherId
                                     })
+                                    .returning({
+                                        questionId: question.id
+                                    })
+
+            // if type is "multiple choice" then create options
+            if (type === "multiple choice") {
+                for (let i = 0; i < options.length; i++) {
+                    await db.insert(option)
+                            .values({
+                                questionId: create[0].questionId,
+                                option: options[i]
+                            })
+                }
+            }
             return {
                 status: 200,
-                message: "Question created successfully"
+                message: "Question created successfully",
+                data: create[0].questionId
             }
         } catch (error) {
             return {
