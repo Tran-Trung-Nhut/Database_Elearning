@@ -22,7 +22,7 @@ const SectionTable = ({ sections, onEdit, onDetailQuiz, onDetailLecture }: { sec
         <div className="p-4">
             {/* Table */}
             <table className="min-w-full table-auto bg-white shadow-md rounded-lg overflow-hidden">
-                <thead className="bg-black text-white">
+                <thead className="bg-hcmutDarkBlue text-white">
                     <tr>
                         <th className="px-6 py-3 text-left uppercase text-sm font-medium">
                             Section ID
@@ -68,15 +68,15 @@ const SectionTable = ({ sections, onEdit, onDetailQuiz, onDetailLecture }: { sec
                                 {section.timeToComplete} minutues
                             </td>
                             
-                            <td className="flex gap-5 items-center my-auto">
+                            <td className="flex gap-5 items-center my-auto mt-1">
                                 {/* Nút hành động */}
-                                <button onClick={() => onEdit(index+1, section.id)} className="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600">
+                                <button onClick={() => onEdit(index+1, section.id)} className="bg-hcmutLightBlue text-white px-6 py-2 rounded hover:bg-blue-600">
                                     Edit
                                 </button>
-                                <button onClick={() => onDetailQuiz(index+1, section.id)} className="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600">
+                                <button onClick={() => onDetailQuiz(index+1, section.id)} className="bg-hcmutLightBlue text-white px-6 py-2 rounded hover:bg-blue-600">
                                     Quiz
                                 </button>
-                                <button onClick={() => onDetailLecture(index+1, section.id)} className="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600">
+                                <button onClick={() => onDetailLecture(index+1, section.id)} className="bg-hcmutLightBlue text-white px-6 py-2 rounded hover:bg-blue-600">
                                     Lecture
                                 </button>
                             </td>
@@ -223,7 +223,7 @@ const editCoursePage = ({ params }: { params: Promise<{ courseId: string }> }) =
         return <LoadingOverlay></LoadingOverlay>
     }
     return (
-        <div className="grid grid-rows-12 grid-cols-12 gap-4 bg-black   ">
+        <div className="grid grid-rows-12 grid-cols-12 gap-4 bg-grayBG   ">
             {Header(userLogin.lastName + ' ' + userLogin.firstName)}
             {Sidebar(userLogin.firstName, userLogin.lastName)}
             {/* content */}
@@ -294,7 +294,7 @@ const editCoursePage = ({ params }: { params: Promise<{ courseId: string }> }) =
                 </div>
             )}
 
-            <div className="bg-white col-start-3 col-span-10 row-span-10 mb-4 rounded-xl">
+            <div className="bg-white col-start-3 col-span-10 row-span-10 mb-4 rounded-xl shadow-xl">
                 {/* Header */}
                 <div className="bg-hcmutLightBlue rounded-t-xl text-center text-3xl text-white font-semibold uppercase items-center p-5">
                     <h1>{course.courseName} </h1>

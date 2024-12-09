@@ -28,7 +28,7 @@ const Header = (teacherName: string) => {
           Tạo khóa học</Button>
       </div>
       <div className="flex justify-center">
-        <input type="search" placeholder="Search here" className="rounded-xl text-white w-60" />
+        <h1 className="font-mono font-extrabold text-4xl m-4">DATABASE(CO2013)</h1>
       </div>
     </div>
   );

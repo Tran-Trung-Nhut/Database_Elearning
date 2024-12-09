@@ -102,12 +102,12 @@ const QuizSection = ({ params }: { params: Promise<{ sectionId: string }> }) => 
   };
 
   return (
-    <div className="grid grid-rows-12 grid-cols-12 gap-4 bg-black">
+    <div className="grid grid-rows-12 grid-cols-12 gap-4 bg-white">
 
     
     {Header(userLogin.lastName + ' ' + userLogin.firstName)}
     {Sidebar(userLogin.firstName, userLogin.lastName)}
-    <div className="bg-white col-start-3 col-span-10 row-span-11 mb-4 rounded-xl overflow-hidden">
+    <div className="bg-white col-start-3 col-span-10 row-span-11 rounded-xl overflow-hidden shadow-xl mb-4">
       <h1 className="bg-pink-600 rounded-t-xl text-center p-2 text-2xl text-white font-semibold uppercase">
         Quiz
       </h1>
@@ -153,8 +153,8 @@ const QuizSection = ({ params }: { params: Promise<{ sectionId: string }> }) => 
 
       {/* Modal for editing quiz */}
       {isEditModalOpen && selectedQuiz && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-          <div className="bg-white p-6 rounded shadow-lg w-full max-w-lg">
+        <div className="fixed inset-0 bg-white bg-opacity-50 flex justify-center items-center">
+          <div className="bg-white p-6 rounded w-full max-w-lg shadow-xl">
             <h2 className="text-xl font-bold mb-4">Edit Quiz</h2>
             <form onSubmit={handleEditFormSubmit}>
               <div className="mb-4">

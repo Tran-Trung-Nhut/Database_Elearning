@@ -33,7 +33,7 @@ const CoursesContent = (teacherId: string ) => {
   console.log(courses);
 
   return (
-    <div className="bg-white row-span-4 col-start-3 col-end-13 grid grid-cols-12 p-4 rounded-xl items-start">
+    <div className="bg-white row-span-4 col-start-3 col-end-13 grid grid-cols-12 p-4 rounded-xl items-start shadow-xl">
       <div className="bg-white p-4 col-start-1 col-end-13 rounded-xl">
         <h1 className="text-2xl font-bold mb-6">Courses</h1>
         <div className="grid grid-cols-12 gap-4">

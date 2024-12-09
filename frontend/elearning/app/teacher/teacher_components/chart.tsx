@@ -181,7 +181,7 @@ const RevenueChart = () => {
         .reduce((sum, curr) => sum + curr.revenueByDay, 0)
     );
     datasets.push({
-        label: "Total Revenue",
+        label: "Tổng doanh thu",
         data: totalRevenueByDay,
         borderColor: "#FF5733", // Distinct color for total revenue
         borderWidth: 3,
@@ -190,7 +190,7 @@ const RevenueChart = () => {
     });
     return (
         <div className="bg-white rounded-lg p-6 h-max">
-            <h2 className="text-2xl font-bold mb-20 text-center">Teacher Revenue</h2>
+            <h2 className="text-2xl font-bold mb-20 text-center">Doanh thu theo ngày</h2>
             <Line data={dataConfig} options={options} />
         </div>
     );

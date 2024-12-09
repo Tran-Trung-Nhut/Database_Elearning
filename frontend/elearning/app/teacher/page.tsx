@@ -77,10 +77,10 @@ const DashBoard = () => {
         {Header(userLogin.lastName + ' ' + userLogin.firstName)}
         {Sidebar(userLogin.firstName, userLogin.lastName)}
         {CoursesContent(userLogin.id)}
-        <div className='bg-white row-span-6 col-start-3 col-span-5 mb-4 rounded-xl'>
+        <div className='bg-white row-span-6 col-start-3 col-span-5 mb-4 rounded-xl shadow-xl'>
           <RevenueChart/>
         </div>
-        <div className='bg-white row-span-6 col-span-5 mb-4 rounded-xl  flex justify-center items-center'>
+        <div className='bg-white row-span-6 col-span-5 mb-4 rounded-xl  flex justify-center items-center shadow-xl'>
             <div className="w-full h-full max-w-full max-h-full mt-50">
               <RegistrationChart />
             </div>
