@@ -2,8 +2,10 @@
 
 import { userLoginState } from '@/state';
 import axios from 'axios';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
+
 
 const CreateCourse = () => {
   const [courseName, setCourseName] = useState('');
@@ -13,6 +15,8 @@ const CreateCourse = () => {
   const [averageQuizScore, setAverageQuizScore] = useState('');
   const [topics, setTopics] = useState<string[]>([]);
   const [currentTopic, setCurrentTopic] = useState<string>('');
+  const [certiName, setCertiName] = useState<string>('');
+  const [expirationTime, setExpirationTime] = useState<number>(0);
   const user = useRecoilValue(userLoginState)
   
   const handleAddTopic = () => {
@@ -73,9 +77,9 @@ const CreateCourse = () => {
   useEffect(() => {
     console.log(user.id);
   }, []);
-
+  const router = useRouter()
   return (
-    <div className="mt-10 create-course-container border-solid border-2 shadow-xl px-6 py-12 lg:px-8 m-100" style={{ padding: '20px', maxWidth: '600px', margin: '0 auto' }}>
+    <div className="mt-10 rounded-xl create-course-container border-solid border-2 shadow-xl px-6 py-12 lg:px-8 m-100" style={{ padding: '20px', maxWidth: '600px', margin: '0 auto' }}>
       <h1 className=" mb-10 text-center text-2xl/9 font-bold tracking-tight text-white bg-hcmutDarkBlue rounded-xl">
         Create Course
       </h1> 
@@ -120,7 +124,7 @@ const CreateCourse = () => {
         </div>
 
         <div style={{ marginBottom: '10px' }}>
-          <label htmlFor="price">Price (coin):</label>
+          <label htmlFor="price">Price (VND):</label>
           <input
             type="number"
             id="price"
@@ -183,14 +187,54 @@ const CreateCourse = () => {
               </span>
             ))}
           </div>
-        </div>
 
-        <button type="submit" 
-          className='bg-hcmutDarkBlue px-2 py-2 text-white cursor-pointer hover:bg-hcmutLightBlue rounded-xl'
-            onClick={handleAddCourse}
-        >
-          Create Course
-        </button>
+        </div>
+        <h1 className=" mb-2 text-center text-2xl/9 font-bold tracking-tight text-white bg-yellow-600 rounded-xl">
+          Course Certificate
+        </h1> 
+        <div style={{ marginBottom: '10px' }}>
+          <label htmlFor="courseName">Certificate Name:</label>
+          <input
+            type="text"
+            id="courseName"
+            value={courseName}
+            // onChange={(e) => setCourseName(e.target.value)}
+            required
+            style={{ width: '100%', padding: '8px', marginTop: '5px' }}
+            className='border-solid border-2 rounded-lg'
+          />
+        </div>
+        <div style={{ marginBottom: '10px' }}>
+          <label htmlFor="price">Expiration time after completion:</label>
+          <input
+            type="number"
+            id="price"
+            value={expirationTime}
+            onChange={(e) => setExpirationTime(Number(e.target.value))}
+            required
+            style={{ width: '100%', padding: '8px', marginTop: '5px' }}
+            className='border-solid border-2 rounded-lg'
+          />
+        </div>
+        
+
+        {/* BUTTON */}
+        <div className='flex justify-between'>
+          <button type="submit" 
+            className='bg-hcmutDarkBlue px-2 py-2 text-white cursor-pointer hover:bg-hcmutLightBlue rounded-xl'
+              onClick={handleAddCourse}
+          >
+            Create Course
+          </button>
+          <button type="button" 
+            className='bg-red-600 px-2 py-2 text-white cursor-pointer hover:bg-red-700 rounded-xl'
+            onClick={() => router.back()}
+          >
+            Quay lại
+          </button>
+        </div>
+        
+        
       </form>
     </div>
   );
