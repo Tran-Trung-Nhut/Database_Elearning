@@ -2,6 +2,8 @@
 
 import Image from 'next/image';
 import aba from "../../public/aba.jpg";
+import shifu from "../../public/techer.jpg";
+import teacherimg from "../../public/tichcho.jpeg";
 import { useRouter } from 'next/navigation';
 // import { userLoginState } from '@/state';
 // import { useRecoilValue, useSetRecoilState } from 'recoil';
@@ -32,7 +34,7 @@ const Sidebar = (firstName: string, lastName: string) => {
     <div className="bg-white rounded-xl col-start-1 col-end-3 row-span-10 flex flex-col mb-4 shadow-xl min-h-screen">
       {/* Profile Section */}
       <div className="bg-gray-200 text-center py-6 rounded-t-xl">
-        <Image src={aba} alt="Profile Picture" className="w-20 h-20 mx-auto rounded-full" />
+        <Image src={teacherimg} alt="Profile Picture" className="w-20 h-20 mx-auto rounded-full" />
         <h2 className="mt-4 text-lg font-semibold text-gray-700">{firstName + ' ' +  lastName}</h2>
         <p className="text-sm text-gray-500">master CS</p>
       </div>
