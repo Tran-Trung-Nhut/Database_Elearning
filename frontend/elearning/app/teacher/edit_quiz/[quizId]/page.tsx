@@ -197,10 +197,9 @@ const editQuizPage = ({ params }: { params: Promise<{ quizId: string }> }) => {
     }
     
     return (
-        <div className="grid grid-rows-12 grid-cols-12 gap-4 bg-black ">
+        <div className="grid grid-rows-12 grid-cols-12 gap-4 bg-grayBG">
             {Header(userLogin.lastName + ' ' + userLogin.firstName)}
             {Sidebar(userLogin.firstName, userLogin.lastName)}
-            {/* Header */}
             <div className="bg-pink-600 col-start-3 col-span-10 row-span-1 rounded-xl text-3xl text-white font-semibold uppercase items-center p-5 flex flex-col justify-center">
                 <h1 className="self-center">quiz title: {quiz.name}</h1>
                 <button
@@ -210,8 +209,6 @@ const editQuizPage = ({ params }: { params: Promise<{ quizId: string }> }) => {
                     Add Question
                 </button>
             </div>
-
-
             {/* Questions Container */}
             <div className="space-y-6 bg-white col-start-3 col-span-10 row-span-9 mb-4 rounded-xl">
                 {sampleQuestions.map((question, index) => (
