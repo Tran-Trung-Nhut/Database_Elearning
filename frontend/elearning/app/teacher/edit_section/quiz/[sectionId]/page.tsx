@@ -6,7 +6,7 @@ import { userLoginState } from "@/state";
 import * as request from '@/app/axios/axios';
 import Header from "../../../teacher_components/header";
 import Sidebar from "../../../teacher_components/sidebar";
-
+import { useRouter } from "next/navigation";
 const QuizSection = ({ params }: { params: Promise<{ sectionId: string }> }) => {
   const [rtnParams, setRtnParams] = useState<{ sectionId: string }>({ sectionId: "" });
   const [section, setSection] = useState<any>({});
@@ -15,7 +15,7 @@ const QuizSection = ({ params }: { params: Promise<{ sectionId: string }> }) => 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedQuiz, setSelectedQuiz] = useState<any | null>(null);
-
+  const router = useRouter(); // Initialize useRouter
   useEffect(() => {
     const loadParams = async () => {
       const unwrappedParams = await params;
@@ -56,7 +56,7 @@ const QuizSection = ({ params }: { params: Promise<{ sectionId: string }> }) => 
     fetchQuiz();
   }, [rtnParams]);
 
-  const handleFormSubmit = (e: React.FormEvent) => {
+  const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget as HTMLFormElement);
     const newQuiz = {
@@ -65,10 +65,23 @@ const QuizSection = ({ params }: { params: Promise<{ sectionId: string }> }) => 
       state: formData.get("quizState") as string,
       attempt: parseInt(formData.get("quizAttempt") as string, 10),
       duration: formData.get("quizDuration") as string,
+      teacherId: userLogin.id,
+      sectionId: section.id,
     };
+    
+    if (!userLogin.id || !section.id) return;
     console.log("New Quiz Added:", newQuiz);
-    setQuiz((prev) => [...prev, newQuiz]);
-    setIsModalOpen(false);
+
+    const response = await request.post('/quiz/create', newQuiz);
+
+    if (response) {
+      setQuiz((prev) => [...prev, newQuiz]);
+      setIsModalOpen(false);
+    }
+    else{
+      console.log("Failed to add quiz");
+      setIsEditModalOpen(false);
+    }
   };
 
   const handleEditClick = (quizId: number) => {
@@ -78,8 +91,11 @@ const QuizSection = ({ params }: { params: Promise<{ sectionId: string }> }) => 
       setIsEditModalOpen(true);
     }
   };
+  const handleDetailClick = (quizId: number) => {
+    router.push(`/teacher/edit_quiz/${quizId}`); // Navigate to edit_quiz/[quizId]
+  };
 
-  const handleEditFormSubmit = (e: React.FormEvent) => {
+  const handleEditFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedQuiz) return;
 
@@ -90,17 +106,36 @@ const QuizSection = ({ params }: { params: Promise<{ sectionId: string }> }) => 
       state: formData.get("quizState") as string,
       attempt: parseInt(formData.get("quizAttempt") as string, 10),
       duration: formData.get("quizDuration") as string,
+      teacherId: userLogin.id,
+      sectionId: section.id,
     };
 
+    if (!userLogin.id || !section.id) return;
+    console.log("Updated Quiz:", updatedQuiz);
+
+    const response = await request.patch('/quiz/update', updatedQuiz);
+
+    if (!response){
+      console.log("Failed to update quiz");
+      setIsEditModalOpen(false);
+    }
     // Update quiz in the state
     setQuiz((prev) =>
       prev.map((q) => (q.id === updatedQuiz.id ? updatedQuiz : q))
     );
 
-    console.log("Updated Quiz:", updatedQuiz);
     setIsEditModalOpen(false);
   };
 
+  if (!section.id) {
+    
+    return (<>
+      <div className="grid grid-rows-12 grid-cols-12 gap-4 bg-black">
+        {Header(userLogin.lastName + ' ' + userLogin.firstName)}
+        {Sidebar(userLogin.firstName, userLogin.lastName)}
+      </div>
+    </>)
+  }
   return (
     <div className="grid grid-cols-12 gap-4 bg-white grid-rows-[auto,1fr]">
 
@@ -109,7 +144,7 @@ const QuizSection = ({ params }: { params: Promise<{ sectionId: string }> }) => 
     {Sidebar(userLogin.firstName, userLogin.lastName)}
     <div className="bg-white col-start-3 col-span-10 row-span-10 rounded-xl shadow-xl mb-4 min-h-screen">
       <h1 className="bg-pink-600 rounded-t-xl text-center p-2 text-2xl text-white font-semibold uppercase">
-        Quiz
+        Quiz: {section.name}
       </h1>
         <div className="row-start-1 self-center flex justify-center my-4">
           <Button onClick={() => setIsModalOpen(true)} className="bg-pink-600">
@@ -129,7 +164,7 @@ const QuizSection = ({ params }: { params: Promise<{ sectionId: string }> }) => 
           <tbody>
             {quiz.map((q, index) => (
               <tr
-                key={index}
+                key={q.id}
                 className={index % 2 === 0 ? "bg-gray-50" : "bg-white"}
               >
                 <td className="border border-gray-300 px-4 py-2">{q.name}</td>
@@ -137,6 +172,12 @@ const QuizSection = ({ params }: { params: Promise<{ sectionId: string }> }) => 
                 <td className="border border-gray-300 px-4 py-2">{q.attempt || "N/A"}</td>
                 <td className="border border-gray-300 px-4 py-2">{q.duration || "0 mins"}</td>
                 <td className="border border-gray-300 px-4 py-2">
+                <Button
+                      onClick={() => handleDetailClick(q.id)}
+                      className="bg-blue-500 text-white"
+                    >
+                      Detail
+                    </Button>
                   <Button
                     onClick={() => handleEditClick(q.id)}
                     className="bg-yellow-500 text-white"

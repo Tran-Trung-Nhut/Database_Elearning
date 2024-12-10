@@ -12,6 +12,9 @@ router.get("/id/:id", questionController.getQuestionById as any);
 // get question by quiz id
 router.get("/quiz/:quizId", questionController.getQuestionByQuizId as any);
 
+// get question and options by quiz id
+router.get("/quiz/:quizId/options", questionController.getQuestionAndAnswerByQuizId as any);
+
 // create question
 router.post("/create", questionController.createQuestion as any);
 

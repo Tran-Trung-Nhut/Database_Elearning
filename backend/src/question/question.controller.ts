@@ -43,6 +43,19 @@ class questionController{
         }
     }
 
+    public async getQuestionAndAnswerByQuizId(req: Request, res: Response) {
+        try {
+            const questionByQuizId = await questionService.getQuestionAndOptionsByQuizId(Number(req.params.quizId));
+
+            return res.status(questionByQuizId.status).send(questionByQuizId.data || questionByQuizId.message);
+        } catch (error) {
+            return {
+                status: 500,
+                message: error
+            }
+            
+        }
+    }
     public async createQuestion(req: Request, res: Response) {
         try {
             const quizId = req.body.quizId;
@@ -50,8 +63,8 @@ class questionController{
             const answer = req.body.answer;
             const content = req.body.content;
             const teacherId = req.body.teacherId;
-            
-            const question = await questionService.createQuestion(quizId, type, answer, content, teacherId);
+            const options = req.body.options;
+            const question = await questionService.createQuestion(quizId, type, answer, content, teacherId, options);
             return res.status(question.status).send(question.message);
             
         } catch (error) {

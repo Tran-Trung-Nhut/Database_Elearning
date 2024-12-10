@@ -15,6 +15,18 @@ const LectureSection = ({ params }: { params: Promise<{ sectionId: string }> }) 
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedLecture, setSelectedLecture] = useState<any | null>(null);
   const [loading, setLoading] = useState(false); // Add loading state
+  const [section, setSection] = useState<any | null>(null);
+
+  const fetchSection = async () => {
+    if (!rtnParams.sectionId) return;
+    try {
+      const response = await request.get(`/section/id/${rtnParams.sectionId}`);
+      console.log(response.data[0])
+      setSection(response.data[0]);
+    } catch (error) {
+      console.error('Error fetching section:', error);
+    }
+  }
   useEffect(() => {
     const loadParams = async () => {
       const unwrappedParams = await params;
@@ -50,6 +62,7 @@ const LectureSection = ({ params }: { params: Promise<{ sectionId: string }> }) 
     };
 
     fetchLectures();
+    fetchSection();
   }, [rtnParams]);
 
 
@@ -159,13 +172,16 @@ const LectureSection = ({ params }: { params: Promise<{ sectionId: string }> }) 
     }
   };
 
+  if (section === null) {
+    return <div>Loading...</div>;
+  }
   return (
     <div className="grid grid-rows-12 grid-cols-12 gap-4 bg-white">
       {Header(userLogin.lastName + ' ' + userLogin.firstName)}
       {Sidebar(userLogin.firstName, userLogin.lastName)}
       <div className="bg-white col-start-3 col-span-10 row-span-10 mb-4 rounded-xl overflow-hidden shadow-xl">
         <h1 className="bg-pink-600 rounded-t-xl text-center p-2 text-2xl text-white font-semibold uppercase">
-          Lectures
+          Lectures: {section.name}
         </h1>
           <div className="row-start-1 self-center flex justify-center mb-4">
             <Button onClick={() => setIsModalOpen(true)} className="bg-pink-600 mt-4">

@@ -162,7 +162,8 @@ function CourseDropdown(props: any) {
                     
                       <div className="flex space-x-4">
                         {/* "Xem lại đáp án lần làm gần nhất" button first */}
-                        <button
+                        {currentAttempts > 0 && (
+                          <button
                           className="text-orange-500 px-6 py-2 hover:scale-110 active:scale-90"
                           onClick={() => {
                             setSelectQuizId(quiz.id )
@@ -172,6 +173,7 @@ function CourseDropdown(props: any) {
                         >
                           Xem lại đáp án lần làm gần nhất
                         </button>
+                        )}
                     
                         {/* Conditional buttons for quiz attempts */}
                         {currentAttempts >= maxAttempts ? (

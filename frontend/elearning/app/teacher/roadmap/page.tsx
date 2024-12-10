@@ -63,8 +63,28 @@ const RoadMapPage = () => {
   const [learningTip, setLearningTip] = useState('');
   const [roadmapCertificateName, setRoadmapCertificateName] = useState('');
   const [roadmapCertificateExpiration, setRoadmapCertificateExpiration] = useState(0);
-  const handleSubmit = () =>{
+  const handleSubmit = async () =>{
     console.log(roadmapName, roadmapDescription, learningTip, roadmapCertificateName, roadmapCertificateExpiration, selectedCourses);
+    let formData = {
+      name: roadmapName,
+      description: roadmapDescription,
+      instruction: learningTip,
+      teacherId: userLogin.id,
+      includeCourse: selectedCourses.map(course => {
+        return {
+          courseId: course.courseId
+        }
+      })
+    }
+
+    // first create roadmap like this
+    const roadmap = await request.post('/roadmap/create', formData);
+    console.log(roadmap);
+    if (roadmap.status === 200) {
+      alert('Roadmap created successfully');
+    } else {
+      console.log(roadmap.message);
+    }
   }
   return (
     <div className="bg-grayBG">

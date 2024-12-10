@@ -131,6 +131,7 @@ class includeCourseService {
 
     public async createIncludeCourse(includeCourseDto: includeCourseDto){
         try {
+            console.log(includeCourseDto);
             await db.insert(
                 includeCourse
             )
@@ -139,10 +140,20 @@ class includeCourseService {
                 courseId: includeCourseDto.courseId,
                 order: includeCourseDto.order
             })
+            .returning({
+                rmId: includeCourse.rmId,
+                courseId: includeCourse.courseId,
+                order: includeCourse.order
+            })
 
             return {
                 message: "IncludeCourse created",
-                status: 201
+                status: 200,
+                data: {
+                    rmId: includeCourseDto.rmId,
+                    courseId: includeCourseDto.courseId,
+                    order: includeCourseDto.order
+                }
             }
         } catch (error) {
             return {

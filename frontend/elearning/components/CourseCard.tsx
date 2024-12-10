@@ -127,7 +127,7 @@ function CourseCard(props: any) {
 
 
       {/* Payment Modal */}
-      {paymentModal && (
+      {paymentModal && ReactDOM.createPortal(
         <>
           <div className="fixed inset-0 z-50 bg-black bg-opacity-50" onClick={() => setPaymentModal(false)}></div>
           <div
@@ -166,7 +166,8 @@ function CourseCard(props: any) {
               </div>
             </div>
           </div>
-        </>
+        </>,
+        document.body
       )}
     </>
   );

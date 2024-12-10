@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { db } from "../db/db";
 import { option } from "../db/schema";
 import questionService from "../question/question.service";
@@ -57,16 +57,6 @@ class optionService {
     public async createOption(questionId: number, optionStr: string) {
         try {
 
-            // // find question first
-            // const findFirst = await questionService.getQuestionById(questionId)
-            
-            // if (findFirst.status != 200){
-            //     return {
-            //         message: "Question not found",
-            //         status: 404
-            //     }
-            // }
-
             const createOption = await db
             .insert(option)
             .values({
@@ -91,7 +81,7 @@ class optionService {
         }
     }   
 
-    public async updateOption(questionId: number, optionStr: string) {
+    public async updateOption(questionId: number, optionStr: string, newOptionStr: string) {
         try {
             // find first
             const findFirst = await this.getOptionByQuestionId(questionId)
@@ -104,9 +94,13 @@ class optionService {
             const updateOption = await db
             .update(option)
             .set({
-                option: optionStr
+                option: newOptionStr
             })
-            .where(eq(option.questionId, questionId))
+            .where(and(eq(option.questionId, questionId) , eq(option.option, optionStr)))
+            .returning({
+                questionId: option.questionId,
+                option: option.option
+            })
 
             return {
                 message: "Successfully updated option",
