@@ -5,7 +5,6 @@ import Sidebar from './teacher_components/sidebar';
 import CoursesContent from './teacher_components/courses';
 import RevenueChart from './teacher_components/chart';
 import RegistrationChart from './teacher_components/studentchart';
-import { Swiper, SwiperSlide } from 'swiper/react';
 import { useRecoilState } from 'recoil';
 import { userLoginState } from '@/state';
 import { useEffect } from 'react';
