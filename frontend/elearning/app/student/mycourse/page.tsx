@@ -24,7 +24,6 @@ const Mycourse = () =>{
                     {TableCourse(userLogin.id)}
                 </div>
             </div>
-            <Footer/>
         </>
     );
 };

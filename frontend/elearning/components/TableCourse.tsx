@@ -82,7 +82,7 @@ function TableCourse(userLoginId: string) {
                                     {course.teacherFirstName + " " + course.teacherLastName}
                                 </td>
                                 <td className="px-6 py-4 text-center">
-                                    {course.progress === 100 ? `${course.GPA}` : `Chưa có kết quả`}
+                                    {course.progress === 100 ? `${course.GPA.toFixed(2)}` : `Chưa có kết quả`}
                                 </td>
                                 <td className="px-6 py-4 text-center">
                                     {course.creationTime.toString()}

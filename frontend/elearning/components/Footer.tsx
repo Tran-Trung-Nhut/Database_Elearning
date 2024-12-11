@@ -2,7 +2,7 @@ import React from 'react';
 
 const Footer = () => {
   return (
-    <footer className="bg-gradient-to-r from-blue-800 to-gray-900 text-white py-10 px-6">
+    <footer className="fixed bg-gradient-to-r from-blue-800 to-gray-900 text-white py-10 px-6">
       <div className="max-w-5xl mx-auto">
         <h1 className="text-3xl font-extrabold mb-4 text-center tracking-wide">
           CO2014 - DATABASE SYSTEM
