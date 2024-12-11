@@ -25,43 +25,60 @@ class joinService {
                 .where(eq(section.id, sectionId));
     
             const courseId = courseResult[0]?.courseId;
-
+    
             const quizListResult = await db
                 .select({
                     quizId: quiz.id,
                 })
                 .from(quiz)
-                .innerJoin(section, eq(quiz.sectionId, section.id)) 
-                .where(eq(section.courseId, courseId)); 
-            const totalQuizCount = quizListResult.length;
+                .innerJoin(section, eq(quiz.sectionId, section.id))
+                .where(eq(section.courseId, courseId));
     
+            const totalQuizCount = quizListResult.length;
             const quizIds = quizListResult.map((q) => q.quizId);
     
-            const userQuizScores = await db
-            .select({
-                quizId: dO.quizId,
-                averageScore: sql<number>`AVG(${dO.score})`.as('averageScore'),
-            })
-            .from(dO)
-            .where(
-                and(
-                    eq(dO.studentId, studentId),
-                    sql`${dO.quizId} = ANY(ARRAY[${sql.join(quizIds.map(Number), sql`, `)}]::int[])`
-                )
-            )
-            .groupBy(dO.quizId);
-
-
+            const allQuizScores = await db
+                .select({
+                    quizId: dO.quizId,
+                    score: dO.score,
+                })
+                .from(dO)
+                .where(eq(dO.studentId, studentId));
     
-            const quizzesCompleted = userQuizScores.length;
-            const totalScore = userQuizScores.reduce((sum, quiz) => sum + quiz.averageScore, 0);
-            const GPA = quizzesCompleted > 0 ? totalScore / quizzesCompleted : 0;
-            const progress = Math.round((quizzesCompleted / totalQuizCount) * 100);
-            
-            if(progress === 100){
-                studentService.updateNumberOfCourseComplete(studentId)
+            const filteredScores = allQuizScores.filter((score) => quizIds.includes(score.quizId));
+            const filterDOScores : { [key: number ] : number} = {}
+
+            for(const d of allQuizScores){
+                filterDOScores[d.quizId] = d.score || 0
             }
 
+            const userQuizScores = quizIds.map((id) => {
+                if(filterDOScores[id] !== undefined){
+                    const scoresForQuiz = filteredScores.filter((score) => score.quizId === id);
+                    const totalScore = scoresForQuiz.reduce((sum, item) => sum + (item.score ?? 0), 0);
+                    const averageScore = scoresForQuiz.length > 0 ? totalScore / scoresForQuiz.length : 0;
+                    return {
+                        quizId: id,
+                        averageScore,
+                    };
+                }
+            });
+            
+            let quizzesCompleted = 0;
+            for(const sc of userQuizScores){
+                if(sc !== undefined){
+                    quizzesCompleted ++
+                }
+            }
+            const totalScore = userQuizScores.reduce((sum, quiz) => sum + (quiz?.averageScore ?? 0), 0);
+            const GPA = quizzesCompleted > 0 ? totalScore / quizzesCompleted : 0;
+            
+            const progress = Math.round((quizzesCompleted / totalQuizCount) * 100);
+    
+            if (progress === 100) {
+                studentService.updateNumberOfCourseComplete(studentId);
+            }
+    
             await db
                 .update(join)
                 .set({
@@ -70,11 +87,11 @@ class joinService {
                     dateComplete: quizzesCompleted === totalQuizCount ? new Date().toISOString() : null,
                 })
                 .where(and(eq(join.courseId, courseId), eq(join.studentId, studentId)));
-    
         } catch (error) {
-            
+            console.error(error);
         }
     }
+    
     
     
     public async getAllJoin(){

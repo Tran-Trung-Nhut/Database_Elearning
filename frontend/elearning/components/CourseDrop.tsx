@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
 import LastAttempt from "./answerRecoil";
+import Footer from "./Footer";
 
 function CourseDropdown(props: any) {
   const [isOpen, setIsOpen] = useState(false);

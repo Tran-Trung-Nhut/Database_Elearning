@@ -3,7 +3,6 @@ import { db } from "../db/db"
 import { student, user } from "../db/schema"
 import userService from "../user/user.service"
 import authService from "../auth/auth.service"
-import { join } from "path"
 import joinService from "../join/join.service"
 
 
